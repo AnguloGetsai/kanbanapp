@@ -1,21 +1,27 @@
-package com.utez.kanban.kanban.domain.student.model;
+package com.utez.kanban.kanban.domain.model;
 
-import com.utez.kanban.kanban.domain.user.model.User;
-
-public class Student extends User {
+public class Student {
     private Long studentID;
     private String firstName;
     private String lastName;
+    private String gender;
     private String image;
-
 
     public Student() {
     }
 
-    public Student(Long studentID, String firstName, String lastName, String image) {
+    public Student(Long studentID, String firstName, String lastName,String gender, String image) {
         this.studentID = studentID;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.gender = gender;
+        this.image = image;
+    }
+
+    public Student(String firstName, String lastName, String gender, String image) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.gender = gender;
         this.image = image;
     }
 
@@ -49,5 +55,13 @@ public class Student extends User {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 }

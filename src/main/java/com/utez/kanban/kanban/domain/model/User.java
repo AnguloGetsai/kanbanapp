@@ -1,25 +1,30 @@
-package com.utez.kanban.kanban.domain.user.model;
+package com.utez.kanban.kanban.domain.model;
 
-public abstract class User {
-
-    //The purpose of this class is to be a superclass
-    //to share theirs attributes and methods
+public class User {
 
     private Long userID;
     private String password;
     private String email;
     private String rol;
     private boolean status;
+    private String verificationToken;
+    private boolean isVerified;
+    private String resetToken;
 
     public User() {
     }
 
-    public User(Long userID, String password, String email, String rol, boolean status) {
+    public User(Long userID, String password, String email,
+                String rol, boolean status, String verificationToken,
+                boolean isVerified, String resetToken) {
         this.userID = userID;
         this.password = password;
         this.email = email;
         this.rol = rol;
         this.status = status;
+        this.verificationToken = verificationToken;
+        this.isVerified = isVerified;
+        this.resetToken = resetToken;
     }
 
     public Long getUserID() {
@@ -60,5 +65,29 @@ public abstract class User {
 
     public void setStatus(boolean status) {
         this.status = status;
+    }
+
+    public String getVerificationToken() {
+        return verificationToken;
+    }
+
+    public void setVerificationToken(String verificationToken) {
+        this.verificationToken = verificationToken;
+    }
+
+    public boolean isVerified() {
+        return isVerified;
+    }
+
+    public void setVerified(boolean verified) {
+        isVerified = verified;
+    }
+
+    public String getResetToken() {
+        return resetToken;
+    }
+
+    public void setResetToken(String resetToken) {
+        this.resetToken = resetToken;
     }
 }
