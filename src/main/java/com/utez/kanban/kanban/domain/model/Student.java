@@ -1,6 +1,6 @@
 package com.utez.kanban.kanban.domain.model;
 
-public class Student {
+public class Student extends User{
     private Long studentID;
     private String firstName;
     private String lastName;

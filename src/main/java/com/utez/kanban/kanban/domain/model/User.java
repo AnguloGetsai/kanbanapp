@@ -1,5 +1,7 @@
 package com.utez.kanban.kanban.domain.model;
 
+import java.time.LocalDateTime;
+
 public class User {
 
     private Long userID;
@@ -7,24 +9,24 @@ public class User {
     private String email;
     private String rol;
     private boolean status;
-    private String verificationToken;
+    private String verificationCode;
     private boolean isVerified;
-    private String resetToken;
+    private LocalDateTime expirationTime;
 
     public User() {
     }
 
-    public User(Long userID, String password, String email,
-                String rol, boolean status, String verificationToken,
-                boolean isVerified, String resetToken) {
+    public User(Long userID, String password, String email, String rol,
+                boolean status, String verificationCode, boolean isVerified,
+                LocalDateTime expirationTime) {
         this.userID = userID;
         this.password = password;
         this.email = email;
         this.rol = rol;
         this.status = status;
-        this.verificationToken = verificationToken;
+        this.verificationCode = verificationCode;
         this.isVerified = isVerified;
-        this.resetToken = resetToken;
+        this.expirationTime = expirationTime;
     }
 
     public Long getUserID() {
@@ -67,12 +69,12 @@ public class User {
         this.status = status;
     }
 
-    public String getVerificationToken() {
-        return verificationToken;
+    public String getVerificationCode() {
+        return verificationCode;
     }
 
-    public void setVerificationToken(String verificationToken) {
-        this.verificationToken = verificationToken;
+    public void setVerificationCode(String verificationCode) {
+        this.verificationCode = verificationCode;
     }
 
     public boolean isVerified() {
@@ -83,11 +85,11 @@ public class User {
         isVerified = verified;
     }
 
-    public String getResetToken() {
-        return resetToken;
+    public LocalDateTime getExpirationTime() {
+        return expirationTime;
     }
 
-    public void setResetToken(String resetToken) {
-        this.resetToken = resetToken;
+    public void setExpirationTime(LocalDateTime expirationTime) {
+        this.expirationTime = expirationTime;
     }
 }

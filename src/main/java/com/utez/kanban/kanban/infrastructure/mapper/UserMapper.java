@@ -12,9 +12,9 @@ public class UserMapper {
                 userEntity.getEmail(),
                 userEntity.getRol(),
                 userEntity.isStatus(),
-                userEntity.getVerificationToken(),
+                userEntity.getVerificationCode(),
                 userEntity.isVerified(),
-                userEntity.getResetToken()
+                userEntity.getExpirationTime()
         );
     }
 
@@ -24,9 +24,9 @@ public class UserMapper {
                 user.getEmail(),
                 user.getRol(),
                 user.isStatus(),
-                user.getVerificationToken(),
+                user.getVerificationCode(),
                 user.isVerified(),
-                user.getResetToken()
+                user.getExpirationTime()
         );
     }
 }
