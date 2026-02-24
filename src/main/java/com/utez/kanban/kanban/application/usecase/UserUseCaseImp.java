@@ -3,11 +3,12 @@ package com.utez.kanban.kanban.application.usecase;
 import com.utez.kanban.kanban.domain.model.User;
 import com.utez.kanban.kanban.domain.model.exeption.user.EmailAlreadyExistsException;
 import com.utez.kanban.kanban.domain.model.exeption.user.EmailNotVerifiedException;
+import com.utez.kanban.kanban.domain.model.exeption.user.UserNotFoundException;
 import com.utez.kanban.kanban.domain.port.in.UserUseCase;
 import com.utez.kanban.kanban.domain.port.out.EmailSenderPort;
 import com.utez.kanban.kanban.domain.port.out.UserRepositoryPort;
-import org.aspectj.apache.bcel.classfile.Code;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.hibernate.tool.schema.internal.exec.ScriptTargetOutputToUrl;
+
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -43,14 +44,25 @@ public class UserUseCaseImp implements UserUseCase {
         }else{
             String code = User.generateCode();
             emailSenderPort.send(email, "Code of verification", "This is your code of verification: "+code);
-            userRepositoryPort.safeVerificationCode(code, email , LocalDateTime.now());
+            userRepositoryPort.saveVerificationCode(code, email , LocalDateTime.now());
         }
     }
 
     @Override
     public void login(String email, String password) {
+        User user = userRepositoryPort.findByEmail(email);
+        if(user == null){
+            throw new UserNotFoundException("Invalid User");
+        }
+        if(user.validateLogin(email, password)){
+            // metodos para el caso del login exitoso
+            System.out.println("Login exitoso");
+        }
 
     }
+
+
+
 
 
 }

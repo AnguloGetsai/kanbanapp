@@ -30,6 +30,13 @@ public class User {
         this.expirationTime = expirationTime;
     }
 
+    //para la validacion del login
+    public boolean validateLogin(String email, String password){
+        if(this.email.equals(email) && this.password.equals(password)){
+            return true;
+        }
+        return false;
+    }
     // metodo para generar el codigo de verificacion
     public static String generateCode(){
         Random random = new Random();

@@ -37,10 +37,12 @@ public class JpaUserRepositoryAdapter implements UserRepositoryPort {
     }
 
     @Override
-    public boolean safeVerificationCode(String code,String email, LocalDateTime time) {
+    public boolean saveVerificationCode(String code,String email, LocalDateTime time) {
         int rows = jpaUserRepository.saveCode(email, code,  time);
         System.out.println("No se cambioaron los datos");
         System.out.println("DATOS DEL ALUMNO "+email+ " " +code + " " + time);
         return (rows > 0) ? true: false;
     }
+
+
 }

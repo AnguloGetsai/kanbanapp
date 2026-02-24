@@ -9,5 +9,6 @@ public interface UserRepositoryPort {
     User saveUser(User user);
     Optional<User> findById(Long id);
     User findByEmail(String email);
-    boolean safeVerificationCode(String code, String email,LocalDateTime time);
+    boolean saveVerificationCode(String code, String email,LocalDateTime time);
+
 }
