@@ -16,11 +16,11 @@ import java.time.LocalDateTime;
 public interface JpaUserRepository extends JpaRepository<UserEntity, Long> {
 
     @Query("""
-            SELECT COUNT (ue)
+            SELECT ue
             FROM UserEntity ue
             WHERE ue.email = :email
             """)
-    long findByEmailAndRol(@Param("email") String email);
+    UserEntity findByEmail(@Param("email") String email);
 
     @Modifying
     @Transactional

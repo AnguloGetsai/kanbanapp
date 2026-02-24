@@ -8,6 +8,6 @@ import java.util.Optional;
 public interface UserRepositoryPort {
     User saveUser(User user);
     Optional<User> findById(Long id);
-    boolean findByEmail(String email);
-    void safeCode(String code, String email,LocalDateTime time);
+    User findByEmail(String email);
+    boolean safeVerificationCode(String code, String email,LocalDateTime time);
 }

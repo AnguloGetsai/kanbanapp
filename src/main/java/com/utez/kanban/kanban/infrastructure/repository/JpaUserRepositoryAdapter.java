@@ -1,6 +1,6 @@
 package com.utez.kanban.kanban.infrastructure.repository;
 
-import com.utez.kanban.kanban.KanbanApplication;
+
 import com.utez.kanban.kanban.domain.model.User;
 import com.utez.kanban.kanban.domain.port.out.UserRepositoryPort;
 import com.utez.kanban.kanban.infrastructure.entity.UserEntity;
@@ -32,14 +32,15 @@ public class JpaUserRepositoryAdapter implements UserRepositoryPort {
     }
 
     @Override
-    public boolean findByEmail(String email) {
-        return jpaUserRepository.findByEmailAndRol(email) > 0;
-
+    public User findByEmail(String email) {
+        return UserMapper.toUser(jpaUserRepository.findByEmail(email));
     }
 
     @Override
-    public void safeCode(String code,String email, LocalDateTime time) {
+    public boolean safeVerificationCode(String code,String email, LocalDateTime time) {
         int rows = jpaUserRepository.saveCode(email, code,  time);
         System.out.println("No se cambioaron los datos");
+        System.out.println("DATOS DEL ALUMNO "+email+ " " +code + " " + time);
+        return (rows > 0) ? true: false;
     }
 }

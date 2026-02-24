@@ -1,6 +1,7 @@
 package com.utez.kanban.kanban.domain.model;
 
 import java.time.LocalDateTime;
+import java.util.Random;
 
 public class User {
 
@@ -27,6 +28,13 @@ public class User {
         this.verificationCode = verificationCode;
         this.isVerified = isVerified;
         this.expirationTime = expirationTime;
+    }
+
+    // metodo para generar el codigo de verificacion
+    public static String generateCode(){
+        Random random = new Random();
+        int code = 100000 + random.nextInt(900000);
+        return String.valueOf(code);
     }
 
     public Long getUserID() {
