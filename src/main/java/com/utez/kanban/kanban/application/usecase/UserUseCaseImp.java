@@ -1,16 +1,15 @@
 package com.utez.kanban.kanban.application.usecase;
 
 import com.utez.kanban.kanban.domain.model.User;
+import com.utez.kanban.kanban.domain.model.exeption.user.BusinessRuleViolationException;
 import com.utez.kanban.kanban.domain.model.exeption.user.EmailAlreadyExistsException;
 import com.utez.kanban.kanban.domain.model.exeption.user.EmailNotVerifiedException;
 import com.utez.kanban.kanban.domain.model.exeption.user.UserNotFoundException;
 import com.utez.kanban.kanban.domain.port.in.UserUseCase;
 import com.utez.kanban.kanban.domain.port.out.EmailSenderPort;
 import com.utez.kanban.kanban.domain.port.out.UserRepositoryPort;
-import org.hibernate.tool.schema.internal.exec.ScriptTargetOutputToUrl;
 
 
-import javax.swing.text.TableView;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -60,6 +59,7 @@ public class UserUseCaseImp implements UserUseCase {
                 // metodos para el caso del login exitoso
                 System.out.println("Login exitoso");
             }
+            throw new BusinessRuleViolationException("Invalid data");
         }
 
 
@@ -67,10 +67,12 @@ public class UserUseCaseImp implements UserUseCase {
 
     @Override
     public void validateVerificationCode(String email, String code) {
+
+
         User user = userRepositoryPort.findByEmail(email);
         if(!userIsNull(user)){
             if(user.validateVerificationCode(code)){
-                if(userRepositoryPort.authorizeVerification(email)){
+                if(userRepositoryPort.authorizeVerification(email, true)){
                     return;
                 }
                 throw new EmailNotVerifiedException("Error saving verification");
@@ -78,7 +80,33 @@ public class UserUseCaseImp implements UserUseCase {
         }
     }
 
+    @Override
+    public void changePassword(String email) {
+        String subject = "Code to change your password";
+        String text = "This is your code: ";
+        String code = User.generateCode();
+        User user = userRepositoryPort.findByEmail(email);
+        if(!userIsNull(user) && user.isVerified()){
+            emailSenderPort.send(email,subject, text + code );
+            userRepositoryPort.saveVerificationCode(code, email, LocalDateTime.now().plusMinutes(3));
+        }
+    }
 
+    @Override
+    public void addPassword(String email, String password) {
+
+        User user = userRepositoryPort.findByEmail(email);
+        if(!userIsNull(user) && user.isVerified()){
+
+            // change the verified code status to false
+            userRepositoryPort.authorizeVerification(email, false);
+            if(!userRepositoryPort.addPassword(email, password)){
+                throw new BusinessRuleViolationException("Invalid password");
+            }
+
+
+        }
+    }
 
 
     public boolean userIsNull(User user){

@@ -45,9 +45,15 @@ public class JpaUserRepositoryAdapter implements UserRepositoryPort {
     }
 
     @Override
-    public boolean authorizeVerification(String email) {
-        long id = jpaUserRepository.authorizeVerification(email);
+    public boolean authorizeVerification(String email, boolean state) {
+        long id = jpaUserRepository.authorizeVerification(email,state );
         return (id > 0);
+    }
+
+    @Override
+    public boolean addPassword(String email, String password) {
+        long id = jpaUserRepository.addPassword(email, password);
+        return id > 0;
     }
 
 

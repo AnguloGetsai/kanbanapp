@@ -11,6 +11,7 @@ public interface UserUseCase {
     void registerEmail(String email);
     void login(String email, String password);
     void validateVerificationCode(String email, String code);
-    void 
+    void changePassword(String email);
+    void addPassword(String email, String password);
 
 }

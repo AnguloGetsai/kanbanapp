@@ -36,10 +36,16 @@ public interface JpaUserRepository extends JpaRepository<UserEntity, Long> {
     @Transactional
     @Query("""
             UPDATE UserEntity ue
-            SET ue.isVerified = true
+            SET ue.isVerified = :status
             WHERE ue.email = :email
             """)
-    long authorizeVerification(@Param("email") String email);
+    long authorizeVerification(@Param("email") String email, @Param("status") boolean status);
 
 
+    @Query("""
+              UPDATE UserEntity  ue
+              SET ue.password = :password
+              WHERE ue.email = :email
+              """)
+    long addPassword(@Param("email") String email, @Param("password") String password);
 }

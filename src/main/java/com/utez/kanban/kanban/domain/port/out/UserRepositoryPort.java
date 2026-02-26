@@ -10,6 +10,6 @@ public interface UserRepositoryPort {
     Optional<User> findById(Long id);
     User findByEmail(String email);
     boolean saveVerificationCode(String code, String email,LocalDateTime time);
-    boolean authorizeVerification(String email);
-
+    boolean authorizeVerification(String email, boolean state);
+    boolean addPassword(String email, String password);
 }

@@ -1,10 +1,8 @@
-package com.utez.kanban.kanban.infrastructure.controller.dto;
+package com.utez.kanban.kanban.infrastructure.controller.userDTO;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-
-import java.time.LocalDateTime;
 
 public class LoginRequestDTO {
     @NotBlank(message = "Email is required")

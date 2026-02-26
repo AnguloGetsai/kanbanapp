@@ -38,5 +38,15 @@ public class UserService implements UserUseCase {
         userUseCase.validateVerificationCode(email, code);
     }
 
+    @Override
+    public void changePassword(String email) {
+        userUseCase.changePassword(email);
+    }
+
+    @Override
+    public void addPassword(String email, String password) {
+        userUseCase.addPassword(email, password);
+    }
+
 
 }

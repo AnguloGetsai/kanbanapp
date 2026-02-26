@@ -1,4 +1,4 @@
-package com.utez.kanban.kanban.infrastructure.controller.dto;
+package com.utez.kanban.kanban.infrastructure.controller.userDTO;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -15,10 +15,15 @@ public class UserCredentialDTO {
     @Pattern(regexp = "\\d{6}", message = "The code must contain exactly 6 digits")
     private String code;
 
+    @NotBlank(message = "Password is required")
+    @Size(min = 10, max = 30, message = "The password must contain between 10 and 30 characters")
+    private String password;
+
     public UserCredentialDTO(String email, String code) {
         this.email = email;
         this.code = code;
     }
+
 
     public UserCredentialDTO() {
     }

@@ -1,10 +1,10 @@
 package com.utez.kanban.kanban.infrastructure.controller;
 
 import com.utez.kanban.kanban.application.service.UserService;
-import com.utez.kanban.kanban.infrastructure.controller.dto.LoginRequestDTO;
-import com.utez.kanban.kanban.infrastructure.controller.dto.UserCredentialDTO;
+import com.utez.kanban.kanban.infrastructure.controller.userDTO.LoginRequestDTO;
+import com.utez.kanban.kanban.infrastructure.controller.userDTO.UserCredentialDTO;
+import com.utez.kanban.kanban.infrastructure.controller.userDTO.UserPasswordDTO;
 import jakarta.validation.Valid;
-import org.hibernate.tool.schema.internal.exec.ScriptTargetOutputToUrl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,8 +20,7 @@ public class UserController {
     @PostMapping("/sendCode")
     public ResponseEntity<?> sendCode(@RequestParam String email){
         userService.registerEmail(email);
-        System.out.println("Entro al metodo send code");
-        return ResponseEntity.ok("Registro exitoso");
+        return ResponseEntity.ok("Successful registration");
     }
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequestDTO loginDTO){
@@ -35,4 +34,19 @@ public class UserController {
         userService.validateVerificationCode(userDTO.getEmail(), userDTO.getCode());
         return ResponseEntity.ok("The code was validated");
     }
+
+    @PostMapping("/changePassword")
+    public ResponseEntity<?> changePassword(@RequestParam String email){
+        userService.changePassword(email);
+        return ResponseEntity.ok("A code to verify that it is you was sent");
+    }
+
+
+    @PostMapping("/addPassword")
+    public ResponseEntity<?> addPassword(@Valid @RequestBody UserPasswordDTO userPassword){
+        userService.addPassword(userPassword.getEmail(), userPassword.getPassword());
+        return ResponseEntity.ok("Password changed correctly");
+    }
+
+
 }
