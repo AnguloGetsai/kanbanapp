@@ -21,7 +21,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         //endpoints publicos
                         .requestMatchers(
-                                "/api/user/sendCode"
+                                "/api/user/sendCode",
+                                "/api/user/validateCode"
                         ).permitAll()
 
                         // todo lo demas requiere autenticaion

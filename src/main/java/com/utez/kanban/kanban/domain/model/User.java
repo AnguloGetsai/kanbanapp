@@ -1,5 +1,8 @@
 package com.utez.kanban.kanban.domain.model;
 
+
+import com.utez.kanban.kanban.domain.model.exeption.user.BusinessRuleViolationException;
+
 import java.time.LocalDateTime;
 import java.util.Random;
 
@@ -44,6 +47,16 @@ public class User {
         return String.valueOf(code);
     }
 
+    // metodo para validar el codigo de verificacion
+    public boolean validateVerificationCode(String code){
+        if(!LocalDateTime.now().isAfter(expirationTime)){
+            if(this.verificationCode.equals(code)){
+                return true;
+            }
+            throw new BusinessRuleViolationException("Invalid code");
+        }
+        throw new BusinessRuleViolationException("The verification code has expired");
+    }
     public Long getUserID() {
         return userID;
     }

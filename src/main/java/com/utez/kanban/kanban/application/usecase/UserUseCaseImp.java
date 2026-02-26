@@ -10,6 +10,7 @@ import com.utez.kanban.kanban.domain.port.out.UserRepositoryPort;
 import org.hibernate.tool.schema.internal.exec.ScriptTargetOutputToUrl;
 
 
+import javax.swing.text.TableView;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -37,32 +38,53 @@ public class UserUseCaseImp implements UserUseCase {
     @Override
     public void registerEmail(String email) {
         User user = userRepositoryPort.findByEmail(email);
+        String subject = "Code of verification";
+        String text = "This is your code of verification: ";
         if(user == null){
-            throw new EmailNotVerifiedException("email invalido");
+            throw new UserNotFoundException("User not found");
         }else if(user.isVerified()){
-            throw new EmailAlreadyExistsException("This email address: " + email + "  has already been verified.");
+            throw new EmailAlreadyExistsException("Email address has already been verified");
         }else{
             String code = User.generateCode();
-            emailSenderPort.send(email, "Code of verification", "This is your code of verification: "+code);
-            userRepositoryPort.saveVerificationCode(code, email , LocalDateTime.now());
+            emailSenderPort.send(email, subject, text + code);
+            userRepositoryPort.saveVerificationCode(code, email , LocalDateTime.now().plusMinutes(3));
         }
     }
 
     @Override
     public void login(String email, String password) {
         User user = userRepositoryPort.findByEmail(email);
-        if(user == null){
-            throw new UserNotFoundException("Invalid User");
-        }
-        if(user.validateLogin(email, password)){
-            // metodos para el caso del login exitoso
-            System.out.println("Login exitoso");
+        if(!userIsNull(user)){
+
+            if(user.validateLogin(email, password)){
+                // metodos para el caso del login exitoso
+                System.out.println("Login exitoso");
+            }
         }
 
+
+    }
+
+    @Override
+    public void validateVerificationCode(String email, String code) {
+        User user = userRepositoryPort.findByEmail(email);
+        if(!userIsNull(user)){
+            if(user.validateVerificationCode(code)){
+                if(userRepositoryPort.authorizeVerification(email)){
+                    return;
+                }
+                throw new EmailNotVerifiedException("Error saving verification");
+            }
+        }
     }
 
 
 
 
-
+    public boolean userIsNull(User user){
+        if(user == null){
+            throw new UserNotFoundException("User invalid");
+        }
+        return false;
+    }
 }

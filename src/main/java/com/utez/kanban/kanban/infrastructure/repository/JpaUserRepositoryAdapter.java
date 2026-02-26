@@ -28,7 +28,7 @@ public class JpaUserRepositoryAdapter implements UserRepositoryPort {
 
     @Override
     public Optional<User> findById(Long id) {
-        return null;
+        return Optional.empty();
     }
 
     @Override
@@ -41,7 +41,13 @@ public class JpaUserRepositoryAdapter implements UserRepositoryPort {
         int rows = jpaUserRepository.saveCode(email, code,  time);
         System.out.println("No se cambioaron los datos");
         System.out.println("DATOS DEL ALUMNO "+email+ " " +code + " " + time);
-        return (rows > 0) ? true: false;
+        return (rows > 0);
+    }
+
+    @Override
+    public boolean authorizeVerification(String email) {
+        long id = jpaUserRepository.authorizeVerification(email);
+        return (id > 0);
     }
 
 

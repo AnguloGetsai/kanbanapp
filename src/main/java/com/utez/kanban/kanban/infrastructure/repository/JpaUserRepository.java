@@ -2,6 +2,7 @@ package com.utez.kanban.kanban.infrastructure.repository;
 
 import com.utez.kanban.kanban.infrastructure.entity.UserEntity;
 
+import org.apache.logging.log4j.message.LoggerNameAwareMessage;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -29,7 +30,16 @@ public interface JpaUserRepository extends JpaRepository<UserEntity, Long> {
                 SET ue.verificationCode = :verificationCode, ue.expirationTime = :expirationDate
                 WHERE ue.email = :email
                 """)
-    int saveCode(@Param("email") String email,
-                  @Param("verificationCode") String verificationCode,
-                  @Param("expirationDate")LocalDateTime expirationDate);
+    int saveCode(@Param("email") String email, @Param("verificationCode") String verificationCode, @Param("expirationDate")LocalDateTime expirationDate);
+
+    @Modifying
+    @Transactional
+    @Query("""
+            UPDATE UserEntity ue
+            SET ue.isVerified = true
+            WHERE ue.email = :email
+            """)
+    long authorizeVerification(@Param("email") String email);
+
+
 }

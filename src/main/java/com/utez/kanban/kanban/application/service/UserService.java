@@ -3,7 +3,7 @@ package com.utez.kanban.kanban.application.service;
 import com.utez.kanban.kanban.domain.model.User;
 import com.utez.kanban.kanban.domain.port.in.UserUseCase;
 
-import java.time.LocalDateTime;
+
 import java.util.Optional;
 
 public class UserService implements UserUseCase {
@@ -30,10 +30,13 @@ public class UserService implements UserUseCase {
 
     @Override
     public void login(String email, String password) {
-        // falta por implemenatar
+        userUseCase.login(email, password);
     }
 
-  
+    @Override
+    public void validateVerificationCode(String email, String code) {
+        userUseCase.validateVerificationCode(email, code);
+    }
 
 
 }

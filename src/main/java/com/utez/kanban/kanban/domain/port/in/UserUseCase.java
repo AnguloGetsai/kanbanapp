@@ -2,7 +2,7 @@ package com.utez.kanban.kanban.domain.port.in;
 
 import com.utez.kanban.kanban.domain.model.User;
 
-import java.time.LocalDateTime;
+
 import java.util.Optional;
 
 public interface UserUseCase {
@@ -10,6 +10,7 @@ public interface UserUseCase {
     Optional<User> findById(Long id);
     void registerEmail(String email);
     void login(String email, String password);
-
+    void validateVerificationCode(String email, String code);
+    void 
 
 }
