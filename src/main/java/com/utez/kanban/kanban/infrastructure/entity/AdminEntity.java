@@ -1,47 +1,47 @@
 package com.utez.kanban.kanban.infrastructure.entity;
 
+
 import jakarta.persistence.*;
 
 import java.util.List;
 
 @Entity
-@Table(name = "student")
-public class StudentEntity {
+@Table(name = "admin")
+public class AdminEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long studentID;
-
+    private Long adminID;
     private String firstName;
     private String lastName;
-    private String gender;
     private String image;
-
 
     @OneToOne
     @JoinColumn(name = "userID")
     private UserEntity userEntity;
 
+    @OneToMany(mappedBy = "adminEntity")
+    private List<AdviserEntity> advisers;
 
-    @OneToMany(mappedBy = "studentEntity")
-    private List<NotificationEntity> notifications;
 
-
-    public StudentEntity() {
+    public AdminEntity() {
     }
 
-    public StudentEntity( String firstName, String lastName, String gender, String image) {
+
+    public AdminEntity(Long adminID, String firstName, String lastName, String image, UserEntity userEntity) {
+        this.adminID = adminID;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.gender = gender;
         this.image = image;
+        this.userEntity = userEntity;
     }
 
-    public Long getStudentID() {
-        return studentID;
+
+    public Long getAdminID() {
+        return adminID;
     }
 
-    public void setStudentID(Long studentID) {
-        this.studentID = studentID;
+    public void setAdminID(Long adminID) {
+        this.adminID = adminID;
     }
 
     public String getFirstName() {
@@ -60,19 +60,27 @@ public class StudentEntity {
         this.lastName = lastName;
     }
 
-    public String getGender() {
-        return gender;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-
     public String getImage() {
         return image;
     }
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public UserEntity getUserEntity() {
+        return userEntity;
+    }
+
+    public void setUserEntity(UserEntity userEntity) {
+        this.userEntity = userEntity;
+    }
+
+    public List<AdviserEntity> getAdvisers() {
+        return advisers;
+    }
+
+    public void setAdvisers(List<AdviserEntity> advisers) {
+        this.advisers = advisers;
     }
 }
