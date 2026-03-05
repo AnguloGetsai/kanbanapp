@@ -36,7 +36,8 @@ public class UserUseCaseImp implements UserUseCase {
 
     @Override
     public void registerEmail(String email) {
-        User user = userRepositoryPort.findByEmail(email);
+        User user = userRepositoryPort.findUserEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
         String subject = "Code of verification";
         String text = "This is your code of verification: ";
         if(user == null){
@@ -52,7 +53,8 @@ public class UserUseCaseImp implements UserUseCase {
 
     @Override
     public void login(String email, String password) {
-        User user = userRepositoryPort.findByEmail(email);
+        User user = userRepositoryPort.findUserEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
         if(!userIsNull(user)){
 
             if(user.validateLogin(email, password)){
@@ -69,7 +71,8 @@ public class UserUseCaseImp implements UserUseCase {
     public void validateVerificationCode(String email, String code) {
 
 
-        User user = userRepositoryPort.findByEmail(email);
+        User user = userRepositoryPort.findUserEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
         if(!userIsNull(user)){
             if(user.validateVerificationCode(code)){
                 if(userRepositoryPort.authorizeVerification(email, true)){
@@ -85,7 +88,8 @@ public class UserUseCaseImp implements UserUseCase {
         String subject = "Code to change your password";
         String text = "This is your code: ";
         String code = User.generateCode();
-        User user = userRepositoryPort.findByEmail(email);
+        User user = userRepositoryPort.findUserEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
         if(!userIsNull(user) && user.isVerified()){
             emailSenderPort.send(email,subject, text + code );
             userRepositoryPort.saveVerificationCode(code, email, LocalDateTime.now().plusMinutes(3));
@@ -95,7 +99,9 @@ public class UserUseCaseImp implements UserUseCase {
     @Override
     public void addPassword(String email, String password) {
 
-        User user = userRepositoryPort.findByEmail(email);
+        User user = userRepositoryPort.findUserEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+
         if(!userIsNull(user) && user.isVerified()){
 
             // change the verified code status to false

@@ -16,15 +16,15 @@ import java.util.Optional;
 
 @Repository
 public interface JpaUserRepository extends JpaRepository<UserEntity, Long> {
-    Optional<UserEntity> findByUserEmail(String email);
+    Optional<UserEntity> findByEmail(String email);
 
 
-    @Query("""
-            SELECT ue
-            FROM UserEntity ue
-            WHERE ue.email = :email
-            """)
-    UserEntity findByEmail(@Param("email") String email);
+//    @Query("""
+//            SELECT ue
+//            FROM UserEntity ue
+//            WHERE ue.email = :email
+//            """)
+//    UserEntity findByEmail(@Param("email") String email);
 
     @Modifying
     @Transactional

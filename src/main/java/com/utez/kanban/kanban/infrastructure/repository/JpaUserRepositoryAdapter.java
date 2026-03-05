@@ -31,10 +31,11 @@ public class JpaUserRepositoryAdapter implements UserRepositoryPort {
         return Optional.empty();
     }
 
-    @Override
-    public User findByEmail(String email) {
-        return UserMapper.toUser(jpaUserRepository.findByEmail(email));
-    }
+//    @Override
+//    public User findByEmail(String email) {
+////        return UserMapper.toUser(jpaUserRepository.findByEmail(email));
+//        return null;
+//    }
 
     @Override
     public boolean saveVerificationCode(String code,String email, LocalDateTime time) {
@@ -59,7 +60,7 @@ public class JpaUserRepositoryAdapter implements UserRepositoryPort {
     @Override
     public Optional<User> findUserEmail(String email) {
         return jpaUserRepository
-                .findByUserEmail(email)
+                .findByEmail(email)
                 .map(UserMapper::toUser);
     }
 

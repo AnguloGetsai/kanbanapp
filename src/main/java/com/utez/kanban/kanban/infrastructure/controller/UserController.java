@@ -14,6 +14,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
@@ -47,7 +49,7 @@ public class UserController {
           )
         );
         String token = jwtService.generateToken(authentication);
-        return ResponseEntity.ok("Successful login");
+        return ResponseEntity.ok(Map.of("token", token));
     }
 
 
