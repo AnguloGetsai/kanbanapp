@@ -35,6 +35,8 @@ public class UserEntity {
         this.expirationTime = expirationTime;
     }
 
+
+
     public UserEntity( String password, String email, String rol, boolean status,
                       String verificationCode, boolean isVerified, LocalDateTime expirationTime) {
 

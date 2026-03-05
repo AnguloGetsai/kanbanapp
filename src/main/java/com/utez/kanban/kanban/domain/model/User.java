@@ -47,6 +47,10 @@ public class User {
         return String.valueOf(code);
     }
 
+    public User(String email, String password){
+        this.email = email;
+        this.password = password;
+    }
     // metodo para validar el codigo de verificacion
     public boolean validateVerificationCode(String code){
         if(!LocalDateTime.now().isAfter(expirationTime)){

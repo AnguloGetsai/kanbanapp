@@ -4,8 +4,14 @@ import com.utez.kanban.kanban.application.service.UserService;
 import com.utez.kanban.kanban.infrastructure.controller.userDTO.LoginRequestDTO;
 import com.utez.kanban.kanban.infrastructure.controller.userDTO.UserCredentialDTO;
 import com.utez.kanban.kanban.infrastructure.controller.userDTO.UserPasswordDTO;
+import com.utez.kanban.kanban.infrastructure.security.JwtService;
 import jakarta.validation.Valid;
+import org.aspectj.runtime.internal.cflowstack.ThreadStackImpl11;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -13,9 +19,19 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
+    private final JwtService jwtService;
+    private final AuthenticationManager authenticationManager;
 
-    public UserController(UserService userService){
+
+    public UserController(
+            UserService userService,
+            AuthenticationManager  authenticationManager,
+            JwtService jwtService
+
+    ){
         this.userService = userService;
+        this.jwtService = jwtService;
+        this.authenticationManager = authenticationManager;
     }
     @PostMapping("/sendCode")
     public ResponseEntity<?> sendCode(@RequestParam String email){
@@ -24,7 +40,13 @@ public class UserController {
     }
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequestDTO loginDTO){
-        userService.login(loginDTO.getEmail(), loginDTO.getPassword());
+        Authentication authentication = authenticationManager.authenticate(
+          new UsernamePasswordAuthenticationToken(
+                  loginDTO.getEmail(),
+                  loginDTO.getPassword()
+          )
+        );
+        String token = jwtService.generateToken(authentication);
         return ResponseEntity.ok("Successful login");
     }
 

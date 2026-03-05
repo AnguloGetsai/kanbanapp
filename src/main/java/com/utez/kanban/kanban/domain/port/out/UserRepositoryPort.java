@@ -12,4 +12,5 @@ public interface UserRepositoryPort {
     boolean saveVerificationCode(String code, String email,LocalDateTime time);
     boolean authorizeVerification(String email, boolean state);
     boolean addPassword(String email, String password);
+    Optional<User> findUserEmail(String email);
 }

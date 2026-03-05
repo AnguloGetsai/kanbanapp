@@ -11,10 +11,13 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 
 @Repository
 public interface JpaUserRepository extends JpaRepository<UserEntity, Long> {
+    Optional<UserEntity> findByUserEmail(String email);
+
 
     @Query("""
             SELECT ue

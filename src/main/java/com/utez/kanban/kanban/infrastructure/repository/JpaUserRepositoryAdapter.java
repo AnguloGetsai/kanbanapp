@@ -56,5 +56,12 @@ public class JpaUserRepositoryAdapter implements UserRepositoryPort {
         return id > 0;
     }
 
+    @Override
+    public Optional<User> findUserEmail(String email) {
+        return jpaUserRepository
+                .findByUserEmail(email)
+                .map(UserMapper::toUser);
+    }
+
 
 }
