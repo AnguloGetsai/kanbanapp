@@ -5,7 +5,5 @@ public class JpaAdviserRepositoryAdapter {
 
     public JpaAdviserRepositoryAdapter(JpaAdviserRepository jpaAdviserRepository){
         this.jpaAdviserRepository = jpaAdviserRepository;
-
-        // Codigo para operaciones con el administrador
     }
 }
