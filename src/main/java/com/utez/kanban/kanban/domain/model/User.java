@@ -3,10 +3,14 @@ package com.utez.kanban.kanban.domain.model;
 
 import com.utez.kanban.kanban.domain.model.exeption.user.BusinessRuleViolationException;
 
+
 import java.time.LocalDateTime;
 import java.util.Random;
 
 public class User {
+
+
+
 
     private Long userID;
     private String password;
@@ -18,6 +22,10 @@ public class User {
     private LocalDateTime expirationTime;
 
     public User() {
+    }
+
+    public User(String email){
+        this.email  = email;
     }
 
     public User(Long userID, String password, String email, String rol,

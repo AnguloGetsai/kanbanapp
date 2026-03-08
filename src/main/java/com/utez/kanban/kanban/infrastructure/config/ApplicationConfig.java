@@ -1,16 +1,19 @@
 package com.utez.kanban.kanban.infrastructure.config;
 
+import com.utez.kanban.kanban.application.service.AdminService;
 import com.utez.kanban.kanban.application.service.StudentService;
 import com.utez.kanban.kanban.application.service.UserService;
+import com.utez.kanban.kanban.application.usecase.AdminUseCaseImp;
+import com.utez.kanban.kanban.application.usecase.AdviserUseCaseImp;
 import com.utez.kanban.kanban.application.usecase.StudentUseCaseImp;
 import com.utez.kanban.kanban.application.usecase.UserUseCaseImp;
-import com.utez.kanban.kanban.domain.port.out.StudentRepositoryPort;
-import com.utez.kanban.kanban.domain.port.out.UserRepositoryPort;
-import com.utez.kanban.kanban.infrastructure.repository.EmailSenderRepositoryAdapter;
-import com.utez.kanban.kanban.infrastructure.repository.JpaStudentRepositoryAdapter;
-import com.utez.kanban.kanban.infrastructure.repository.JpaUserRepositoryAdapter;
+import com.utez.kanban.kanban.domain.port.in.AdviserUseCase;
+import com.utez.kanban.kanban.domain.port.out.*;
+import com.utez.kanban.kanban.infrastructure.repository.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 
 @Configuration
@@ -29,9 +32,9 @@ public class ApplicationConfig {
     }
 
     @Bean
-    public UserService userService(UserRepositoryPort userRepositoryPort, EmailSenderRepositoryAdapter emailSenderRepositoryAdapter){
+    public UserService userService(UserRepositoryPort userRepositoryPort, EmailSenderPort emailSenderPort, EncryptPasswordPort encryptPasswordPort){
         return new UserService(
-                new UserUseCaseImp(userRepositoryPort, emailSenderRepositoryAdapter)
+                new UserUseCaseImp(userRepositoryPort, emailSenderPort, encryptPasswordPort)
 
         );
     }
@@ -41,6 +44,19 @@ public class ApplicationConfig {
     public UserRepositoryPort userRepositoryPort(JpaUserRepositoryAdapter jpaUserRepositoryAdapter){
         return jpaUserRepositoryAdapter;
     }
+
+    @Bean
+    public AdminService adminService(AdviserRepositoryPort adviserRepositoryPort, UserRepositoryPort userRepositoryPort){
+        return new AdminService(
+                new AdminUseCaseImp(adviserRepositoryPort, userRepositoryPort)
+        );
+    }
+
+    @Bean
+    public AdviserRepositoryPort adviserRepositoryPort(JpaAdviserRepositoryAdapter jpaAdviserRepositoryAdapter){
+        return jpaAdviserRepositoryAdapter;
+    }
+
 
 
 }

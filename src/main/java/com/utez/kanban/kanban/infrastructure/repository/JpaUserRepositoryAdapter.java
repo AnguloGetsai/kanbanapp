@@ -5,6 +5,8 @@ import com.utez.kanban.kanban.domain.model.User;
 import com.utez.kanban.kanban.domain.port.out.UserRepositoryPort;
 import com.utez.kanban.kanban.infrastructure.entity.UserEntity;
 import com.utez.kanban.kanban.infrastructure.mapper.UserMapper;
+import org.hibernate.engine.internal.NaturalIdLogging_$logger;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -15,15 +17,17 @@ import java.util.Optional;
 public class JpaUserRepositoryAdapter implements UserRepositoryPort {
     private JpaUserRepository jpaUserRepository;
 
-    public JpaUserRepositoryAdapter(JpaUserRepository jpaUserRepository){
+
+
+    public JpaUserRepositoryAdapter(JpaUserRepository jpaUserRepository ){
         this.jpaUserRepository = jpaUserRepository;
+
     }
 
     @Override
-    public User saveUser(User user) {
-        UserEntity userEntity = UserMapper.toUserEntity(user);
-        userEntity = jpaUserRepository.save(userEntity);
-        return UserMapper.toUser(userEntity);
+    public Optional<User> saveUser(User user) {
+        UserEntity created = jpaUserRepository.save(UserMapper.toUserEntity(user));
+        return Optional.of(UserMapper.toUser(created));
     }
 
     @Override
@@ -31,11 +35,6 @@ public class JpaUserRepositoryAdapter implements UserRepositoryPort {
         return Optional.empty();
     }
 
-//    @Override
-//    public User findByEmail(String email) {
-////        return UserMapper.toUser(jpaUserRepository.findByEmail(email));
-//        return null;
-//    }
 
     @Override
     public boolean saveVerificationCode(String code,String email, LocalDateTime time) {
@@ -63,6 +62,14 @@ public class JpaUserRepositoryAdapter implements UserRepositoryPort {
                 .findByEmail(email)
                 .map(UserMapper::toUser);
     }
+
+    @Override
+    public boolean changeStatus(String email, boolean status) {
+        return jpaUserRepository.changeStatus(email, status) == 1;
+    }
+
+
+
 
 
 }

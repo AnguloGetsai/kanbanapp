@@ -13,10 +13,7 @@ public class UserService implements UserUseCase {
     public UserService(UserUseCase userUseCase){
         this.userUseCase = userUseCase;
     }
-    @Override
-    public User createUser(User user) {
-       return  userUseCase.createUser(user);
-    }
+
 
     @Override
     public Optional<User> findById(Long id) {
@@ -46,6 +43,16 @@ public class UserService implements UserUseCase {
     @Override
     public void addPassword(String email, String password) {
         userUseCase.addPassword(email, password);
+    }
+
+    @Override
+    public void enableUser(String email ) {
+        userUseCase.enableUser(email);
+    }
+
+    @Override
+    public void disableUser(String email ) {
+        userUseCase.disableUser(email);
     }
 
 

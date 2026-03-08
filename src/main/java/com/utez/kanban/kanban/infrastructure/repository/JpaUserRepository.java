@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,12 +20,14 @@ public interface JpaUserRepository extends JpaRepository<UserEntity, Long> {
     Optional<UserEntity> findByEmail(String email);
 
 
-//    @Query("""
-//            SELECT ue
-//            FROM UserEntity ue
-//            WHERE ue.email = :email
-//            """)
-//    UserEntity findByEmail(@Param("email") String email);
+    @Transactional
+    @Modifying
+    @Query("""
+            UPDATE UserEntity ue 
+            SET ue.status = :status
+            WHERE ue.email = :email
+            """)
+    int changeStatus(@Param("email") String email, @Param("status") boolean status);
 
     @Modifying
     @Transactional

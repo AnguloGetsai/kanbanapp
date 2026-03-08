@@ -7,7 +7,9 @@ import com.utez.kanban.kanban.domain.model.exeption.user.EmailNotVerifiedExcepti
 import com.utez.kanban.kanban.domain.model.exeption.user.UserNotFoundException;
 import com.utez.kanban.kanban.domain.port.in.UserUseCase;
 import com.utez.kanban.kanban.domain.port.out.EmailSenderPort;
+import com.utez.kanban.kanban.domain.port.out.EncryptPasswordPort;
 import com.utez.kanban.kanban.domain.port.out.UserRepositoryPort;
+
 
 
 import java.time.LocalDateTime;
@@ -17,17 +19,16 @@ import java.util.Optional;
 public class UserUseCaseImp implements UserUseCase {
     private final UserRepositoryPort userRepositoryPort;
     private final EmailSenderPort emailSenderPort;
+    private final EncryptPasswordPort encryptPasswordPort;
 
     public UserUseCaseImp(UserRepositoryPort userRepositoryPort,
-                          EmailSenderPort emailSenderPort){
+                          EmailSenderPort emailSenderPort,
+                          EncryptPasswordPort encryptPasswordPort){
         this.userRepositoryPort = userRepositoryPort;
         this.emailSenderPort = emailSenderPort;
+        this.encryptPasswordPort = encryptPasswordPort;
     }
 
-    @Override
-    public User createUser(User user) {
-        return userRepositoryPort.saveUser(user);
-    }
 
     @Override
     public Optional<User> findById(Long id) {
@@ -99,18 +100,36 @@ public class UserUseCaseImp implements UserUseCase {
     @Override
     public void addPassword(String email, String password) {
 
+
         User user = userRepositoryPort.findUserEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
 
         if(!userIsNull(user) && user.isVerified()){
 
+            String passEncrypt = encryptPasswordPort.encrypt(password);
             // change the verified code status to false
             userRepositoryPort.authorizeVerification(email, false);
-            if(!userRepositoryPort.addPassword(email, password)){
+            if(!userRepositoryPort.addPassword(email, passEncrypt)){
                 throw new BusinessRuleViolationException("Invalid password");
             }
 
 
+        }
+    }
+
+
+
+    @Override
+    public void enableUser(String email) {
+        if(!userRepositoryPort.changeStatus(email, true)){
+            throw new BusinessRuleViolationException("An error occurred while changing the state on true");
+        }
+    }
+
+    @Override
+    public void disableUser(String email) {
+        if(!userRepositoryPort.changeStatus(email, false)){
+            throw new BusinessRuleViolationException("An error occurred while changing the state on false");
         }
     }
 

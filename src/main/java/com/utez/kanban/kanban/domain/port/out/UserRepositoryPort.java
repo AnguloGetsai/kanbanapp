@@ -6,10 +6,12 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 public interface UserRepositoryPort {
-    User saveUser(User user);
+    Optional<User> saveUser(User user);
     Optional<User> findById(Long id);
     boolean saveVerificationCode(String code, String email,LocalDateTime time);
     boolean authorizeVerification(String email, boolean state);
     boolean addPassword(String email, String password);
     Optional<User> findUserEmail(String email);
+    boolean changeStatus(String email, boolean status);
+
 }

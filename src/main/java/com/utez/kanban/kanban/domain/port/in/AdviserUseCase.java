@@ -1,5 +1,7 @@
 package com.utez.kanban.kanban.domain.port.in;
 
-public interface AdviserUseCase {
+import com.utez.kanban.kanban.domain.model.Adviser;
 
+public interface AdviserUseCase {
+    void registerAdviser(Adviser adviser);
 }
