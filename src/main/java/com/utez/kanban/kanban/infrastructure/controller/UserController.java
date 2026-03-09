@@ -20,6 +20,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/user")
+@Validated
 public class UserController {
 
     private final UserService userService;
@@ -74,5 +75,20 @@ public class UserController {
         return ResponseEntity.ok("Password changed correctly");
     }
 
+    @PostMapping("/disableUser")
+    public ResponseEntity<?> disableUser(
+            @RequestParam @Email String email
+    ){
+        userService.disableUser(email);
+        return ResponseEntity.ok("User was disable");
+    }
+
+    @PostMapping("/enableUser")
+    public ResponseEntity<?> enableUser(
+            @RequestParam @Email String email
+    ){
+        userService.enableUser(email);
+        return ResponseEntity.ok("User was enable");
+    }
 
 }
