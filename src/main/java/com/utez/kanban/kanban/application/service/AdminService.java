@@ -20,7 +20,7 @@ public class AdminService implements AdminUseCase {
     }
 
     @Override
-    public void registerAdviserUser(User user) {
-        adminUseCase.registerAdviserUser(user);
+    public void registerAdviserUser(Adviser adviser) {
+        adminUseCase.registerAdviserUser(adviser);
     }
 }

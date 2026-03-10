@@ -8,5 +8,5 @@ import java.util.Optional;
 
 public interface AdminUseCase {
     List<Adviser> getAllAdvisers();
-    void registerAdviserUser(User user);
+    void registerAdviserUser(Adviser adviser);
 }

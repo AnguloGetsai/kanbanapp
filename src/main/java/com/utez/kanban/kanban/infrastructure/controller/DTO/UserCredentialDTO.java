@@ -1,4 +1,4 @@
-package com.utez.kanban.kanban.infrastructure.controller.userDTO;
+package com.utez.kanban.kanban.infrastructure.controller.DTO;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

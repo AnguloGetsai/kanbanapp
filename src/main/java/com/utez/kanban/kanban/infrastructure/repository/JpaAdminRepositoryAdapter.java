@@ -4,9 +4,11 @@ import com.utez.kanban.kanban.domain.model.Admin;
 import com.utez.kanban.kanban.domain.port.out.AdminRepositoryPort;
 import com.utez.kanban.kanban.infrastructure.entity.AdminEntity;
 import com.utez.kanban.kanban.infrastructure.mapper.AdminMapper;
+import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
+@Component
 public class JpaAdminRepositoryAdapter implements AdminRepositoryPort {
 
     private final JpaAdminRepository jpaAdminRepository;
@@ -44,4 +46,12 @@ public class JpaAdminRepositoryAdapter implements AdminRepositoryPort {
         }
         return false;
     }
+
+    @Override
+    public Optional<Admin> findByEmail(String email) {
+        return jpaAdminRepository.findAdminByEmail(email)
+                .map(AdminMapper::toAdmin );
+    }
+
+
 }

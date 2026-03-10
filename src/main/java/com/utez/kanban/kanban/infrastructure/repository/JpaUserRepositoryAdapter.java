@@ -25,9 +25,9 @@ public class JpaUserRepositoryAdapter implements UserRepositoryPort {
     }
 
     @Override
-    public Optional<User> saveUser(User user) {
+    public User saveUser(User user) {
         UserEntity created = jpaUserRepository.save(UserMapper.toUserEntity(user));
-        return Optional.of(UserMapper.toUser(created));
+        return UserMapper.toUser(created);
     }
 
     @Override

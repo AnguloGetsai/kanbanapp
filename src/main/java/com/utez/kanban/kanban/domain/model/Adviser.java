@@ -23,6 +23,9 @@ public class Adviser {
         this.admin = admin;
     }
 
+    public Adviser() {
+    }
+
     public Long getAdviserID() {
         return adviserID;
     }

@@ -20,6 +20,7 @@ public class UserMapper {
 
     public static UserEntity toUserEntity(User user){
         return new UserEntity(
+                user.getUserID(),
                 user.getPassword(),
                 user.getEmail(),
                 user.getRol(),

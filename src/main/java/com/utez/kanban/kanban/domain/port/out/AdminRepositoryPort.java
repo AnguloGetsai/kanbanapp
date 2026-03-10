@@ -9,4 +9,6 @@ public interface AdminRepositoryPort {
     Optional<Admin> findById(Long adminID);
     Optional<Admin> update(Admin admin);
     boolean delete(Long adminID);
+    Optional<Admin> findByEmail(String email);
+
 }

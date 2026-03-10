@@ -46,15 +46,20 @@ public class ApplicationConfig {
     }
 
     @Bean
-    public AdminService adminService(AdviserRepositoryPort adviserRepositoryPort, UserRepositoryPort userRepositoryPort){
+    public AdminService adminService(AdviserRepositoryPort adviserRepositoryPort, UserRepositoryPort userRepositoryPort, AdminRepositoryPort adminRepositoryPort){
         return new AdminService(
-                new AdminUseCaseImp(adviserRepositoryPort, userRepositoryPort)
+                new AdminUseCaseImp(adviserRepositoryPort, userRepositoryPort, adminRepositoryPort)
         );
     }
 
     @Bean
     public AdviserRepositoryPort adviserRepositoryPort(JpaAdviserRepositoryAdapter jpaAdviserRepositoryAdapter){
         return jpaAdviserRepositoryAdapter;
+    }
+
+    @Bean
+    public AdminRepositoryPort adminRepositoryPort(JpaAdminRepositoryAdapter jpaAdminRepositoryAdapter){
+        return jpaAdminRepositoryAdapter;
     }
 
 

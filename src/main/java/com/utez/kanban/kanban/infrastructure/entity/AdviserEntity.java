@@ -34,6 +34,15 @@ public class AdviserEntity {
         this.adminEntity = adminEntity;
     }
 
+    public AdviserEntity(String firstName, String lastName, UserEntity userEntity, AdminEntity adminEntity){
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.userEntity = userEntity;
+        this.adminEntity = adminEntity;
+    }
+
+
+
 
 
     public AdviserEntity(){
