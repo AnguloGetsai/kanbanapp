@@ -46,9 +46,9 @@ public class ApplicationConfig {
     }
 
     @Bean
-    public AdminService adminService(AdviserRepositoryPort adviserRepositoryPort, UserRepositoryPort userRepositoryPort, AdminRepositoryPort adminRepositoryPort){
+    public AdminService adminService(AdviserRepositoryPort adviserRepositoryPort, UserRepositoryPort userRepositoryPort, AdminRepositoryPort adminRepositoryPort, BoardRepositoryPort boardRepositoryPort){
         return new AdminService(
-                new AdminUseCaseImp(adviserRepositoryPort, userRepositoryPort, adminRepositoryPort)
+                new AdminUseCaseImp(adviserRepositoryPort, userRepositoryPort, adminRepositoryPort, boardRepositoryPort)
         );
     }
 
@@ -62,6 +62,9 @@ public class ApplicationConfig {
         return jpaAdminRepositoryAdapter;
     }
 
-
+    @Bean
+    public BoardRepositoryPort boardRepositoryPort(JpaBoardRepositoryAdapter jpaBoardRepositoryAdapter){
+        return jpaBoardRepositoryAdapter;
+    }
 
 }

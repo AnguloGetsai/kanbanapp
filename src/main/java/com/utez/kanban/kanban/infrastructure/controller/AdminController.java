@@ -3,7 +3,9 @@ package com.utez.kanban.kanban.infrastructure.controller;
 import com.utez.kanban.kanban.application.service.AdminService;
 import com.utez.kanban.kanban.domain.model.Admin;
 import com.utez.kanban.kanban.domain.model.Adviser;
+import com.utez.kanban.kanban.domain.model.Board;
 import com.utez.kanban.kanban.domain.model.User;
+import com.utez.kanban.kanban.infrastructure.controller.DTO.AdviserInformation;
 import com.utez.kanban.kanban.infrastructure.controller.DTO.AdvisorRegistration;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
@@ -13,6 +15,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @Validated
@@ -43,6 +48,26 @@ public class AdminController {
 
         adminService.registerAdviserUser(adviser);
         return ResponseEntity.ok("Registered advisor user");
+    }
+
+
+
+
+    @GetMapping("/getAllAdvisers")
+    public List<AdviserInformation> getAllAdvisers(){
+        List<AdviserInformation> adviserInformationList = new ArrayList<>();
+        for(Adviser a: adminService.getAllAdvisers()){
+            AdviserInformation adviserInformation = new AdviserInformation(
+                    a.getUser().getEmail(),
+                    a.getFirstName(),
+                    a.getLastName(),
+                    a.getUser().isStatus()
+            );
+            adviserInformationList.add(adviserInformation);
+        }
+
+
+        return adviserInformationList;
     }
 
 

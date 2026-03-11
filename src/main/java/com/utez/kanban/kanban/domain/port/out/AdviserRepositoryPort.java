@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface AdviserRepositoryPort {
-    void saveAdviser(Adviser adviser);
+    Adviser saveAdviser(Adviser adviser);
     List<Adviser> getAllAdvisers();
 
 }

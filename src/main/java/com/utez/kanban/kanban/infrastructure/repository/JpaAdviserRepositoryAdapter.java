@@ -17,8 +17,8 @@ public class JpaAdviserRepositoryAdapter implements AdviserRepositoryPort {
     }
 
     @Override
-    public void saveAdviser(Adviser adviser) {
-        jpaAdviserRepository.save(AdviserMapper.toAdviserEntity(adviser));
+    public Adviser saveAdviser(Adviser adviser) {
+         return AdviserMapper.toAdviser(jpaAdviserRepository.save(AdviserMapper.toAdviserEntity(adviser)));
     }
 
 

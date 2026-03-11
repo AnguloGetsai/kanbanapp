@@ -3,7 +3,9 @@ package com.utez.kanban.kanban.infrastructure.repository;
 import com.utez.kanban.kanban.domain.model.Board;
 import com.utez.kanban.kanban.domain.port.out.BoardRepositoryPort;
 import com.utez.kanban.kanban.infrastructure.mapper.BoardMapper;
+import org.springframework.stereotype.Component;
 
+@Component
 public class JpaBoardRepositoryAdapter implements BoardRepositoryPort {
     private final JpaBoardRepository jpaBoardRepository;
 
