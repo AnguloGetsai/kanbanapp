@@ -39,7 +39,7 @@ public class UserController {
     @PostMapping("/sendCode")
     public ResponseEntity<?> sendCode(@RequestParam String email){
         userService.registerEmail(email);
-        return ResponseEntity.ok("Successful registration");
+        return ResponseEntity.ok(Map.of("message","Successful"));
     }
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequestDTO loginDTO){
