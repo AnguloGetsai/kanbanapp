@@ -8,10 +8,6 @@ import java.time.LocalDateTime;
 import java.util.Random;
 
 public class User {
-
-
-
-
     private Long userID;
     private String password;
     private String email;

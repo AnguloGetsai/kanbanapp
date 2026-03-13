@@ -40,7 +40,7 @@ public class UserController {
         this.authenticationManager = authenticationManager;
     }
     @PostMapping("/sendCode")
-    public ResponseEntity<?> sendCode(@RequestParam String email){
+    public ResponseEntity<?> sendCode(@RequestParam  @Email String email){
         userService.registerEmail(email);
         return ResponseEntity.ok(Map.of("status",201,
                                         "message","Code sent"));
@@ -67,7 +67,7 @@ public class UserController {
     }
 
     @PostMapping("/changePassword")
-    public ResponseEntity<?> changePassword(@RequestParam String email){
+    public ResponseEntity<?> changePassword(@RequestParam @Email String email){
         userService.changePassword(email);
         return ResponseEntity.ok(new SuccessResponse(
                 201,
