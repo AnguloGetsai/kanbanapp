@@ -14,6 +14,7 @@ import com.utez.kanban.kanban.domain.port.out.UserRepositoryPort;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.UUID;
 
 
 public class UserUseCaseImp implements UserUseCase {
@@ -69,19 +70,22 @@ public class UserUseCaseImp implements UserUseCase {
     }
 
     @Override
-    public void validateVerificationCode(String email, String code) {
+    public String validateVerificationCode(String email, String code) {
 
 
         User user = userRepositoryPort.findUserEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
-        if(!userIsNull(user)){
+
             if(user.validateVerificationCode(code)){
-                if(userRepositoryPort.authorizeVerification(email, true)){
-                    return;
+                String token = UUID.randomUUID().toString();
+                if(userRepositoryPort.authorizeVerification(email, true, token, LocalDateTime.now().plusMinutes(10))){
+                    return token;
                 }
-                throw new EmailNotVerifiedException("Error saving verification");
+
             }
-        }
+        throw new BusinessRuleViolationException("You have an error to add the verification");
+
+
     }
 
     @Override
@@ -98,23 +102,26 @@ public class UserUseCaseImp implements UserUseCase {
     }
 
     @Override
-    public void addPassword(String email, String password) {
+    public void addPassword(String email, String password, String passwordToken) {
 
 
         User user = userRepositoryPort.findUserEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
 
-        if(!userIsNull(user) && user.isVerified()){
+        if(user.validatePasswordToken(passwordToken) && user.isVerified()){
 
             String passEncrypt = encryptPasswordPort.encrypt(password);
             // change the verified code status to false
-            userRepositoryPort.authorizeVerification(email, false);
+            userRepositoryPort.authorizeVerification(email, false, null, null);
             if(!userRepositoryPort.addPassword(email, passEncrypt)){
                 throw new BusinessRuleViolationException("Invalid password");
             }
+            return;
 
 
         }
+
+        throw new BusinessRuleViolationException("Invalid credentials");
     }
 
 

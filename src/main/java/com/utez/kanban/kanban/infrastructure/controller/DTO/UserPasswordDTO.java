@@ -16,9 +16,13 @@ public class UserPasswordDTO {
     @Size(max = 100, message = "Maximum 100 characters")
     private String email;
 
-    public UserPasswordDTO(String password, String email) {
+@NotBlank(message = "PasswordToken is required")
+    private String passwordToken;
+
+    public UserPasswordDTO(String password, String email, String passwordToken) {
         this.password = password;
         this.email = email;
+        this.passwordToken = passwordToken;
     }
 
     public UserPasswordDTO() {
@@ -39,5 +43,14 @@ public class UserPasswordDTO {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+
+    public String getPasswordToken() {
+        return passwordToken;
+    }
+
+    public void setPasswordToken(String passwordToken) {
+        this.passwordToken = passwordToken;
     }
 }

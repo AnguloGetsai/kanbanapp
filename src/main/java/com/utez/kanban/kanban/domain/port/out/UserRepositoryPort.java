@@ -9,7 +9,7 @@ public interface UserRepositoryPort {
     User saveUser(User user);
     Optional<User> findById(Long id);
     boolean saveVerificationCode(String code, String email,LocalDateTime time);
-    boolean authorizeVerification(String email, boolean state);
+    boolean authorizeVerification(String email, boolean state, String passwordToken, LocalDateTime passwordTokenExpiration);
     boolean addPassword(String email, String password);
     Optional<User> findUserEmail(String email);
     boolean changeStatus(String email, boolean status);

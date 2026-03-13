@@ -20,6 +20,8 @@ public class User {
     private String verificationCode;
     private boolean isVerified;
     private LocalDateTime expirationTime;
+    private String passwordToken;
+    private LocalDateTime passwordTokenExpiration;
 
     public User() {
     }
@@ -28,9 +30,11 @@ public class User {
         this.email  = email;
     }
 
-    public User(Long userID, String password, String email, String rol,
-                boolean status, String verificationCode, boolean isVerified,
-                LocalDateTime expirationTime) {
+
+    public User(Long userID, String password, String email,
+                String rol, boolean status, String verificationCode,
+                boolean isVerified, LocalDateTime expirationTime,
+                String passwordToken, LocalDateTime passwordTokenExpiration) {
         this.userID = userID;
         this.password = password;
         this.email = email;
@@ -39,6 +43,8 @@ public class User {
         this.verificationCode = verificationCode;
         this.isVerified = isVerified;
         this.expirationTime = expirationTime;
+        this.passwordToken = passwordToken;
+        this.passwordTokenExpiration = passwordTokenExpiration;
     }
 
     //para la validacion del login
@@ -71,6 +77,18 @@ public class User {
     }
     public Long getUserID() {
         return userID;
+    }
+
+
+    // metodo para validar el token de agregar contrasnia
+    public boolean validatePasswordToken(String passwordToken){
+        if(this.passwordToken.equals(passwordToken)){
+            if(LocalDateTime.now().isBefore(passwordTokenExpiration)){
+                return true;
+            }
+            throw new BusinessRuleViolationException("Token was expired");
+        }
+        return false;
     }
 
     public void setUserID(Long userID) {
@@ -131,5 +149,22 @@ public class User {
 
     public void setExpirationTime(LocalDateTime expirationTime) {
         this.expirationTime = expirationTime;
+    }
+
+
+    public String getPasswordToken() {
+        return passwordToken;
+    }
+
+    public void setPasswordToken(String passwordToken) {
+        this.passwordToken = passwordToken;
+    }
+
+    public LocalDateTime getPasswordTokenExpiration() {
+        return passwordTokenExpiration;
+    }
+
+    public void setPasswordTokenExpiration(LocalDateTime passwordTokenExpiration) {
+        this.passwordTokenExpiration = passwordTokenExpiration;
     }
 }

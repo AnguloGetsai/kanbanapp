@@ -10,6 +10,7 @@ import org.springframework.web.servlet.View;
 import java.util.HashMap;
 import java.util.Map;
 
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -26,10 +27,26 @@ public class GlobalExceptionHandler {
         Map<String , String> errors = new HashMap<>();
 
         ex.getBindingResult().getFieldErrors()
-                .forEach( error ->
-
-                  errors.put(error.getField(), error.getDefaultMessage())
+                .forEach(error ->
+                        errors.put(error.getField(), error.getDefaultMessage())
                 );
+
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<ErrorResponse> handleRuntimeException(
+            RuntimeException ex
+    ){
+
+        ErrorResponse errorResponse = new ErrorResponse(
+                400,
+                "RUNTIME_ERROR",
+                ex.getMessage()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(errorResponse);
     }
 }

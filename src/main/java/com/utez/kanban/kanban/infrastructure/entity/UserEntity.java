@@ -2,6 +2,7 @@ package com.utez.kanban.kanban.infrastructure.entity;
 
 import jakarta.persistence.*;
 
+import javax.naming.Name;
 import java.time.LocalDateTime;
 
 @Entity
@@ -23,8 +24,17 @@ public class UserEntity {
     @Column(name = "expirationTime")
     private LocalDateTime expirationTime;
 
-    public UserEntity(Long userID, String password, String email, String rol, boolean status,
-                      String verificationCode, boolean isVerified, LocalDateTime expirationTime) {
+    @Column(name = "passwordToken")
+    private String passwordToken;
+
+    @Column(name = "passwordTokenExpiration")
+    private LocalDateTime passwordTokenExpiration;
+
+
+    public UserEntity(Long userID, String password, String email, String rol,
+                      boolean status, String verificationCode, boolean isVerified,
+                      LocalDateTime expirationTime, String passwordToken,
+                      LocalDateTime passwordTokenExpiration) {
         this.userID = userID;
         this.password = password;
         this.email = email;
@@ -33,11 +43,11 @@ public class UserEntity {
         this.verificationCode = verificationCode;
         this.isVerified = isVerified;
         this.expirationTime = expirationTime;
+        this.passwordToken = passwordToken;
+        this.passwordTokenExpiration = passwordTokenExpiration;
     }
 
-
-
-    public UserEntity( String password, String email, String rol, boolean status,
+    public UserEntity(String password, String email, String rol, boolean status,
                       String verificationCode, boolean isVerified, LocalDateTime expirationTime) {
 
         this.password = password;
@@ -114,5 +124,21 @@ public class UserEntity {
 
     public void setExpirationTime(LocalDateTime expirationTime) {
         this.expirationTime = expirationTime;
+    }
+
+    public String getPasswordToken() {
+        return passwordToken;
+    }
+
+    public void setPasswordToken(String passwordToken) {
+        this.passwordToken = passwordToken;
+    }
+
+    public LocalDateTime getPasswordTokenExpiration() {
+        return passwordTokenExpiration;
+    }
+
+    public void setPasswordTokenExpiration(LocalDateTime passwordTokenExpiration) {
+        this.passwordTokenExpiration = passwordTokenExpiration;
     }
 }

@@ -2,6 +2,7 @@ package com.utez.kanban.kanban.application.service;
 
 import com.utez.kanban.kanban.domain.model.User;
 import com.utez.kanban.kanban.domain.port.in.UserUseCase;
+import org.springframework.security.core.parameters.P;
 
 
 import java.util.Optional;
@@ -31,8 +32,8 @@ public class UserService implements UserUseCase {
     }
 
     @Override
-    public void validateVerificationCode(String email, String code) {
-        userUseCase.validateVerificationCode(email, code);
+    public String validateVerificationCode(String email, String code) {
+        return userUseCase.validateVerificationCode(email, code);
     }
 
     @Override
@@ -41,8 +42,8 @@ public class UserService implements UserUseCase {
     }
 
     @Override
-    public void addPassword(String email, String password) {
-        userUseCase.addPassword(email, password);
+    public void addPassword(String email, String password, String passwordToken) {
+        userUseCase.addPassword(email, password, passwordToken);
     }
 
     @Override

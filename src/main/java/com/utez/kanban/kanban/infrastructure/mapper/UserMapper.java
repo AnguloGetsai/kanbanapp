@@ -14,7 +14,9 @@ public class UserMapper {
                 userEntity.isStatus(),
                 userEntity.getVerificationCode(),
                 userEntity.isVerified(),
-                userEntity.getExpirationTime()
+                userEntity.getExpirationTime(),
+                userEntity.getPasswordToken(),
+                userEntity.getPasswordTokenExpiration()
         );
     }
 
@@ -27,7 +29,9 @@ public class UserMapper {
                 user.isStatus(),
                 user.getVerificationCode(),
                 user.isVerified(),
-                user.getExpirationTime()
+                user.getExpirationTime(),
+                user.getPasswordToken(),
+                user.getPasswordTokenExpiration()
         );
     }
 }
