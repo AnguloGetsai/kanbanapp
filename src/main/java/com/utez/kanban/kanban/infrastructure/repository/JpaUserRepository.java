@@ -23,7 +23,7 @@ public interface JpaUserRepository extends JpaRepository<UserEntity, Long> {
     @Transactional
     @Modifying
     @Query("""
-            UPDATE UserEntity ue 
+            UPDATE UserEntity ue
             SET ue.status = :status
             WHERE ue.email = :email
             """)

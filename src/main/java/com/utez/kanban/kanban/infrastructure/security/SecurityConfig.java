@@ -49,7 +49,7 @@ public class SecurityConfig {
                                 "/api/user/validateCode",
                                 "/api/user/login",
                                 "/api/user/addPassword",
-                                "/api/admin/registerAdvisorUser"
+                                "/api/user/changePassword"
                         ).permitAll()
 
                         // todo lo demas requiere autenticaion

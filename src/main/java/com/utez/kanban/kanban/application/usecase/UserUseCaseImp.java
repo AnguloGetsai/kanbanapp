@@ -76,6 +76,7 @@ public class UserUseCaseImp implements UserUseCase {
         User user = userRepositoryPort.findUserEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
 
+
             if(user.validateVerificationCode(code)){
                 String token = UUID.randomUUID().toString();
                 if(userRepositoryPort.authorizeVerification(email, true, token, LocalDateTime.now().plusMinutes(10))){
@@ -95,10 +96,14 @@ public class UserUseCaseImp implements UserUseCase {
         String code = User.generateCode();
         User user = userRepositoryPort.findUserEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
-        if(!userIsNull(user) && user.isVerified()){
+
+        if(user.isVerified()){
+            System.out.println("mensaje para emial |"+email+"|");
             emailSenderPort.send(email,subject, text + code );
             userRepositoryPort.saveVerificationCode(code, email, LocalDateTime.now().plusMinutes(3));
+            return;
         }
+        throw new BusinessRuleViolationException("Not validated user");
     }
 
     @Override
@@ -112,7 +117,7 @@ public class UserUseCaseImp implements UserUseCase {
 
             String passEncrypt = encryptPasswordPort.encrypt(password);
             // change the verified code status to false
-            userRepositoryPort.authorizeVerification(email, false, null, null);
+            userRepositoryPort.authorizeVerification(email, true, null, null);
             if(!userRepositoryPort.addPassword(email, passEncrypt)){
                 throw new BusinessRuleViolationException("Invalid password");
             }
@@ -121,7 +126,7 @@ public class UserUseCaseImp implements UserUseCase {
 
         }
 
-        throw new BusinessRuleViolationException("Invalid credentials");
+        throw new BusinessRuleViolationException("Not validated user");
     }
 
 
