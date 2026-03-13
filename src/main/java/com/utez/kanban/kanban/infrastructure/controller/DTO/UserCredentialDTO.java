@@ -5,6 +5,9 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
+
+
+
 public class UserCredentialDTO {
     @NotBlank(message =  "Email is required")
     @Email(message = "The email address is invalid")
