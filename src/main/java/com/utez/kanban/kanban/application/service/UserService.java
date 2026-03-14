@@ -56,5 +56,10 @@ public class UserService implements UserUseCase {
         userUseCase.disableUser(email);
     }
 
+    @Override
+    public Optional<User> findByEmail(String email) {
+        return userUseCase.findByEmail(email);
+    }
+
 
 }

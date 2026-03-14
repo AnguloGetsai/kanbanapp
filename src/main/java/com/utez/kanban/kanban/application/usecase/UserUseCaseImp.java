@@ -145,6 +145,11 @@ public class UserUseCaseImp implements UserUseCase {
         }
     }
 
+    @Override
+    public Optional<User> findByEmail(String email) {
+        return userRepositoryPort.findUserEmail(email);
+    }
+
 
     public boolean userIsNull(User user){
         if(user == null){

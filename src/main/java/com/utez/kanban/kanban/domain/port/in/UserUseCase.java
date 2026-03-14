@@ -14,6 +14,7 @@ public interface UserUseCase {
     void addPassword(String email, String password, String passwordToken);
     void enableUser(String email);
     void disableUser(String email);
+    Optional<User> findByEmail(String email);
 
 
 }

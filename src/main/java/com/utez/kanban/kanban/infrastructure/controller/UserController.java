@@ -1,6 +1,8 @@
 package com.utez.kanban.kanban.infrastructure.controller;
 
 import com.utez.kanban.kanban.application.service.UserService;
+import com.utez.kanban.kanban.domain.model.User;
+import com.utez.kanban.kanban.domain.model.exeption.user.UserNotFoundException;
 import com.utez.kanban.kanban.infrastructure.controller.DTO.LoginRequestDTO;
 import com.utez.kanban.kanban.infrastructure.controller.DTO.SuccessResponse;
 import com.utez.kanban.kanban.infrastructure.controller.DTO.UserCredentialDTO;
@@ -53,9 +55,15 @@ public class UserController {
                   loginDTO.getPassword()
           )
         );
+
+        User user = userService.findByEmail(authentication.getName())
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
         String token = jwtService.generateToken(authentication);
-        return ResponseEntity.ok(Map.of("status",201,
-                                        "token", token));
+        return ResponseEntity.ok(Map.of("token", token,
+                                        "user", Map.of(
+                                                    "email",user.getEmail(),
+                                                    "rol",user.getRol()
+                )));
     }
 
 
