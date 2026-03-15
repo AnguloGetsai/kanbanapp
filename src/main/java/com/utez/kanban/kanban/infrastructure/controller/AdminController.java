@@ -5,19 +5,20 @@ import com.utez.kanban.kanban.domain.model.Admin;
 import com.utez.kanban.kanban.domain.model.Adviser;
 import com.utez.kanban.kanban.domain.model.Board;
 import com.utez.kanban.kanban.domain.model.User;
-import com.utez.kanban.kanban.infrastructure.controller.DTO.AdviserInformation;
-import com.utez.kanban.kanban.infrastructure.controller.DTO.AdvisorRegistration;
+import com.utez.kanban.kanban.domain.model.exeption.user.UserNotFoundException;
+import com.utez.kanban.kanban.infrastructure.controller.DTO.*;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Email;
-import org.apache.commons.lang3.concurrent.TimedSemaphore;
-import org.hibernate.tool.schema.internal.exec.ScriptTargetOutputToUrl;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
+
 
 @RestController
 @Validated
@@ -29,9 +30,17 @@ public class AdminController {
         this.adminService = adminService;
     }
 
+    // *|* *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*
+
+    //           TODOS LOS ENDPOINTS QUE TE PIDAN COMO PARAMETRO AUTHENTICATION NO LE PASES NADA       //
+    //                                          ESO LO INYECTA SPRING.
+
+    //  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*
+
     @PostMapping("/registerAdvisorUser")
     public ResponseEntity<?> createUserAdviser(@RequestBody @Valid AdvisorRegistration advisorRegistration,
-                                               Authentication authentication){
+                                               Authentication authentication // authentication no se manda
+    ){
         Adviser adviser = new Adviser();
 
 
@@ -58,6 +67,7 @@ public class AdminController {
         List<AdviserInformation> adviserInformationList = new ArrayList<>();
         for(Adviser a: adminService.getAllAdvisers()){
             AdviserInformation adviserInformation = new AdviserInformation(
+                    a.getAdviserID(),
                     a.getUser().getEmail(),
                     a.getFirstName(),
                     a.getLastName(),
@@ -68,6 +78,50 @@ public class AdminController {
 
 
         return adviserInformationList;
+    }
+
+
+
+    @PostMapping("/uploadLogo")
+    public ResponseEntity<?> uploadLogo(
+            @RequestParam("file") MultipartFile file,
+            Authentication authentication
+    ){
+        try{
+            String email = authentication.getName();
+            adminService.uploadLogo(email, file.getBytes());
+            return ResponseEntity.ok(new SuccessResponse(200,"Logo was saved"));
+        } catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.status(500).body(e.getMessage());
+        }
+    }
+    @GetMapping("/getAdminInformation")
+    public ResponseEntity<?> getAdminInformation(Authentication authentication){
+        String email = authentication.getName();
+        Admin  admin = adminService.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+        String logoBase64 = Base64.getEncoder().encodeToString(admin.getImage());
+
+        return ResponseEntity.ok(
+                new AdminInformation(
+                        admin.getFirstName(),
+                        admin.getLastName(),
+                        email,
+                        logoBase64
+
+                )
+        );
+    }
+
+
+    @GetMapping("/getAllBoards")
+    public ResponseEntity<List<BoardCard>> getAllBoards(){
+        List<BoardCard> boardCardList = new ArrayList<>();
+        for(Board board: adminService.getAllBoards()){
+            boardCardList.add(BoardCard.toBoardCard(board));
+        }
+        return ResponseEntity.ok(boardCardList);
     }
 
 

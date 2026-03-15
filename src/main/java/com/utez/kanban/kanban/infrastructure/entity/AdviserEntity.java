@@ -13,7 +13,10 @@ public class AdviserEntity {
 
     private String firstName;
     private String lastName;
-    private String image;
+
+    @Lob
+    @Column(name = "image")
+    private byte[] image;
 
     @OneToOne
     @JoinColumn(name = "userID")
@@ -24,7 +27,7 @@ public class AdviserEntity {
     private AdminEntity adminEntity;
 
 
-    public AdviserEntity(Long adviserID, String firstName, String lastName, String image,
+    public AdviserEntity(Long adviserID, String firstName, String lastName, byte[] image,
                          UserEntity userEntity, AdminEntity adminEntity) {
         this.adviserID = adviserID;
         this.firstName = firstName;
@@ -34,12 +37,7 @@ public class AdviserEntity {
         this.adminEntity = adminEntity;
     }
 
-    public AdviserEntity(String firstName, String lastName, UserEntity userEntity, AdminEntity adminEntity){
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.userEntity = userEntity;
-        this.adminEntity = adminEntity;
-    }
+
 
 
 
@@ -74,11 +72,11 @@ public class AdviserEntity {
         this.lastName = lastName;
     }
 
-    public String getImage() {
+    public byte[] getImage() {
         return image;
     }
 
-    public void setImage(String image) {
+    public void setImage(byte[] image) {
         this.image = image;
     }
 

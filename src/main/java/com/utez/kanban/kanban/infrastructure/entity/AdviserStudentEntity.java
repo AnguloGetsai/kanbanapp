@@ -22,6 +22,14 @@ public class AdviserStudentEntity {
     private boolean status;
 
 
+    public AdviserStudentEntity(AdviserStudentID id, AdviserEntity adviserEntity,
+                                StudentEntity studentEntity, boolean status) {
+        this.id = id;
+        this.adviserEntity = adviserEntity;
+        this.studentEntity = studentEntity;
+        this.status = status;
+    }
+
     public AdviserStudentEntity() {
     }
 

@@ -14,10 +14,6 @@ public class StudentUseCaseImp implements StudentUseCase {
         this.studentRepositoryPort = studentRepositoryPort;
     }
 
-    @Override
-    public Student saveBasicInformation(Student student) {
-        return studentRepositoryPort.saveBasicInformation(student);
-    }
 
 
 }

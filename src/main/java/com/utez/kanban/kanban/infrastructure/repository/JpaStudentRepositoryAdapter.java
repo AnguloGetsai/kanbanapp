@@ -6,6 +6,8 @@ import com.utez.kanban.kanban.infrastructure.entity.StudentEntity;
 import com.utez.kanban.kanban.infrastructure.mapper.StudentMapper;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 
 @Component
 public class JpaStudentRepositoryAdapter implements StudentRepositoryPort {
@@ -15,13 +17,22 @@ public class JpaStudentRepositoryAdapter implements StudentRepositoryPort {
     public JpaStudentRepositoryAdapter(JpaStudentRepository jpaStudentRepository){
         this.jpaStudentRepository = jpaStudentRepository;
     }
+
+
     @Override
-    public Student saveBasicInformation(Student student) {
-        StudentEntity  studentEntity = StudentMapper.toStudentEntity(student);
-        studentEntity = jpaStudentRepository.save(studentEntity);
-        return StudentMapper.toStudent(studentEntity);
+    public Student saveStudent(Student student) {
+        return StudentMapper.toStudent(jpaStudentRepository.save(StudentMapper.toStudentEntity(student)));
     }
 
+    @Override
+    public Optional<Student> findById(Long id) {
+        return jpaStudentRepository.findById(id)
+                .map(StudentMapper::toStudent);
+    }
 
-
+    @Override
+    public Optional<Student> findByEmail(String email) {
+        return jpaStudentRepository.getStudentEntitiesByEmail(email)
+                .map(StudentMapper::toStudent);
+    }
 }

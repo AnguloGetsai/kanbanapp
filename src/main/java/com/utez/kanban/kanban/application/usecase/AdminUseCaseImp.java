@@ -2,6 +2,7 @@ package com.utez.kanban.kanban.application.usecase;
 
 import com.utez.kanban.kanban.domain.model.*;
 import com.utez.kanban.kanban.domain.model.exeption.user.BusinessRuleViolationException;
+import com.utez.kanban.kanban.domain.model.exeption.user.UserNotFoundException;
 import com.utez.kanban.kanban.domain.port.in.AdminUseCase;
 import com.utez.kanban.kanban.domain.port.out.AdminRepositoryPort;
 import com.utez.kanban.kanban.domain.port.out.AdviserRepositoryPort;
@@ -9,6 +10,7 @@ import com.utez.kanban.kanban.domain.port.out.BoardRepositoryPort;
 import com.utez.kanban.kanban.domain.port.out.UserRepositoryPort;
 
 import java.util.List;
+import java.util.Optional;
 
 
 public class AdminUseCaseImp implements AdminUseCase {
@@ -82,6 +84,29 @@ public class AdminUseCaseImp implements AdminUseCase {
 
     }
 
+    @Override
+    public Optional<Admin> getAdminInformation(String email) {
+        return adminRepositoryPort.findByEmail(email);
+    }
+
+    @Override
+    public void uploadLogo(String email, byte[] image) {
+        Admin admin = adminRepositoryPort.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+
+        adminRepositoryPort.updateLogo(admin.getAdminID(), image);
+
+    }
+
+    @Override
+    public Optional<Admin> findByEmail(String email) {
+        return adminRepositoryPort.findByEmail(email);
+    }
+
+    @Override
+    public List<Board> getAllBoards() {
+        return boardRepositoryPort.getAllBoards();
+    }
 
 
 }

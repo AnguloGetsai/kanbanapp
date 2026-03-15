@@ -1,6 +1,7 @@
 package com.utez.kanban.kanban.infrastructure.config;
 
 import com.utez.kanban.kanban.application.service.AdminService;
+import com.utez.kanban.kanban.application.service.AdviserService;
 import com.utez.kanban.kanban.application.service.StudentService;
 import com.utez.kanban.kanban.application.service.UserService;
 import com.utez.kanban.kanban.application.usecase.AdminUseCaseImp;
@@ -14,6 +15,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.server.util.matcher.NegatedServerWebExchangeMatcher;
 
 
 @Configuration
@@ -53,18 +55,37 @@ public class ApplicationConfig {
     }
 
     @Bean
+    public AdminRepositoryPort adminRepositoryPort(JpaAdminRepositoryAdapter jpaAdminRepositoryAdapter){
+        return jpaAdminRepositoryAdapter;
+    }
+
+
+    @Bean
+    public AdviserService adviserService(AdviserRepositoryPort adviserRepositoryPort,
+                                         UserRepositoryPort userRepositoryPort,
+                                         StudentRepositoryPort studentRepositoryPort,
+                                         AdviserStudentRepository adviserStudentRepository){
+        return new AdviserService(
+                new AdviserUseCaseImp(adviserRepositoryPort, userRepositoryPort, studentRepositoryPort, adviserStudentRepository)
+        );
+    }
+
+    @Bean
     public AdviserRepositoryPort adviserRepositoryPort(JpaAdviserRepositoryAdapter jpaAdviserRepositoryAdapter){
         return jpaAdviserRepositoryAdapter;
     }
 
-    @Bean
-    public AdminRepositoryPort adminRepositoryPort(JpaAdminRepositoryAdapter jpaAdminRepositoryAdapter){
-        return jpaAdminRepositoryAdapter;
-    }
 
     @Bean
     public BoardRepositoryPort boardRepositoryPort(JpaBoardRepositoryAdapter jpaBoardRepositoryAdapter){
         return jpaBoardRepositoryAdapter;
     }
+
+    @Bean
+    public AdviserStudentRepository adviserStudentRepository(JpaAdviserStudentRepositoryAdapter jpaAdviserStudentRepositoryAdapter){
+        return jpaAdviserStudentRepositoryAdapter;
+    }
+
+
 
 }

@@ -1,29 +1,36 @@
 package com.utez.kanban.kanban.domain.model;
 
-public class Student extends User{
+import java.util.List;
+
+public class Student {
     private Long studentID;
     private String firstName;
     private String lastName;
     private String gender;
     private String image;
 
-    public Student() {
-    }
 
-    public Student(Long studentID, String firstName, String lastName,String gender, String image) {
+    private User user;
+    private List<Notification> notifications;
+
+
+    //nuevo campo
+    private boolean statusAdviser;
+
+
+    public Student(Long studentID, String firstName, String lastName,
+                   String gender, String image, User user,
+                   List<Notification> notifications) {
         this.studentID = studentID;
         this.firstName = firstName;
         this.lastName = lastName;
         this.gender = gender;
         this.image = image;
+        this.user = user;
+        this.notifications = notifications;
     }
 
-    public Student(String firstName, String lastName, String gender, String image) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.gender = gender;
-        this.image = image;
-    }
+    public Student(){}
 
     public Long getStudentID() {
         return studentID;
@@ -49,6 +56,14 @@ public class Student extends User{
         this.lastName = lastName;
     }
 
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
     public String getImage() {
         return image;
     }
@@ -57,11 +72,27 @@ public class Student extends User{
         this.image = image;
     }
 
-    public String getGender() {
-        return gender;
+    public User getUser() {
+        return user;
     }
 
-    public void setGender(String gender) {
-        this.gender = gender;
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public List<Notification> getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(List<Notification> notifications) {
+        this.notifications = notifications;
+    }
+
+    public boolean isStatusAdviser() {
+        return statusAdviser;
+    }
+
+    public void setStatusAdviser(boolean statusAdviser) {
+        this.statusAdviser = statusAdviser;
     }
 }

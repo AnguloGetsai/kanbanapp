@@ -4,7 +4,7 @@ public class Adviser {
     private Long adviserID;
     private String firstName;
     private String lastName;
-    private String image;
+    private byte[] image;
 
     private User user;
     private Admin admin;
@@ -14,7 +14,7 @@ public class Adviser {
 
 
 
-    public Adviser(Long adviserID, String firstName, String lastName, String image, User user, Admin admin) {
+    public Adviser(Long adviserID, String firstName, String lastName, byte[] image, User user, Admin admin) {
         this.adviserID = adviserID;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -50,11 +50,11 @@ public class Adviser {
         this.lastName = lastName;
     }
 
-    public String getImage() {
+    public byte[] getImage() {
         return image;
     }
 
-    public void setImage(String image) {
+    public void setImage(byte[] image) {
         this.image = image;
     }
 

@@ -13,7 +13,10 @@ public class AdminEntity {
     private Long adminID;
     private String firstName;
     private String lastName;
-    private String image;
+
+    @Lob
+    @Column(name = "image")
+    private byte[] image;
 
     @OneToOne
     @JoinColumn(name = "userID")
@@ -27,7 +30,7 @@ public class AdminEntity {
     }
 
 
-    public AdminEntity(Long adminID, String firstName, String lastName, String image, UserEntity userEntity) {
+    public AdminEntity(Long adminID, String firstName, String lastName, byte[] image, UserEntity userEntity) {
         this.adminID = adminID;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -60,11 +63,11 @@ public class AdminEntity {
         this.lastName = lastName;
     }
 
-    public String getImage() {
+    public byte[] getImage() {
         return image;
     }
 
-    public void setImage(String image) {
+    public void setImage(byte[] image) {
         this.image = image;
     }
 

@@ -11,10 +11,6 @@ public class StudentService implements StudentUseCase {
         this.studentUseCase = studentUseCase;
     }
 
-    @Override
-    public Student saveBasicInformation(Student student) {
-        return studentUseCase.saveBasicInformation(student);
-    }
 
 
 }

@@ -1,5 +1,6 @@
 package com.utez.kanban.kanban.infrastructure.entity;
 
+import com.utez.kanban.kanban.domain.model.User;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -17,6 +18,7 @@ public class StudentEntity {
     private String image;
 
 
+
     @OneToOne
     @JoinColumn(name = "userID")
     private UserEntity userEntity;
@@ -29,11 +31,15 @@ public class StudentEntity {
     public StudentEntity() {
     }
 
-    public StudentEntity( String firstName, String lastName, String gender, String image) {
+    public StudentEntity(Long studentID, String firstName, String lastName, String gender,
+                         String image, UserEntity userEntity, List<NotificationEntity> notifications) {
+        this.studentID = studentID;
         this.firstName = firstName;
         this.lastName = lastName;
         this.gender = gender;
         this.image = image;
+        this.userEntity = userEntity;
+        this.notifications = notifications;
     }
 
     public Long getStudentID() {
@@ -74,5 +80,21 @@ public class StudentEntity {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public UserEntity getUserEntity() {
+        return userEntity;
+    }
+
+    public void setUserEntity(UserEntity userEntity) {
+        this.userEntity = userEntity;
+    }
+
+    public List<NotificationEntity> getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(List<NotificationEntity> notifications) {
+        this.notifications = notifications;
     }
 }

@@ -1,10 +1,13 @@
 package com.utez.kanban.kanban.application.service;
 
+import com.utez.kanban.kanban.domain.model.Admin;
 import com.utez.kanban.kanban.domain.model.Adviser;
-import com.utez.kanban.kanban.domain.model.User;
+
+import com.utez.kanban.kanban.domain.model.Board;
 import com.utez.kanban.kanban.domain.port.in.AdminUseCase;
 
 import java.util.List;
+import java.util.Optional;
 
 public class AdminService implements AdminUseCase {
 
@@ -22,5 +25,25 @@ public class AdminService implements AdminUseCase {
     @Override
     public void registerAdviserUser(Adviser adviser) {
         adminUseCase.registerAdviserUser(adviser);
+    }
+
+    @Override
+    public Optional<Admin> getAdminInformation(String email) {
+        return adminUseCase.getAdminInformation(email);
+    }
+
+    @Override
+    public void uploadLogo(String email, byte[] image) {
+        adminUseCase.uploadLogo(email, image);
+    }
+
+    @Override
+    public Optional<Admin> findByEmail(String email) {
+        return adminUseCase.findByEmail(email);
+    }
+
+    @Override
+    public List<Board> getAllBoards() {
+        return adminUseCase.getAllBoards();
     }
 }

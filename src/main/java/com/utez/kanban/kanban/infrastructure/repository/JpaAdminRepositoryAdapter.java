@@ -53,5 +53,10 @@ public class JpaAdminRepositoryAdapter implements AdminRepositoryPort {
                 .map(AdminMapper::toAdmin );
     }
 
+    @Override
+    public boolean updateLogo(Long id, byte[] image) {
+        return jpaAdminRepository.updateLogo(id, image) > 0;
+    }
+
 
 }

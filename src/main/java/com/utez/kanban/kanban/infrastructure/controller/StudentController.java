@@ -21,10 +21,6 @@ public class StudentController {
     }
 
 
-    @PostMapping
-    public ResponseEntity<?> saveBasicInformation(@RequestBody Student student){
-        Student informationSaved = studentService.saveBasicInformation(student);
-        return null;
-    }
+
 
 }

@@ -1,17 +1,19 @@
 package com.utez.kanban.kanban.infrastructure.controller.DTO;
 
 public class AdviserInformation {
-    String email;
-    String firstName;
-    String lastName;
-    boolean status;
+    private Long id;
+    private String email;
+    private String firstName;
+    private String lastName;
+    private boolean status;
 
     public AdviserInformation(){
 
     }
 
 
-    public AdviserInformation(String email, String firstName, String lastName, boolean status) {
+    public AdviserInformation(Long id, String email, String firstName, String lastName, boolean status) {
+        this.id = id;
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -49,5 +51,13 @@ public class AdviserInformation {
 
     public void setStatus(boolean status) {
         this.status = status;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }
