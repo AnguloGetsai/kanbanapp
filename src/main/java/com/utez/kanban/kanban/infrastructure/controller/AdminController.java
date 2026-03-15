@@ -101,17 +101,9 @@ public class AdminController {
         String email = authentication.getName();
         Admin  admin = adminService.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
-        String logoBase64 = Base64.getEncoder().encodeToString(admin.getImage());
 
-        return ResponseEntity.ok(
-                new AdminInformation(
-                        admin.getFirstName(),
-                        admin.getLastName(),
-                        email,
-                        logoBase64
 
-                )
-        );
+        return ResponseEntity.ok(AdminInformation.toAdminInformation(admin));
     }
 
 

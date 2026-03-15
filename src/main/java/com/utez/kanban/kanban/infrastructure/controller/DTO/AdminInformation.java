@@ -1,5 +1,9 @@
 package com.utez.kanban.kanban.infrastructure.controller.DTO;
 
+import com.utez.kanban.kanban.domain.model.Admin;
+
+import java.util.Base64;
+
 public class AdminInformation {
     private String firstName;
     private String lastName;
@@ -19,6 +23,22 @@ public class AdminInformation {
         this.email = email;
 
         this.logo = logo;
+    }
+
+
+    public static AdminInformation toAdminInformation(Admin admin){
+        String logoBase64 = "SIN LOGO";
+        if(admin.getImage() != null){
+            logoBase64 = Base64.getEncoder().encodeToString(admin.getImage());
+        }
+        System.out.println("Este es el lgogo bro  "+logoBase64);
+
+        return new AdminInformation(
+                admin.getFirstName(),
+                admin.getLastName(),
+                admin.getUser().getEmail(),
+                logoBase64
+        );
     }
 
     public String getLogo() {
