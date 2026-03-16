@@ -27,7 +27,7 @@ public class AdminInformation {
 
 
     public static AdminInformation toAdminInformation(Admin admin){
-        String logoBase64 = "SIN LOGO";
+        String logoBase64 = "";
         if(admin.getImage() != null){
             logoBase64 = Base64.getEncoder().encodeToString(admin.getImage());
         }
