@@ -66,14 +66,8 @@ public class AdminController {
     public List<AdviserInformation> getAllAdvisers(){
         List<AdviserInformation> adviserInformationList = new ArrayList<>();
         for(Adviser a: adminService.getAllAdvisers()){
-            AdviserInformation adviserInformation = new AdviserInformation(
-                    a.getAdviserID(),
-                    a.getUser().getEmail(),
-                    a.getFirstName(),
-                    a.getLastName(),
-                    a.getUser().isStatus()
-            );
-            adviserInformationList.add(adviserInformation);
+
+            adviserInformationList.add(AdviserInformation.toAdviserInformation(a));
         }
 
 
@@ -114,6 +108,18 @@ public class AdminController {
             boardCardList.add(BoardCard.toBoardCard(board));
         }
         return ResponseEntity.ok(boardCardList);
+    }
+
+    @PostMapping("/updateAdminInformation")
+    public ResponseEntity<?> updateAdminInformation(
+            @RequestBody @Valid AdminInformation adminInformation
+            ,Authentication authentication){
+        adminService.updateAdminInformation(authentication.getName(),AdminInformation.toAdmin(adminInformation) );
+        return ResponseEntity.ok(new SuccessResponse(
+                201,
+                "Updated admin"
+        ));
+
     }
 
 

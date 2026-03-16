@@ -19,4 +19,24 @@ JOIN ae.userEntity ue
 WHERE ue.email = :email AND ue.rol = 'ADVISER'
 """)
     Optional<AdviserEntity> getAdviserEntityByEmail(@Param("email") String email);
+
+
+    @Transactional
+    @Modifying
+    @Query("""
+            UPDATE AdviserEntity ae
+            SET ae.image = :logo
+            WHERE ae.adviserID = :id
+            """)
+    int uploadLogo(@Param("id") Long id, @Param("logo") byte[] logo);
+
+
+    @Transactional
+    @Modifying
+    @Query("""
+               UPDATE AdviserEntity ae
+               SET ae.firstName = :firstName, ae.lastName = :lastName
+               WHERE ae.adviserID = :id
+                """)
+    int updateAdviserInformation(@Param("id") Long id,@Param("firstName") String firstName,@Param("lastName") String lastName);
 }

@@ -23,6 +23,11 @@ public class Adviser {
         this.admin = admin;
     }
 
+    public Adviser(String firstName, String lastName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+
     public Adviser() {
     }
 

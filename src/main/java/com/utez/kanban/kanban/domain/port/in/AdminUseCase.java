@@ -15,4 +15,6 @@ public interface AdminUseCase {
     void uploadLogo(String email, byte[] image);
     Optional<Admin> findByEmail(String email);
     List<Board> getAllBoards();
+    void updateAdminInformation(String email, Admin admin);
+
 }

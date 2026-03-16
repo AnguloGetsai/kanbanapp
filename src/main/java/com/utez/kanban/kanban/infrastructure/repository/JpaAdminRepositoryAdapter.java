@@ -58,5 +58,10 @@ public class JpaAdminRepositoryAdapter implements AdminRepositoryPort {
         return jpaAdminRepository.updateLogo(id, image) > 0;
     }
 
+    @Override
+    public boolean updateAdminInformation(Long id, Admin admin) {
+        return jpaAdminRepository.updateAdminInformation(id, admin.getFirstName(), admin.getLastName()) > 0;
+    }
+
 
 }

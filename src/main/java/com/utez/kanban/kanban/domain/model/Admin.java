@@ -17,8 +17,11 @@ public class Admin {
     }
 
 
+    public Admin(String firstName, String lastName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
 
-
+    }
 
     public Admin() {
 

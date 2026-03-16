@@ -28,4 +28,13 @@ public interface JpaAdminRepository extends JpaRepository<AdminEntity, Long> {
             WHERE adminID = :id
             """)
     int updateLogo(@Param("id") Long id, @Param("image") byte[] image);
+
+    @Transactional
+    @Modifying
+    @Query("""
+               UPDATE AdminEntity ae
+               SET ae.firstName = :firstName, ae.lastName = :lastName
+               WHERE ae.adminID = :id
+               """)
+    int updateAdminInformation(@Param("id") Long id,@Param("firstName") String firstName,@Param("lastName") String lastName);
 }

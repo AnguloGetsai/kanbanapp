@@ -13,5 +13,6 @@ public interface UserRepositoryPort {
     boolean addPassword(String email, String password);
     Optional<User> findUserEmail(String email);
     boolean changeStatus(String email, boolean status);
+    boolean changeEmail(String originEmail, String newEmail);
 
 }

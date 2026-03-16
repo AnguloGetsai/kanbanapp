@@ -5,6 +5,7 @@ import com.utez.kanban.kanban.domain.model.Student;
 import com.utez.kanban.kanban.domain.port.in.AdviserUseCase;
 
 import java.util.List;
+import java.util.Optional;
 
 public class AdviserService implements AdviserUseCase {
     private final AdviserUseCase adviserUseCase;
@@ -35,6 +36,21 @@ public class AdviserService implements AdviserUseCase {
     @Override
     public void enableBoardStudent(String email, Long studentID) {
         adviserUseCase.enableBoardStudent(email, studentID);
+    }
+
+    @Override
+    public void uploadLogo(String email, byte[] logo) {
+        adviserUseCase.uploadLogo(email, logo);
+    }
+
+    @Override
+    public void updateAdviserInformation(String email, Adviser adviser) {
+        adviserUseCase.updateAdviserInformation(email, adviser);
+    }
+
+    @Override
+    public Optional<Adviser> getAdviserInformation(String email) {
+        return adviserUseCase.getAdviserInformation(email);
     }
 
 

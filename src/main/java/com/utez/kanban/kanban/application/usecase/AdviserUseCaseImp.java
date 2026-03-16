@@ -9,8 +9,10 @@ import com.utez.kanban.kanban.domain.port.out.AdviserRepositoryPort;
 import com.utez.kanban.kanban.domain.port.out.AdviserStudentRepository;
 import com.utez.kanban.kanban.domain.port.out.StudentRepositoryPort;
 import com.utez.kanban.kanban.domain.port.out.UserRepositoryPort;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 
 import java.util.List;
+import java.util.Optional;
 
 public class AdviserUseCaseImp implements AdviserUseCase {
     private final AdviserRepositoryPort adviserRepositoryPort;
@@ -98,6 +100,30 @@ public class AdviserUseCaseImp implements AdviserUseCase {
             return;
         }
         throw new BusinessRuleViolationException("Changes not applied");
+    }
+
+    @Override
+    public void uploadLogo(String email, byte[] logo) {
+        Adviser adviser = adviserRepositoryPort.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("Adviser not found"));
+        adviserRepositoryPort.uploadLogo(adviser.getAdviserID(), logo);
+    }
+
+    @Override
+    public void updateAdviserInformation(String email, Adviser adviser) {
+        Adviser foundAdviser = adviserRepositoryPort.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("Adviser not found"));
+
+        if(!adviserRepositoryPort.updateAdviserInformation(foundAdviser.getAdviserID(), adviser)){
+            throw new BusinessRuleViolationException("Error updating advisor data");
+        }
+    }
+
+    @Override
+    public Optional<Adviser> getAdviserInformation(String email) {
+        Adviser adviser = adviserRepositoryPort.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("Adviser not found"));
+        return Optional.ofNullable(adviser);
     }
 
 

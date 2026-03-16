@@ -2,6 +2,7 @@ package com.utez.kanban.kanban.application.usecase;
 
 import com.utez.kanban.kanban.domain.model.*;
 import com.utez.kanban.kanban.domain.model.exeption.user.BusinessRuleViolationException;
+import com.utez.kanban.kanban.domain.model.exeption.user.EmailAlreadyExistsException;
 import com.utez.kanban.kanban.domain.model.exeption.user.UserNotFoundException;
 import com.utez.kanban.kanban.domain.port.in.AdminUseCase;
 import com.utez.kanban.kanban.domain.port.out.AdminRepositoryPort;
@@ -106,6 +107,22 @@ public class AdminUseCaseImp implements AdminUseCase {
     @Override
     public List<Board> getAllBoards() {
         return boardRepositoryPort.getAllBoards();
+    }
+
+    @Override
+    public void updateAdminInformation(String email, Admin admin) {
+        Admin foundAdmin = adminRepositoryPort.findByEmail(email)
+                        .orElseThrow(() -> new UserNotFoundException("Admin not found"));
+        adminRepositoryPort.updateAdminInformation(foundAdmin.getAdminID(), admin);
+
+//        // cambiar emali
+//        if(userRepositoryPort.findUserEmail(admin.getUser().getEmail()).isPresent()){
+//            throw  new EmailAlreadyExistsException("Email already exists");
+//        }
+//
+//        if(!userRepositoryPort.changeEmail(email, admin.getUser().getEmail())){
+//            throw new BusinessRuleViolationException("Error changing email");
+//        }
     }
 
 

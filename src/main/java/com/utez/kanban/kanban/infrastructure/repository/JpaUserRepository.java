@@ -55,4 +55,13 @@ public interface JpaUserRepository extends JpaRepository<UserEntity, Long> {
               WHERE ue.email = :email
               """)
     long addPassword(@Param("email") String email, @Param("password") String password);
+
+    @Transactional
+    @Modifying
+    @Query("""
+                UPDATE UserEntity ue
+                SET ue.email = :newEmail
+                WHERE ue.email = :originEmail
+                """)
+    int changeEmail(@Param("originEmail") String originEmail, @Param("newEmail") String newEmail);
 }

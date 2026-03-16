@@ -46,4 +46,11 @@ public class AdminService implements AdminUseCase {
     public List<Board> getAllBoards() {
         return adminUseCase.getAllBoards();
     }
+
+    @Override
+    public void updateAdminInformation(String email, Admin admin) {
+        adminUseCase.updateAdminInformation(email, admin);
+    }
+
+
 }

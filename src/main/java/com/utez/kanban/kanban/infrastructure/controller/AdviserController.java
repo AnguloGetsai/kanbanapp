@@ -2,20 +2,21 @@ package com.utez.kanban.kanban.infrastructure.controller;
 
 import com.utez.kanban.kanban.application.service.AdviserService;
 import com.utez.kanban.kanban.application.service.StudentService;
+import com.utez.kanban.kanban.domain.model.Adviser;
 import com.utez.kanban.kanban.domain.model.Student;
-import com.utez.kanban.kanban.infrastructure.controller.DTO.AdviserStudentDTO;
-import com.utez.kanban.kanban.infrastructure.controller.DTO.StudentDTO;
-import com.utez.kanban.kanban.infrastructure.controller.DTO.StudentRegister;
-import com.utez.kanban.kanban.infrastructure.controller.DTO.SuccessResponse;
+import com.utez.kanban.kanban.domain.model.exeption.user.UserNotFoundException;
+import com.utez.kanban.kanban.infrastructure.controller.DTO.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.security.PublicKey;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 @RestController
@@ -85,6 +86,38 @@ public class AdviserController {
                 200,
                 "The student was disqualified"
         ));
+    }
+
+    @PostMapping("/uploadLogo")
+    public ResponseEntity<?> uploadLogo(
+            @RequestParam("file") MultipartFile file,
+            Authentication authentication
+            ){
+        try {
+            adviserService.uploadLogo(authentication.getName(), file.getBytes());
+            return ResponseEntity.ok(new SuccessResponse(200, "logo added"));
+        }catch(Exception e){
+            e.printStackTrace();
+            return ResponseEntity.status(500).body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/updateAdivserInformation")
+    public ResponseEntity<?> updateAdviserInformation(
+            @RequestBody @Valid AdviserInformation adviserInformation,
+            Authentication authentication
+            ){
+        adviserService.updateAdviserInformation(authentication.getName(), AdviserInformation.toAdviser(adviserInformation));
+        return ResponseEntity.ok("updated adviser");
+    }
+
+
+
+    @GetMapping("/getAdviserInformation")
+    public ResponseEntity<?> getAdviserInformation(Authentication authentication){
+        Adviser adviser = adviserService.getAdviserInformation(authentication.getName())
+                .orElseThrow(() -> new UserNotFoundException("USER NOT FOUND"));
+        return ResponseEntity.ok(AdviserInformation.toAdviserInformation(adviser));
     }
 
 

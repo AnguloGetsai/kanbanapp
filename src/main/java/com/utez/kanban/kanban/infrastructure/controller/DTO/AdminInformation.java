@@ -1,20 +1,36 @@
 package com.utez.kanban.kanban.infrastructure.controller.DTO;
 
 import com.utez.kanban.kanban.domain.model.Admin;
+import com.utez.kanban.kanban.domain.model.User;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.Base64;
 
 public class AdminInformation {
+
+    @NotBlank(message = "firstName is required")
     private String firstName;
+    @NotBlank(message = "lastName is required")
     private String lastName;
+
     private String email;
 
+    // el logo no se manda en el updateAdminInformation solo manda el firstName y lastName
     private String logo;
 
 
 
     public AdminInformation(){
 
+    }
+
+
+    public AdminInformation(String firstName, String lastName, String email) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
     }
 
     public AdminInformation(String firstName, String lastName, String email, String logo) {
@@ -38,6 +54,15 @@ public class AdminInformation {
                 admin.getLastName(),
                 admin.getUser().getEmail(),
                 logoBase64
+        );
+    }
+
+
+    public static Admin toAdmin(AdminInformation adminInformation){
+
+        return new Admin(
+                adminInformation.getFirstName(),
+                adminInformation.getLastName()
         );
     }
 

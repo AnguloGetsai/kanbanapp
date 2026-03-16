@@ -46,5 +46,15 @@ public class JpaAdviserRepositoryAdapter implements AdviserRepositoryPort {
                 .map(AdviserMapper::toAdviser);
     }
 
+    @Override
+    public boolean uploadLogo(Long id, byte[] logo) {
+        return jpaAdviserRepository.uploadLogo(id, logo) > 0;
+    }
+
+    @Override
+    public boolean updateAdviserInformation(Long id, Adviser adviser) {
+        return  jpaAdviserRepository.updateAdviserInformation(id, adviser.getFirstName(), adviser.getLastName()) > 0;
+    }
+
 
 }

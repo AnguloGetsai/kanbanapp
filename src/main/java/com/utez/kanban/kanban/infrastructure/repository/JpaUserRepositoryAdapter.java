@@ -65,11 +65,13 @@ public class JpaUserRepositoryAdapter implements UserRepositoryPort {
 
     @Override
     public boolean changeStatus(String email, boolean status) {
-        return jpaUserRepository.changeStatus(email, status) == 1;
+        return jpaUserRepository.changeStatus(email, status) > 0;
     }
 
-
-
+    @Override
+    public boolean changeEmail(String originEmail, String newEmail) {
+        return jpaUserRepository.changeEmail(originEmail, newEmail) > 0;
+    }
 
 
 }

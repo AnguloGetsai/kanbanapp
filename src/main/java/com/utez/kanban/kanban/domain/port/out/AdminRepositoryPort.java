@@ -11,5 +11,6 @@ public interface AdminRepositoryPort {
     boolean delete(Long adminID);
     Optional<Admin> findByEmail(String email);
     boolean updateLogo(Long id, byte[] image);
+    boolean updateAdminInformation(Long id, Admin admin);
 
 }
