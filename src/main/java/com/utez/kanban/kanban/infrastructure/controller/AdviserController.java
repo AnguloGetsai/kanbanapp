@@ -87,7 +87,7 @@ public class AdviserController {
                 "The student was disqualified"
         ));
     }
-
+    // solo manda la imagen
     @PostMapping("/uploadLogo")
     public ResponseEntity<?> uploadLogo(
             @RequestParam("file") MultipartFile file,
@@ -101,7 +101,7 @@ public class AdviserController {
             return ResponseEntity.status(500).body(e.getMessage());
         }
     }
-
+    // solo manda firstName and lastName
     @PostMapping("/updateAdivserInformation")
     public ResponseEntity<?> updateAdviserInformation(
             @RequestBody @Valid AdviserInformation adviserInformation,

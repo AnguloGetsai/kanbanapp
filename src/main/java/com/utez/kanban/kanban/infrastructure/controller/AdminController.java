@@ -37,6 +37,8 @@ public class AdminController {
 
     //  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*
 
+
+    //solo manda firstName, lastName and email
     @PostMapping("/registerAdvisorUser")
     public ResponseEntity<?> createUserAdviser(@RequestBody @Valid AdvisorRegistration advisorRegistration,
                                                Authentication authentication // authentication no se manda
@@ -75,7 +77,7 @@ public class AdminController {
     }
 
 
-
+    // manda el solo la imagen
     @PostMapping("/uploadLogo")
     public ResponseEntity<?> uploadLogo(
             @RequestParam("file") MultipartFile file,
@@ -110,6 +112,8 @@ public class AdminController {
         return ResponseEntity.ok(boardCardList);
     }
 
+
+    // solo manda firstName and lastName
     @PostMapping("/updateAdminInformation")
     public ResponseEntity<?> updateAdminInformation(
             @RequestBody @Valid AdminInformation adminInformation

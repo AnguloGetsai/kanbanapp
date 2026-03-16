@@ -17,7 +17,7 @@ public class AdminInformation {
 
     private String email;
 
-    // el logo no se manda en el updateAdminInformation solo manda el firstName y lastName
+
     private String logo;
 
 
