@@ -11,9 +11,6 @@ public class Adviser {
 
 
 
-
-
-
     public Adviser(Long adviserID, String firstName, String lastName, byte[] image, User user, Admin admin) {
         this.adviserID = adviserID;
         this.firstName = firstName;
