@@ -9,6 +9,8 @@ import com.utez.kanban.kanban.domain.port.in.AdminUseCase;
 import java.util.List;
 import java.util.Optional;
 
+// nuevo espacio vacio xd
+
 public class AdminService implements AdminUseCase {
 
     private final AdminUseCase adminUseCase;
