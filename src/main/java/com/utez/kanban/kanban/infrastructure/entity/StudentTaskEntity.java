@@ -20,34 +20,25 @@ public class StudentTaskEntity {
     @JoinColumn(name = "taskID")
     private TaskEntity taskEntity;
 
-    private String color;
+    // private String color; campo eliminado
+
     private String status;
     private LocalDate assignedDate;
+    private LocalDate culminationDate;
 
-    public String getColor() {
-        return color;
-    }
 
-    public void setColor(String color) {
-        this.color = color;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
+    public StudentTaskEntity(StudentTaskID id, StudentEntity studentEntity,
+                             TaskEntity taskEntity, String status, LocalDate assignedDate,
+                             LocalDate culminationDate) {
+        this.id = id;
+        this.studentEntity = studentEntity;
+        this.taskEntity = taskEntity;
         this.status = status;
-    }
-
-    public LocalDate getAssignedDate() {
-        return assignedDate;
-    }
-
-    public void setAssignedDate(LocalDate assignedDate) {
         this.assignedDate = assignedDate;
+        this.culminationDate = culminationDate;
     }
 
+    public StudentTaskEntity(){}
     public StudentTaskID getId() {
         return id;
     }
@@ -72,5 +63,27 @@ public class StudentTaskEntity {
         this.taskEntity = taskEntity;
     }
 
+    public String getStatus() {
+        return status;
+    }
 
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public LocalDate getAssignedDate() {
+        return assignedDate;
+    }
+
+    public void setAssignedDate(LocalDate assignedDate) {
+        this.assignedDate = assignedDate;
+    }
+
+    public LocalDate getCulminationDate() {
+        return culminationDate;
+    }
+
+    public void setCulminationDate(LocalDate culminationDate) {
+        this.culminationDate = culminationDate;
+    }
 }

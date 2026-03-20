@@ -5,29 +5,38 @@ import com.utez.kanban.kanban.domain.model.exeption.user.BusinessRuleViolationEx
 import com.utez.kanban.kanban.domain.model.exeption.user.EmailAlreadyExistsException;
 import com.utez.kanban.kanban.domain.model.exeption.user.UserNotFoundException;
 import com.utez.kanban.kanban.domain.port.in.AdviserUseCase;
-import com.utez.kanban.kanban.domain.port.out.AdviserRepositoryPort;
-import com.utez.kanban.kanban.domain.port.out.AdviserStudentRepository;
-import com.utez.kanban.kanban.domain.port.out.StudentRepositoryPort;
-import com.utez.kanban.kanban.domain.port.out.UserRepositoryPort;
+import com.utez.kanban.kanban.domain.port.out.*;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.web.SecurityFilterChain;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class AdviserUseCaseImp implements AdviserUseCase {
     private final AdviserRepositoryPort adviserRepositoryPort;
     private final UserRepositoryPort userRepositoryPort;
     private final StudentRepositoryPort studentRepositoryPort;
     private final AdviserStudentRepository adviserStudentRepository;
+    private final TaskRepositoryPort taskRepositoryPort;
+    private final BoardRepositoryPort boardRepositoryPort;
+    private final AttachmentRepositoryPort attachmentRepositoryPort;
+    private final StudentTaskRepositoryPort studentTaskRepositoryPort;
 
     public AdviserUseCaseImp(AdviserRepositoryPort adviserRepositoryPort,
                              UserRepositoryPort userRepositoryPort,
                              StudentRepositoryPort studentRepositoryPort,
-                             AdviserStudentRepository adviserStudentRepository){
+                             AdviserStudentRepository adviserStudentRepository,
+                             TaskRepositoryPort taskRepositoryPort,
+                             BoardRepositoryPort boardRepositoryPort,
+                             AttachmentRepositoryPort attachmentRepositoryPort,
+                             StudentTaskRepositoryPort studentTaskRepositoryPort){
         this.adviserRepositoryPort = adviserRepositoryPort;
         this.userRepositoryPort = userRepositoryPort;
         this.studentRepositoryPort = studentRepositoryPort;
         this.adviserStudentRepository = adviserStudentRepository;
+        this.taskRepositoryPort = taskRepositoryPort;
+        this.boardRepositoryPort = boardRepositoryPort;
+        this.attachmentRepositoryPort = attachmentRepositoryPort;
+        this.studentTaskRepositoryPort = studentTaskRepositoryPort;
     }
 
 
@@ -124,6 +133,59 @@ public class AdviserUseCaseImp implements AdviserUseCase {
         Adviser adviser = adviserRepositoryPort.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("Adviser not found"));
         return Optional.ofNullable(adviser);
+    }
+
+    @Override
+    public void createTask(List<Long> studentIDs, Task task, String email, List<Attachment> files) {
+
+        //buscar si el adviser existe
+        Adviser adviser = adviserRepositoryPort.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("USER NOT FOUND"));
+
+        // buscar el board del asesor
+        Board board = boardRepositoryPort.findBoardByAdviserId(adviser.getAdviserID())
+                .orElseThrow(() -> new BusinessRuleViolationException("BOARD NOT FOUND"));
+
+        // crear la tarea
+        task.setBoard(board);
+        Task createdTask = taskRepositoryPort.save(task)
+                .orElseThrow(() -> new BusinessRuleViolationException("Error creating task"));
+
+        // agregar los archivos adjuntos a la tarea
+
+        for(Attachment file: files){
+            file.setTask(createdTask);
+            attachmentRepositoryPort.saveAttachment(file);
+        }
+
+
+        // agregar los estudiantes a la tarea
+        if(studentIDs == null) return;
+
+        List<Student> studentList = studentRepositoryPort.getStudentByAdviserID(adviser.getAdviserID());
+        if(studentList == null) return;
+
+        Set<Long> idsSet = new HashSet<>(studentIDs);
+        List<Student> filtrados = studentList.stream()
+                .filter(s -> idsSet.contains(s.getStudentID()))
+                .toList();
+
+        List<StudentTask> st = filtrados.stream()
+                .map(s -> {
+                     StudentTask studentTask = new StudentTask();
+                     studentTask.setTask(createdTask);
+                     studentTask.setStudent(s);
+                     studentTask.setAssignedDate(createdTask.getCreationDate());
+                     studentTask.setStatus(createdTask.getStatusKanban());
+                     return studentTask;
+                })
+                .toList();
+
+        studentTaskRepositoryPort.saveAll(st);
+
+
+
+
     }
 
 

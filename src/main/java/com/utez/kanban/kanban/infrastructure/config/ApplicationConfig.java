@@ -64,9 +64,22 @@ public class ApplicationConfig {
     public AdviserService adviserService(AdviserRepositoryPort adviserRepositoryPort,
                                          UserRepositoryPort userRepositoryPort,
                                          StudentRepositoryPort studentRepositoryPort,
-                                         AdviserStudentRepository adviserStudentRepository){
+                                         AdviserStudentRepository adviserStudentRepository,
+                                         TaskRepositoryPort taskRepositoryPort,
+                                         BoardRepositoryPort boardRepositoryPort,
+                                         AttachmentRepositoryPort attachmentRepositoryPort,
+                                         StudentTaskRepositoryPort studentTaskRepositoryPort
+
+    ){
         return new AdviserService(
-                new AdviserUseCaseImp(adviserRepositoryPort, userRepositoryPort, studentRepositoryPort, adviserStudentRepository)
+                new AdviserUseCaseImp(adviserRepositoryPort,
+                        userRepositoryPort,
+                        studentRepositoryPort,
+                        adviserStudentRepository,
+                        taskRepositoryPort,
+                        boardRepositoryPort,
+                        attachmentRepositoryPort,
+                        studentTaskRepositoryPort)
         );
     }
 

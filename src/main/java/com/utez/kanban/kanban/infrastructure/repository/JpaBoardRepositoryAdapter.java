@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class JpaBoardRepositoryAdapter implements BoardRepositoryPort {
@@ -29,5 +30,11 @@ public class JpaBoardRepositoryAdapter implements BoardRepositoryPort {
             boardList.add(BoardMapper.toBoard(boardEntity));
         }
         return boardList;
+    }
+
+    @Override
+    public Optional<Board> findBoardByAdviserId(Long id) {
+        return jpaBoardRepository.findBoardByAdviserID(id)
+                .map(BoardMapper::toBoard);
     }
 }

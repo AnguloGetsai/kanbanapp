@@ -1,40 +1,24 @@
-package com.utez.kanban.kanban.infrastructure.entity;
-
-import jakarta.persistence.*;
+package com.utez.kanban.kanban.domain.model;
 
 import java.time.LocalDate;
 
-
-@Entity
-@Table(name = "task")
-public class TaskEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class Task {
     private Long taskID;
-
-
-    //private LocalDate culminationDate; atributo eliminado
     private LocalDate limitDate;
     private LocalDate creationDate;
     private String name;
     private String description;
     private String statusKanban;
 
-    // nuevos atributos
     private String color;
     private String priority;
 
+    private Board board;
 
-
-
-
-    @ManyToOne
-    @JoinColumn(name = "boardID")
-    private BoardEntity boardEntity;
-
-    public TaskEntity(Long taskID, LocalDate limitDate, LocalDate creationDate,
-                      String name, String description, String statusKanban,
-                      String color, String priority, BoardEntity boardEntity) {
+    public Task(Long taskID, LocalDate limitDate,
+                LocalDate creationDate, String name,
+                String description, String statusKanban,
+                String color, String priority, Board board) {
         this.taskID = taskID;
         this.limitDate = limitDate;
         this.creationDate = creationDate;
@@ -43,10 +27,20 @@ public class TaskEntity {
         this.statusKanban = statusKanban;
         this.color = color;
         this.priority = priority;
-        this.boardEntity = boardEntity;
+        this.board = board;
     }
 
-    public TaskEntity(){
+    public Task(LocalDate limitDate, LocalDate creationDate, String name, String description, String statusKanban, String color, String priority) {
+        this.limitDate = limitDate;
+        this.creationDate = creationDate;
+        this.name = name;
+        this.description = description;
+        this.statusKanban = statusKanban;
+        this.color = color;
+        this.priority = priority;
+    }
+
+    public Task(){
 
     }
 
@@ -57,7 +51,6 @@ public class TaskEntity {
     public void setTaskID(Long taskID) {
         this.taskID = taskID;
     }
-
 
     public LocalDate getLimitDate() {
         return limitDate;
@@ -99,14 +92,6 @@ public class TaskEntity {
         this.statusKanban = statusKanban;
     }
 
-    public BoardEntity getBoardEntity() {
-        return boardEntity;
-    }
-
-    public void setBoardEntity(BoardEntity boardEntity) {
-        this.boardEntity = boardEntity;
-    }
-
     public String getColor() {
         return color;
     }
@@ -121,5 +106,13 @@ public class TaskEntity {
 
     public void setPriority(String priority) {
         this.priority = priority;
+    }
+
+    public Board getBoard() {
+        return board;
+    }
+
+    public void setBoard(Board board) {
+        this.board = board;
     }
 }

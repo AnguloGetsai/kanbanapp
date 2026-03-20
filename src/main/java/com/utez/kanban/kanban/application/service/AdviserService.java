@@ -1,7 +1,9 @@
 package com.utez.kanban.kanban.application.service;
 
 import com.utez.kanban.kanban.domain.model.Adviser;
+import com.utez.kanban.kanban.domain.model.Attachment;
 import com.utez.kanban.kanban.domain.model.Student;
+import com.utez.kanban.kanban.domain.model.Task;
 import com.utez.kanban.kanban.domain.port.in.AdviserUseCase;
 
 import java.util.List;
@@ -51,6 +53,11 @@ public class AdviserService implements AdviserUseCase {
     @Override
     public Optional<Adviser> getAdviserInformation(String email) {
         return adviserUseCase.getAdviserInformation(email);
+    }
+
+    @Override
+    public void createTask(List<Long> studentIDs, Task task, String email, List<Attachment> files) {
+        adviserUseCase.createTask(studentIDs, task, email, files);
     }
 
 

@@ -2,7 +2,9 @@ package com.utez.kanban.kanban.domain.port.in;
 
 
 import com.utez.kanban.kanban.domain.model.Adviser;
+import com.utez.kanban.kanban.domain.model.Attachment;
 import com.utez.kanban.kanban.domain.model.Student;
+import com.utez.kanban.kanban.domain.model.Task;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,4 +18,5 @@ public interface AdviserUseCase {
     void uploadLogo(String email, byte[] logo);
     void updateAdviserInformation(String email, Adviser adviser);
     Optional<Adviser> getAdviserInformation(String email);
+    void createTask(List<Long> studentIDs, Task task, String email, List<Attachment> files);
 }

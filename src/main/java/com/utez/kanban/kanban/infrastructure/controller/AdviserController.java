@@ -4,6 +4,7 @@ import com.utez.kanban.kanban.application.service.AdviserService;
 import com.utez.kanban.kanban.application.service.StudentService;
 import com.utez.kanban.kanban.domain.model.Adviser;
 import com.utez.kanban.kanban.domain.model.Student;
+import com.utez.kanban.kanban.domain.model.Task;
 import com.utez.kanban.kanban.domain.model.exeption.user.UserNotFoundException;
 import com.utez.kanban.kanban.infrastructure.controller.DTO.*;
 import jakarta.validation.Valid;
@@ -118,6 +119,12 @@ public class AdviserController {
         Adviser adviser = adviserService.getAdviserInformation(authentication.getName())
                 .orElseThrow(() -> new UserNotFoundException("USER NOT FOUND"));
         return ResponseEntity.ok(AdviserInformation.toAdviserInformation(adviser));
+    }
+
+    @PostMapping
+    public ResponseEntity<?> createTask(@RequestBody @Valid TaskDTO taskDTO, Authentication authentication){
+        adviserService.createTask(taskDTO.getStudentIDs(),TaskDTO.toTask(taskDTO),authentication.getName(),taskDTO.getFiles());
+
     }
 
 
