@@ -1,5 +1,6 @@
 package com.utez.kanban.kanban.infrastructure.controller.DTO;
 
+import com.utez.kanban.kanban.domain.model.Attachment;
 import com.utez.kanban.kanban.domain.model.Board;
 import com.utez.kanban.kanban.domain.model.StatusKanban;
 import com.utez.kanban.kanban.domain.model.Task;
@@ -51,6 +52,30 @@ public class TaskDTO {
                 taskDTO.getColor(),
                 taskDTO.getPriority()
         );
+    }
+
+
+    public static List<Attachment> toAttachment(List<MultipartFile> files){
+
+        List<Attachment> attachmentList = files.stream().map(s -> {
+            Attachment attachment = new Attachment();
+            attachment.setFileData(getFileByte(s));
+            attachment.setFileName(s.getOriginalFilename());
+            attachment.setFileType(attachment.getFileType());
+            return attachment;
+        }).toList();
+        return attachmentList;
+    }
+
+    public static byte[] getFileByte(MultipartFile file){
+        try{
+            return file.getBytes();
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+
+
     }
 
     public LocalDate getLimitDate() {

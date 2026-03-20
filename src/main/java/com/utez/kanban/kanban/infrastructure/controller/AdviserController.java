@@ -123,7 +123,8 @@ public class AdviserController {
 
     @PostMapping
     public ResponseEntity<?> createTask(@RequestBody @Valid TaskDTO taskDTO, Authentication authentication){
-        adviserService.createTask(taskDTO.getStudentIDs(),TaskDTO.toTask(taskDTO),authentication.getName(),taskDTO.getFiles());
+        adviserService.createTask(taskDTO.getStudentIDs(),TaskDTO.toTask(taskDTO),authentication.getName(),TaskDTO.toAttachment(taskDTO.getFiles()));
+        return ResponseEntity.ok(new SuccessResponse(201, "Added task successful"));
 
     }
 

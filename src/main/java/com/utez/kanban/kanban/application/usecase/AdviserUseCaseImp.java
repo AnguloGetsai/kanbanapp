@@ -153,13 +153,23 @@ public class AdviserUseCaseImp implements AdviserUseCase {
 
         // agregar los archivos adjuntos a la tarea
 
-        for(Attachment file: files){
-            file.setTask(createdTask);
-            attachmentRepositoryPort.saveAttachment(file);
-        }
 
+     //    pendiente por hacer filtro hash
+        List<Attachment> attachmentList = files
+                .stream()
+                .map(s -> {
+                    Attachment attachment = new Attachment();
+                    attachment.setTask(createdTask);
+                    attachment.setFileType(s.getFileType());
+                    attachment.setFileName(s.getFileName());
+                    attachment.setFileData(s.getFileData());
+                    return attachment;
+                }).toList();
+
+        attachmentRepositoryPort.saveAll(attachmentList);
 
         // agregar los estudiantes a la tarea
+
         if(studentIDs == null) return;
 
         List<Student> studentList = studentRepositoryPort.getStudentByAdviserID(adviser.getAdviserID());

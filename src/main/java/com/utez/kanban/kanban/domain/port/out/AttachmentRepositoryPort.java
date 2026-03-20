@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface AttachmentRepositoryPort {
     void saveAttachment(Attachment attachment);
-
+    void saveAll(List<Attachment> attachmentList);
 }
