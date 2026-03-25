@@ -2,85 +2,46 @@ package com.utez.kanban.kanban.infrastructure.entity;
 
 import jakarta.persistence.*;
 
-import java.time.LocalDate;
-
-
 @Entity
-@Table(name = "task")
+@Table(name = "tasks")
 public class TaskEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long taskID;
+    private Long id;
 
-
-    //private LocalDate culminationDate; atributo eliminado
-    private LocalDate limitDate;
-    private LocalDate creationDate;
-    private String name;
+    private String title;
     private String description;
-    private String statusKanban;
+    private String status;
 
-    // nuevos atributos
-    private String color;
-    private String priority;
+    @Lob
+    @Column(name = "evidence")
+    private byte[] evidence;
 
-
-
-
+    @ManyToOne
+    @JoinColumn(name = "student_id")
+    private StudentEntity student;
 
     @ManyToOne
     @JoinColumn(name = "boardID")
     private BoardEntity boardEntity;
 
-    public TaskEntity(Long taskID, LocalDate limitDate, LocalDate creationDate,
-                      String name, String description, String statusKanban,
-                      String color, String priority, BoardEntity boardEntity) {
-        this.taskID = taskID;
-        this.limitDate = limitDate;
-        this.creationDate = creationDate;
-        this.name = name;
-        this.description = description;
-        this.statusKanban = statusKanban;
-        this.color = color;
-        this.priority = priority;
-        this.boardEntity = boardEntity;
+    // GETTERS Y SETTERS
+
+    public Long getId() {
+        return id;
     }
 
-    public TaskEntity(){
-
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public Long getTaskID() {
-        return taskID;
+    public String getTitle() {
+        return title;
     }
 
-    public void setTaskID(Long taskID) {
-        this.taskID = taskID;
-    }
-
-
-    public LocalDate getLimitDate() {
-        return limitDate;
-    }
-
-    public void setLimitDate(LocalDate limitDate) {
-        this.limitDate = limitDate;
-    }
-
-    public LocalDate getCreationDate() {
-        return creationDate;
-    }
-
-    public void setCreationDate(LocalDate creationDate) {
-        this.creationDate = creationDate;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getDescription() {
@@ -91,12 +52,28 @@ public class TaskEntity {
         this.description = description;
     }
 
-    public String getStatusKanban() {
-        return statusKanban;
+    public String getStatus() {
+        return status;
     }
 
-    public void setStatusKanban(String statusKanban) {
-        this.statusKanban = statusKanban;
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public byte[] getEvidence() {
+        return evidence;
+    }
+
+    public void setEvidence(byte[] evidence) {
+        this.evidence = evidence;
+    }
+
+    public StudentEntity getStudent() {
+        return student;
+    }
+
+    public void setStudent(StudentEntity student) {
+        this.student = student;
     }
 
     public BoardEntity getBoardEntity() {
@@ -105,21 +82,5 @@ public class TaskEntity {
 
     public void setBoardEntity(BoardEntity boardEntity) {
         this.boardEntity = boardEntity;
-    }
-
-    public String getColor() {
-        return color;
-    }
-
-    public void setColor(String color) {
-        this.color = color;
-    }
-
-    public String getPriority() {
-        return priority;
-    }
-
-    public void setPriority(String priority) {
-        this.priority = priority;
     }
 }

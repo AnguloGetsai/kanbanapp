@@ -1,10 +1,8 @@
 package com.utez.kanban.kanban.infrastructure.controller;
 
 import com.utez.kanban.kanban.application.service.AdviserService;
-import com.utez.kanban.kanban.application.service.StudentService;
 import com.utez.kanban.kanban.domain.model.Adviser;
 import com.utez.kanban.kanban.domain.model.Student;
-import com.utez.kanban.kanban.domain.model.Task;
 import com.utez.kanban.kanban.domain.model.exeption.user.UserNotFoundException;
 import com.utez.kanban.kanban.infrastructure.controller.DTO.*;
 import jakarta.validation.Valid;
@@ -15,9 +13,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.security.PublicKey;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 
 @RestController
@@ -29,7 +25,7 @@ public class AdviserController {
     public AdviserController(AdviserService adviserService){
         this.adviserService = adviserService;
     }
-    // pendiente asignar el estudiante a tablero durante el registro
+
     @PostMapping("/registerStudent")
     public ResponseEntity<?> registerStudent(@RequestBody @Valid StudentRegister studentRegister){
         adviserService.registerStudent(

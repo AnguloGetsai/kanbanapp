@@ -1,33 +1,39 @@
 package com.utez.kanban.kanban.domain.model;
 
 public class AdviserStudent {
-    private Adviser adviser;
-    private Student student;
+
+    private Long adviserId;
+    private Long studentId;
     private boolean status;
 
+    public AdviserStudent() {}
+
     public AdviserStudent(Adviser adviser, Student student, boolean status) {
-        this.adviser = adviser;
-        this.student = student;
+        if (adviser != null) {
+            this.adviserId = adviser.getAdviserID();
+        }
+        if (student != null) {
+            this.studentId = student.getStudentID();
+        }
         this.status = status;
     }
 
-    public AdviserStudent() {
+    // GETTERS Y SETTERS
+
+    public Long getAdviserId() {
+        return adviserId;
     }
 
-    public Adviser getAdviser() {
-        return adviser;
+    public void setAdviserId(Long adviserId) {
+        this.adviserId = adviserId;
     }
 
-    public void setAdviser(Adviser adviser) {
-        this.adviser = adviser;
+    public Long getStudentId() {
+        return studentId;
     }
 
-    public Student getStudent() {
-        return student;
-    }
-
-    public void setStudent(Student student) {
-        this.student = student;
+    public void setStudentId(Long studentId) {
+        this.studentId = studentId;
     }
 
     public boolean isStatus() {

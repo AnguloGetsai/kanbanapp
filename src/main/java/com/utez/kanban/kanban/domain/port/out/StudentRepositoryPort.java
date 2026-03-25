@@ -5,10 +5,13 @@ import com.utez.kanban.kanban.domain.model.Student;
 import java.util.List;
 import java.util.Optional;
 
-
 public interface StudentRepositoryPort {
-    Student saveStudent(Student student);
+
     Optional<Student> findById(Long id);
+
     Optional<Student> findByEmail(String email);
+
+    Student saveStudent(Student student);
+
     List<Student> getStudentByAdviserID(Long id);
 }

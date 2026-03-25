@@ -24,7 +24,7 @@ WHERE ue.email = :email AND ue.rol = 'STUDENT'
             SELECT se
             FROM AdviserStudentEntity ase
             JOIN ase.studentEntity se
-            WHERE ase.adviserEntity.adviserID = :id
+            WHERE ase.adviserId = :id
             """)
     List<StudentEntity> getStudentByAdviserID(@Param("id") Long id);
 }

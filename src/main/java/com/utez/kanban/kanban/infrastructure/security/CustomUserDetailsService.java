@@ -24,9 +24,14 @@ public class CustomUserDetailsService implements UserDetailsService {
         UserEntity user = jpaUserRepository
                 .findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        boolean enabled = user.isStatus();
         return new User(
                 user.getEmail(),
                 user.getPassword(),
+                enabled,
+                true,
+                true,
+                true,
                 Collections.emptyList()
         );
     }
