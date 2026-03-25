@@ -5,40 +5,57 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "adviser_student")
 public class AdviserStudentEntity {
+    @EmbeddedId
+    AdviserStudentID id;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @ManyToOne
+    @MapsId("adviserID")
+    @JoinColumn(name = "adviserID")
+    private AdviserEntity adviserEntity;
 
-    private Long adviserId;
-    private Long studentId;
+    @ManyToOne
+    @MapsId("studentID")
+    @JoinColumn(name = "studentID")
+    private StudentEntity studentEntity;
+
 
     private boolean status;
 
-    @ManyToOne
-    @JoinColumn(name = "student_id", insertable = false, updatable = false)
-    private StudentEntity studentEntity;
 
-    // GETTERS Y SETTERS
+    public AdviserStudentEntity(AdviserStudentID id, AdviserEntity adviserEntity,
+                                StudentEntity studentEntity, boolean status) {
+        this.id = id;
+        this.adviserEntity = adviserEntity;
+        this.studentEntity = studentEntity;
+        this.status = status;
+    }
 
-    public Long getId() {
+    public AdviserStudentEntity() {
+    }
+
+
+    public AdviserStudentID getId() {
         return id;
     }
 
-    public Long getAdviserId() {
-        return adviserId;
+    public void setId(AdviserStudentID id) {
+        this.id = id;
     }
 
-    public void setAdviserId(Long adviserId) {
-        this.adviserId = adviserId;
+    public AdviserEntity getAdviserEntity() {
+        return adviserEntity;
     }
 
-    public Long getStudentId() {
-        return studentId;
+    public void setAdviserEntity(AdviserEntity adviserEntity) {
+        this.adviserEntity = adviserEntity;
     }
 
-    public void setStudentId(Long studentId) {
-        this.studentId = studentId;
+    public StudentEntity getStudentEntity() {
+        return studentEntity;
+    }
+
+    public void setStudentEntity(StudentEntity studentEntity) {
+        this.studentEntity = studentEntity;
     }
 
     public boolean isStatus() {
@@ -47,9 +64,5 @@ public class AdviserStudentEntity {
 
     public void setStatus(boolean status) {
         this.status = status;
-    }
-
-    public StudentEntity getStudentEntity() {
-        return studentEntity;
     }
 }

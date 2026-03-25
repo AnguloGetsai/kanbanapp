@@ -5,20 +5,20 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "notification")
 public class NotificationEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long notificationID;
-
     private boolean isRead;
-
     private String message;
 
     @ManyToOne
     @JoinColumn(name = "studentID")
     private StudentEntity studentEntity;
 
-    public NotificationEntity(){}
+
+    public NotificationEntity() {
+    }
+
 
     public NotificationEntity(Long notificationID, boolean isRead, String message, StudentEntity studentEntity) {
         this.notificationID = notificationID;

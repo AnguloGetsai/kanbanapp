@@ -1,0 +1,19 @@
+package com.utez.kanban.kanban.application.usecase;
+
+import com.utez.kanban.kanban.domain.model.Student;
+import com.utez.kanban.kanban.domain.port.in.StudentUseCase;
+import com.utez.kanban.kanban.domain.port.out.StudentRepositoryPort;
+
+import java.util.Random;
+
+public class StudentUseCaseImp implements StudentUseCase {
+
+    private final StudentRepositoryPort studentRepositoryPort;
+
+    public StudentUseCaseImp(StudentRepositoryPort studentRepositoryPort){
+        this.studentRepositoryPort = studentRepositoryPort;
+    }
+
+
+
+}

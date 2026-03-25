@@ -7,15 +7,15 @@ import java.util.Objects;
 
 @Embeddable
 public class StudentTaskID implements Serializable {
-
     private Long studentID;
     private Long taskID;
-
-    public StudentTaskID() {}
 
     public StudentTaskID(Long studentID, Long taskID) {
         this.studentID = studentID;
         this.taskID = taskID;
+    }
+
+    public StudentTaskID() {
     }
 
     public Long getStudentID() {
@@ -34,13 +34,13 @@ public class StudentTaskID implements Serializable {
         this.taskID = taskID;
     }
 
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof StudentTaskID)) return false;
+        if(this == o) return true;
+        if( !(o instanceof  StudentTaskID)) return false;
         StudentTaskID that = (StudentTaskID) o;
-        return Objects.equals(studentID, that.studentID) &&
-                Objects.equals(taskID, that.taskID);
+        return Objects.equals(studentID, that.studentID) && Objects.equals(taskID, that.taskID);
     }
 
     @Override

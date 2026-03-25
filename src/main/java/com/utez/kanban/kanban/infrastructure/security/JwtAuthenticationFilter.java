@@ -40,13 +40,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if(jwtService.validateToken(token)){
             var userDetails = userDetailsService.loadUserByUsername(username);
 
-            // Si el usuario está desactivado, no lo autenticamos (USERS.status = false).
-            if (!userDetails.isEnabled()) {
-                SecurityContextHolder.clearContext();
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                return;
-            }
-
             var authToken = new UsernamePasswordAuthenticationToken(
                     userDetails,
                     null,

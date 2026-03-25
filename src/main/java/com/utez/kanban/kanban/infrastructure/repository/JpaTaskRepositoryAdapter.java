@@ -5,7 +5,6 @@ import com.utez.kanban.kanban.domain.port.out.TaskRepositoryPort;
 import com.utez.kanban.kanban.infrastructure.mapper.TaskMapper;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -13,28 +12,13 @@ public class JpaTaskRepositoryAdapter implements TaskRepositoryPort {
 
     private final JpaTaskRepository jpaTaskRepository;
 
-    public JpaTaskRepositoryAdapter(JpaTaskRepository jpaTaskRepository) {
+    public JpaTaskRepositoryAdapter(JpaTaskRepository jpaTaskRepository){
         this.jpaTaskRepository = jpaTaskRepository;
     }
 
-    @Override
-    public Optional<Task> findById(Long id) {
-        return jpaTaskRepository.findById(id)
-                .map(TaskMapper::toTask);
-    }
 
     @Override
-    public Task save(Task task) {
-        return TaskMapper.toTask(
-                jpaTaskRepository.save(TaskMapper.toEntity(task))
-        );
-    }
-
-    @Override
-    public List<Task> getTasksByStudent(Long studentId) {
-        return jpaTaskRepository.findByStudent_StudentID(studentId)
-                .stream()
-                .map(TaskMapper::toTask)
-                .toList();
+    public Optional<Task> save(Task task) {
+        return  Optional.of(TaskMapper.toTask(jpaTaskRepository.save(TaskMapper.toTaskEntity(task))));
     }
 }

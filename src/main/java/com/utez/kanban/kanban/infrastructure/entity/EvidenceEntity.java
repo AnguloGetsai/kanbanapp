@@ -1,33 +1,41 @@
 package com.utez.kanban.kanban.infrastructure.entity;
 
 import jakarta.persistence.*;
-import java.time.LocalDate;
 
+import javax.print.attribute.standard.MediaSize;
+import java.time.LocalDate;
 @Entity
 @Table(name = "evidence")
 public class EvidenceEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long evidenceID;
 
-    @Column(name = "comment")
+    @Column(name = "file_url")
+    private String fileUrl;
+    private String type;
+
+    @Column(name = "upload_date")
+    private LocalDate uploadDate;
     private String comment;
 
-    @Column(name = "studentID")
-    private Long studentID;
+    @ManyToOne
+    @JoinColumns({
+            @JoinColumn(name = "studentID", referencedColumnName = "studentID"),
+            @JoinColumn(name = "taskID", referencedColumnName = "taskID")
+    })
+    private StudentTaskEntity studentTaskEntity;
 
-    @Column(name = "taskID")
-    private Long taskID;
 
-    public EvidenceEntity() {}
+    public EvidenceEntity(Long evidenceID, String fileUrl, String type, LocalDate uploadDate, String comment, StudentTaskEntity studentTaskEntity) {
+        this.evidenceID = evidenceID;
+        this.fileUrl = fileUrl;
+        this.type = type;
+        this.uploadDate = uploadDate;
+        this.comment = comment;
+        this.studentTaskEntity = studentTaskEntity;
+    }
 
-    // ✅ SETTERS
-    public void setComment(String comment) { this.comment = comment; }
-
-    public void setStudentID(Long studentID) { this.studentID = studentID; }
-
-    public void setTaskID(Long taskID) { this.taskID = taskID; }
-
-    public Long getEvidenceID() { return evidenceID; }
+    public EvidenceEntity() {
+    }
 }

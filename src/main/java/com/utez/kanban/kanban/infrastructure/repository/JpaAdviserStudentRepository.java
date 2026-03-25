@@ -17,16 +17,9 @@ public interface JpaAdviserStudentRepository extends JpaRepository<AdviserStuden
     @Query("""
 SELECT ase
 FROM AdviserStudentEntity ase
-WHERE ase.adviserId = :id
+WHERE ase.id.adviserID = :id
 """)
     List<AdviserStudentEntity> findAdviserStudentEntitis(@Param("id") Long id);
-
-    @Query("""
-            SELECT ase
-            FROM AdviserStudentEntity ase
-            WHERE ase.studentId = :studentId AND ase.status = true
-            """)
-    List<AdviserStudentEntity> findActiveAdviserStudentsByStudentId(@Param("studentId") Long studentId);
 
 
     @Transactional
@@ -34,7 +27,7 @@ WHERE ase.adviserId = :id
     @Query("""
             UPDATE AdviserStudentEntity ase
             SET ase.status = :status
-            WHERE ase.adviserId = :adviserID AND ase.studentId = :studentID
+            WHERE ase.id.adviserID = :adviserID AND ase.id.studentID = :studentID
             """)
     int changeStatus(@Param("status") boolean status, @Param("adviserID") Long adviserID, @Param("studentID") Long studentID);
 }

@@ -6,11 +6,12 @@ import com.utez.kanban.kanban.domain.model.exeption.user.EmailAlreadyExistsExcep
 import com.utez.kanban.kanban.domain.model.exeption.user.UserNotFoundException;
 import com.utez.kanban.kanban.domain.port.in.AdviserUseCase;
 import com.utez.kanban.kanban.domain.port.out.*;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.web.SecurityFilterChain;
 
 import java.util.*;
 
 public class AdviserUseCaseImp implements AdviserUseCase {
-
     private final AdviserRepositoryPort adviserRepositoryPort;
     private final UserRepositoryPort userRepositoryPort;
     private final StudentRepositoryPort studentRepositoryPort;
@@ -20,16 +21,14 @@ public class AdviserUseCaseImp implements AdviserUseCase {
     private final AttachmentRepositoryPort attachmentRepositoryPort;
     private final StudentTaskRepositoryPort studentTaskRepositoryPort;
 
-    public AdviserUseCaseImp(
-            AdviserRepositoryPort adviserRepositoryPort,
-            UserRepositoryPort userRepositoryPort,
-            StudentRepositoryPort studentRepositoryPort,
-            AdviserStudentRepository adviserStudentRepository,
-            TaskRepositoryPort taskRepositoryPort,
-            BoardRepositoryPort boardRepositoryPort,
-            AttachmentRepositoryPort attachmentRepositoryPort,
-            StudentTaskRepositoryPort studentTaskRepositoryPort
-    ) {
+    public AdviserUseCaseImp(AdviserRepositoryPort adviserRepositoryPort,
+                             UserRepositoryPort userRepositoryPort,
+                             StudentRepositoryPort studentRepositoryPort,
+                             AdviserStudentRepository adviserStudentRepository,
+                             TaskRepositoryPort taskRepositoryPort,
+                             BoardRepositoryPort boardRepositoryPort,
+                             AttachmentRepositoryPort attachmentRepositoryPort,
+                             StudentTaskRepositoryPort studentTaskRepositoryPort){
         this.adviserRepositoryPort = adviserRepositoryPort;
         this.userRepositoryPort = userRepositoryPort;
         this.studentRepositoryPort = studentRepositoryPort;
@@ -40,38 +39,34 @@ public class AdviserUseCaseImp implements AdviserUseCase {
         this.studentTaskRepositoryPort = studentTaskRepositoryPort;
     }
 
+
     @Override
     public void registerStudent(String email, String firstName, String lastName) {
-
-        if (userRepositoryPort.findUserEmail(email).isPresent()) {
-            throw new EmailAlreadyExistsException("User already exists");
+        if(userRepositoryPort.findUserEmail(email).isPresent()){
+            throw  new EmailAlreadyExistsException("User already exists");
         }
 
-        // crear usuario
+
+        // crear su usuario
         User user = new User();
         user.setEmail(email);
         user.setRol(Rol.STUDENT.name());
-
         User studentUser = userRepositoryPort.saveUser(user);
-        if (studentUser == null) {
-            throw new BusinessRuleViolationException("Error creating user");
-        }
+        if(studentUser == null) throw  new BusinessRuleViolationException("An error occurred while creating the user");
 
-        // crear student
+        // crear el student
         Student student = new Student();
         student.setFirstName(firstName);
         student.setLastName(lastName);
         student.setUser(studentUser);
 
+
         Student studentCreated = studentRepositoryPort.saveStudent(student);
-        if (studentCreated == null) {
-            throw new BusinessRuleViolationException("Student not created");
-        }
+        if(studentCreated == null)throw  new BusinessRuleViolationException("Student not created");
     }
 
     @Override
     public void addStudentToBoard(String adviserEmail, String studentEmail) {
-
         Adviser adviser = adviserRepositoryPort.findByEmail(adviserEmail)
                 .orElseThrow(() -> new UserNotFoundException("Adviser not found"));
 
@@ -85,122 +80,123 @@ public class AdviserUseCaseImp implements AdviserUseCase {
 
     @Override
     public List<Student> getAllStudents(String email) {
-
         Adviser adviser = adviserRepositoryPort.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("Adviser not found"));
-
         return adviserStudentRepository.getAllStudents(adviser.getAdviserID());
     }
 
     @Override
     public void disableBoardStudent(String email, Long studentID) {
-
         Adviser adviser = adviserRepositoryPort.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("Adviser not found"));
 
         studentRepositoryPort.findById(studentID)
                 .orElseThrow(() -> new BusinessRuleViolationException("Student not found"));
-
-        if (!adviserStudentRepository.changeStatus(false, adviser.getAdviserID(), studentID)) {
-            throw new BusinessRuleViolationException("Changes not applied");
+        if(adviserStudentRepository.changeStatus(false, adviser.getAdviserID(), studentID)){
+            return;
         }
+        throw new BusinessRuleViolationException("Changes not applied");
     }
 
     @Override
     public void enableBoardStudent(String email, Long studentID) {
-
         Adviser adviser = adviserRepositoryPort.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("Adviser not found"));
 
         studentRepositoryPort.findById(studentID)
                 .orElseThrow(() -> new BusinessRuleViolationException("Student not found"));
-
-        if (!adviserStudentRepository.changeStatus(true, adviser.getAdviserID(), studentID)) {
-            throw new BusinessRuleViolationException("Changes not applied");
+        if(adviserStudentRepository.changeStatus(true, adviser.getAdviserID(), studentID)){
+            return;
         }
+        throw new BusinessRuleViolationException("Changes not applied");
     }
 
     @Override
     public void uploadLogo(String email, byte[] logo) {
-
         Adviser adviser = adviserRepositoryPort.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("Adviser not found"));
-
         adviserRepositoryPort.uploadLogo(adviser.getAdviserID(), logo);
     }
 
     @Override
     public void updateAdviserInformation(String email, Adviser adviser) {
-
-        Adviser found = adviserRepositoryPort.findByEmail(email)
+        Adviser foundAdviser = adviserRepositoryPort.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("Adviser not found"));
 
-        if (!adviserRepositoryPort.updateAdviserInformation(found.getAdviserID(), adviser)) {
-            throw new BusinessRuleViolationException("Error updating adviser");
+        if(!adviserRepositoryPort.updateAdviserInformation(foundAdviser.getAdviserID(), adviser)){
+            throw new BusinessRuleViolationException("Error updating advisor data");
         }
     }
 
     @Override
     public Optional<Adviser> getAdviserInformation(String email) {
-
         Adviser adviser = adviserRepositoryPort.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("Adviser not found"));
-
-        return Optional.of(adviser);
+        return Optional.ofNullable(adviser);
     }
 
     @Override
     public void createTask(List<Long> studentIDs, Task task, String email, List<Attachment> files) {
 
-        // buscar adviser
+        //buscar si el adviser existe
         Adviser adviser = adviserRepositoryPort.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("USER NOT FOUND"));
 
-        // buscar board
+        // buscar el board del asesor
         Board board = boardRepositoryPort.findBoardByAdviserId(adviser.getAdviserID())
                 .orElseThrow(() -> new BusinessRuleViolationException("BOARD NOT FOUND"));
 
-        // crear tarea
+        // crear la tarea
         task.setBoard(board);
-        Task createdTask = taskRepositoryPort.save(task);
+        Task createdTask = taskRepositoryPort.save(task)
+                .orElseThrow(() -> new BusinessRuleViolationException("Error creating task"));
 
-        if (createdTask == null) {
-            throw new BusinessRuleViolationException("Error creating task");
-        }
+        // agregar los archivos adjuntos a la tarea
 
-        // guardar archivos
-        if (files != null && !files.isEmpty()) {
-            List<Attachment> attachmentList = files.stream().map(f -> {
-                Attachment attachment = new Attachment();
-                attachment.setTask(createdTask);
-                attachment.setFileName(f.getFileName());
-                attachment.setFileType(f.getFileType());
-                attachment.setFileData(f.getFileData());
-                return attachment;
-            }).toList();
 
-            attachmentRepositoryPort.saveAll(attachmentList);
-        }
-
-        // asignar estudiantes
-        if (studentIDs == null || studentIDs.isEmpty()) return;
-
-        List<Student> studentList = studentRepositoryPort.getStudentByAdviserID(adviser.getAdviserID());
-        if (studentList == null) return;
-
-        Set<Long> ids = new HashSet<>(studentIDs);
-
-        List<StudentTask> studentTasks = studentList.stream()
-                .filter(s -> ids.contains(s.getStudentID()))
+     //    pendiente por hacer filtro hash
+        List<Attachment> attachmentList = files
+                .stream()
                 .map(s -> {
-                    StudentTask st = new StudentTask();
-                    st.setStudent(s);
-                    st.setTask(createdTask);
-                    st.setAssignedDate(createdTask.getCreationDate());
-                    st.setStatus(createdTask.getStatusKanban());
-                    return st;
+                    Attachment attachment = new Attachment();
+                    attachment.setTask(createdTask);
+                    attachment.setFileType(s.getFileType());
+                    attachment.setFileName(s.getFileName());
+                    attachment.setFileData(s.getFileData());
+                    return attachment;
                 }).toList();
 
-        studentTaskRepositoryPort.saveAll(studentTasks);
+        attachmentRepositoryPort.saveAll(attachmentList);
+
+        // agregar los estudiantes a la tarea
+
+        if(studentIDs == null) return;
+
+        List<Student> studentList = studentRepositoryPort.getStudentByAdviserID(adviser.getAdviserID());
+        if(studentList == null) return;
+
+        Set<Long> idsSet = new HashSet<>(studentIDs);
+        List<Student> filtrados = studentList.stream()
+                .filter(s -> idsSet.contains(s.getStudentID()))
+                .toList();
+
+        List<StudentTask> st = filtrados.stream()
+                .map(s -> {
+                     StudentTask studentTask = new StudentTask();
+                     studentTask.setTask(createdTask);
+                     studentTask.setStudent(s);
+                     studentTask.setAssignedDate(createdTask.getCreationDate());
+                     studentTask.setStatus(createdTask.getStatusKanban());
+                     return studentTask;
+                })
+                .toList();
+
+        studentTaskRepositoryPort.saveAll(st);
+
+
+
+
     }
+
+
 }
