@@ -2,6 +2,7 @@ package com.utez.kanban.kanban.infrastructure.controller.DTO;
 
 import com.utez.kanban.kanban.domain.model.StudentTask;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TaskDetailDto {
@@ -26,10 +27,14 @@ public class TaskDetailDto {
 
     public static TaskDetailDto fromDomain(StudentTask st){
 
-        List<AttachmentDto> files = st.getTask().getAttachments()
-                .stream()
-                .map(AttachmentDto::fromEntity)
-                .toList();
+        List<AttachmentDto> files = new ArrayList<>();
+
+        if(st.getTask().getAttachments() != null){
+            files = st.getTask().getAttachments()
+                    .stream()
+                    .map(AttachmentDto::fromDomain)
+                    .toList();
+        }
 
         return new TaskDetailDto(
                 st.getTask().getTaskID(),

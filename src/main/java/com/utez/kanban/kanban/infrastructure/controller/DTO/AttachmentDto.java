@@ -1,5 +1,6 @@
 package com.utez.kanban.kanban.infrastructure.controller.DTO;
 
+import com.utez.kanban.kanban.domain.model.Attachment;
 import com.utez.kanban.kanban.infrastructure.entity.AttachmentEntity;
 
 import java.util.Base64;
@@ -66,6 +67,23 @@ public class AttachmentDto {
 
 
 
+    }
+
+
+
+    public static AttachmentDto fromDomain(Attachment a){
+        String fileB64 = "";
+
+        if(a.getFileData() != null){
+            fileB64 = Base64.getEncoder().encodeToString(a.getFileData());
+        }
+
+        return new AttachmentDto(
+                a.getAttachmentID(),
+                a.getFileName(),
+                a.getFileType(),
+                fileB64
+        );
     }
 
 }
