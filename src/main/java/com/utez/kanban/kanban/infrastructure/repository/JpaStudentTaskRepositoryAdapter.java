@@ -12,6 +12,7 @@ import org.springframework.web.context.request.NativeWebRequest;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class JpaStudentTaskRepositoryAdapter implements StudentTaskRepositoryPort {
@@ -38,5 +39,24 @@ public class JpaStudentTaskRepositoryAdapter implements StudentTaskRepositoryPor
                 .toList();
 
         jpaStudentTaskRepository.saveAll(studentTaskEntityList);
+    }
+
+    @Override
+    public List<StudentTask> getTasksByStudentAndAdviser(String email, Long adviserID) {
+        List<StudentTask> list = new ArrayList<>();
+
+        for(StudentTaskEntity entity : jpaStudentTaskRepository
+                .findTasksByStudentAndAdviser(email, adviserID)){
+
+            list.add(StudentTaskMapper.toStudentTask(entity));
+        }
+
+        return list;
+    }
+
+    @Override
+    public Optional<StudentTask> getTaskDetail(String email, Long taskID) {
+        return jpaStudentTaskRepository.findTaskDetailById(taskID, email)
+                .map(StudentTaskMapper::toStudentTask);
     }
 }

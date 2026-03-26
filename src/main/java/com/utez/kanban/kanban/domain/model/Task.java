@@ -1,6 +1,7 @@
 package com.utez.kanban.kanban.domain.model;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class Task {
     private Long taskID;
@@ -12,6 +13,8 @@ public class Task {
 
     private String color;
     private String priority;
+
+    private List<Attachment> attachments;
 
     private Board board;
 
@@ -114,5 +117,13 @@ public class Task {
 
     public void setBoard(Board board) {
         this.board = board;
+    }
+
+    public List<Attachment> getAttachments() {
+        return attachments;
+    }
+
+    public void setAttachments(List<Attachment> attachments) {
+        this.attachments = attachments;
     }
 }

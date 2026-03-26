@@ -1,10 +1,8 @@
 package com.utez.kanban.kanban.infrastructure.controller.DTO;
 
 import com.utez.kanban.kanban.domain.model.Admin;
-import com.utez.kanban.kanban.domain.model.User;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import org.springframework.web.bind.annotation.PostMapping;
+
 
 import java.util.Base64;
 

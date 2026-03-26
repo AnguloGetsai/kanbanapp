@@ -14,6 +14,7 @@ public interface AdviserRepositoryPort {
     Optional<Adviser> findByEmail(String email);
     boolean uploadLogo(Long id, byte[] logo);
     boolean updateAdviserInformation(Long id, Adviser adviser);
+    List<Adviser> getAdvisersByStudentEmail(String email);
 
 
 }

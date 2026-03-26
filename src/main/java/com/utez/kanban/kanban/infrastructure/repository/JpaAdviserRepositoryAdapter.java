@@ -9,6 +9,7 @@ import com.utez.kanban.kanban.infrastructure.mapper.StudentMapper;
 import jakarta.validation.constraints.Email;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 @Component
@@ -54,6 +55,17 @@ public class JpaAdviserRepositoryAdapter implements AdviserRepositoryPort {
     @Override
     public boolean updateAdviserInformation(Long id, Adviser adviser) {
         return  jpaAdviserRepository.updateAdviserInformation(id, adviser.getFirstName(), adviser.getLastName()) > 0;
+    }
+
+    @Override
+    public List<Adviser> getAdvisersByStudentEmail(String email) {
+        List<Adviser> advisers = new ArrayList<>();
+
+        for (AdviserEntity entity : jpaAdviserRepository.getAdvisersByStudentEmail(email)) {
+            advisers.add(AdviserMapper.toAdviser(entity));
+        }
+
+        return advisers;
     }
 
 

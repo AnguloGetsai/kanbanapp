@@ -22,9 +22,13 @@ import org.springframework.security.web.server.util.matcher.NegatedServerWebExch
 public class ApplicationConfig {
 
     @Bean
-    public StudentService studentService(StudentRepositoryPort studentRepositoryPort){
+    public StudentService studentService(
+            StudentRepositoryPort studentRepositoryPort,
+            AdviserRepositoryPort adviserRepositoryPort,
+            StudentTaskRepositoryPort studentTaskRepositoryPort
+            ){
         return new StudentService(
-                new StudentUseCaseImp(studentRepositoryPort)
+                new StudentUseCaseImp(studentRepositoryPort, adviserRepositoryPort,studentTaskRepositoryPort)
         );
     }
 

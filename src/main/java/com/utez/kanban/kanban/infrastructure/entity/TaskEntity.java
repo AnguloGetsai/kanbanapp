@@ -3,6 +3,7 @@ package com.utez.kanban.kanban.infrastructure.entity;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 
 @Entity
@@ -25,7 +26,8 @@ public class TaskEntity {
     private String priority;
 
 
-
+    @OneToMany(mappedBy = "taskEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<AttachmentEntity> attachments;
 
 
     @ManyToOne
@@ -121,5 +123,14 @@ public class TaskEntity {
 
     public void setPriority(String priority) {
         this.priority = priority;
+    }
+
+
+    public List<AttachmentEntity> getAttachments() {
+        return attachments;
+    }
+
+    public void setAttachments(List<AttachmentEntity> attachments) {
+        this.attachments = attachments;
     }
 }

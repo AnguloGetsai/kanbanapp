@@ -7,7 +7,7 @@ public class Student {
     private String firstName;
     private String lastName;
     private String gender;
-    private String image;
+    private byte[] image;
 
 
     private User user;
@@ -19,7 +19,7 @@ public class Student {
 
 
     public Student(Long studentID, String firstName, String lastName,
-                   String gender, String image, User user,
+                   String gender, byte[] image, User user,
                    List<Notification> notifications) {
         this.studentID = studentID;
         this.firstName = firstName;
@@ -64,11 +64,11 @@ public class Student {
         this.gender = gender;
     }
 
-    public String getImage() {
+    public byte[] getImage() {
         return image;
     }
 
-    public void setImage(String image) {
+    public void setImage(byte[] image) {
         this.image = image;
     }
 

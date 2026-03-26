@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -39,4 +40,17 @@ WHERE ue.email = :email AND ue.rol = 'ADVISER'
                WHERE ae.adviserID = :id
                 """)
     int updateAdviserInformation(@Param("id") Long id,@Param("firstName") String firstName,@Param("lastName") String lastName);
+
+
+    @Query("""
+    SELECT ase.adviserEntity
+    FROM AdviserStudentEntity ase
+    JOIN ase.studentEntity se
+    JOIN se.userEntity ue
+    WHERE ue.email = :email
+    """)
+    List<AdviserEntity> getAdvisersByStudentEmail(@Param("email") String email);
+
+
+
 }

@@ -15,7 +15,7 @@ public class StudentEntity {
     private String firstName;
     private String lastName;
     private String gender;
-    private String image;
+    private byte[] image;
 
 
 
@@ -32,7 +32,7 @@ public class StudentEntity {
     }
 
     public StudentEntity(Long studentID, String firstName, String lastName, String gender,
-                         String image, UserEntity userEntity, List<NotificationEntity> notifications) {
+                         byte[] image, UserEntity userEntity, List<NotificationEntity> notifications) {
         this.studentID = studentID;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -74,11 +74,11 @@ public class StudentEntity {
         this.gender = gender;
     }
 
-    public String getImage() {
+    public byte[] getImage() {
         return image;
     }
 
-    public void setImage(String image) {
+    public void setImage(byte[] image) {
         this.image = image;
     }
 
