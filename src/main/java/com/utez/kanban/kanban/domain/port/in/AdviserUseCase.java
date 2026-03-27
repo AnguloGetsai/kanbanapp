@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface AdviserUseCase {
-    void registerStudent(String email, String firstName, String lastName);
+    void registerStudent(String adviserEmail,String email, String firstName, String lastName);
     void addStudentToBoard(String adviserEmail,String studentEmail);
     List<Student> getAllStudents(String email);
     void disableBoardStudent(String email, Long studentID);
@@ -19,4 +19,8 @@ public interface AdviserUseCase {
     void updateAdviserInformation(String email, Adviser adviser);
     Optional<Adviser> getAdviserInformation(String email);
     void createTask(List<Long> studentIDs, Task task, String email, List<Attachment> files);
+    List<Task> getAllTasks(String email);
+    void deleteTask(Long taskID, String email);
+    void updateTask(Long taskID, String email, Task updatedTask);
+    void updateTaskStatus(Long taskID, String email, String status);
 }

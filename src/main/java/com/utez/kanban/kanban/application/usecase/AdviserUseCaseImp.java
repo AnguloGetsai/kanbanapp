@@ -6,8 +6,7 @@ import com.utez.kanban.kanban.domain.model.exeption.user.EmailAlreadyExistsExcep
 import com.utez.kanban.kanban.domain.model.exeption.user.UserNotFoundException;
 import com.utez.kanban.kanban.domain.port.in.AdviserUseCase;
 import com.utez.kanban.kanban.domain.port.out.*;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.web.SecurityFilterChain;
+
 
 import java.util.*;
 
@@ -41,7 +40,7 @@ public class AdviserUseCaseImp implements AdviserUseCase {
 
 
     @Override
-    public void registerStudent(String email, String firstName, String lastName) {
+    public void registerStudent(String adviserEmail,String email, String firstName, String lastName) {
         if(userRepositoryPort.findUserEmail(email).isPresent()){
             throw  new EmailAlreadyExistsException("User already exists");
         }
@@ -63,6 +62,16 @@ public class AdviserUseCaseImp implements AdviserUseCase {
 
         Student studentCreated = studentRepositoryPort.saveStudent(student);
         if(studentCreated == null)throw  new BusinessRuleViolationException("Student not created");
+
+        Adviser adviser  = adviserRepositoryPort.findByEmail(adviserEmail)
+                .orElseThrow(() -> new  UserNotFoundException("Adviser not found"));
+
+
+
+            AdviserStudent adviserStudent = new AdviserStudent(adviser, studentCreated, true);
+            adviserStudentRepository.addStudentToBoard(adviserStudent);
+
+
     }
 
     @Override
@@ -155,25 +164,21 @@ public class AdviserUseCaseImp implements AdviserUseCase {
 
 
      //    pendiente por hacer filtro hash
-        List<Attachment> attachmentList = files
-                .stream()
-                .map(s -> {
-                    Attachment attachment = new Attachment();
-                    attachment.setTask(createdTask);
-                    attachment.setFileType(s.getFileType());
-                    attachment.setFileName(s.getFileName());
-                    attachment.setFileData(s.getFileData());
-                    return attachment;
-                }).toList();
-
-        attachmentRepositoryPort.saveAll(attachmentList);
+        if(files != null && !files.isEmpty()){
+            files.forEach(f -> f.setTask(createdTask));
+            attachmentRepositoryPort.saveAll(files);
+        }
 
         // agregar los estudiantes a la tarea
 
-        if(studentIDs == null) return;
+        if(studentIDs == null || studentIDs.isEmpty()){
+            throw new BusinessRuleViolationException("Task must have at least one student");
+        }
 
         List<Student> studentList = studentRepositoryPort.getStudentByAdviserID(adviser.getAdviserID());
-        if(studentList == null) return;
+        if(studentList.isEmpty()){
+            throw new BusinessRuleViolationException("No students found for adviser");
+        }
 
         Set<Long> idsSet = new HashSet<>(studentIDs);
         List<Student> filtrados = studentList.stream()
@@ -196,6 +201,81 @@ public class AdviserUseCaseImp implements AdviserUseCase {
 
 
 
+    }
+
+    @Override
+    public List<Task> getAllTasks(String email) {
+        Adviser adviser = adviserRepositoryPort.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("Adviser not found"));
+
+        return taskRepositoryPort.findTasksByAdviserID(adviser.getAdviserID());
+    }
+
+    @Override
+    public void deleteTask(Long taskID, String email) {
+        Adviser adviser = adviserRepositoryPort.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("Adviser not found"));
+
+        Task task = taskRepositoryPort.findById(taskID)
+                .orElseThrow(() -> new BusinessRuleViolationException("Task not found"));
+
+        // VALIDAR QUE LA TAREA SEA DEL ASESOR
+        if(!task.getBoard().getAdviser().getAdviserID().equals(adviser.getAdviserID())){
+            throw new BusinessRuleViolationException("Unauthorized");
+        }
+
+        taskRepositoryPort.deleteTask(taskID);
+    }
+
+    @Override
+    public void updateTask(Long taskID, String email, Task updatedTask) {
+        Adviser adviser = adviserRepositoryPort.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("Adviser not found"));
+
+        Task existingTask = taskRepositoryPort.findById(taskID)
+                .orElseThrow(() -> new BusinessRuleViolationException("Task not found"));
+
+        // validar que la tarea pertenece al asesor
+        if(!existingTask.getBoard().getAdviser().getAdviserID()
+                .equals(adviser.getAdviserID())){
+            throw new BusinessRuleViolationException("Unauthorized");
+        }
+
+        // actualizar campos
+        existingTask.setName(updatedTask.getName());
+        existingTask.setDescription(updatedTask.getDescription());
+        existingTask.setStatusKanban(updatedTask.getStatusKanban());
+        existingTask.setColor(updatedTask.getColor());
+        existingTask.setPriority(updatedTask.getPriority());
+        existingTask.setLimitDate(updatedTask.getLimitDate());
+
+        taskRepositoryPort.save(existingTask);
+    }
+
+    @Override
+    public void updateTaskStatus(Long taskID, String email, String status) {
+        Adviser adviser = adviserRepositoryPort.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("Adviser not found"));
+
+        Task task = taskRepositoryPort.findById(taskID)
+                .orElseThrow(() -> new BusinessRuleViolationException("Task not found"));
+
+        // validar ownership
+        if(!task.getBoard().getAdviser().getAdviserID()
+                .equals(adviser.getAdviserID())){
+            throw new BusinessRuleViolationException("Unauthorized");
+        }
+
+        // validar enum
+        try {
+            StatusKanban.valueOf(status);
+        } catch (Exception e){
+            throw new BusinessRuleViolationException("Invalid status");
+        }
+
+        task.setStatusKanban(status);
+
+        taskRepositoryPort.save(task);
     }
 
 

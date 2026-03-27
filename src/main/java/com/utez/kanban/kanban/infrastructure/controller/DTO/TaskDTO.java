@@ -57,14 +57,17 @@ public class TaskDTO {
 
     public static List<Attachment> toAttachment(List<MultipartFile> files){
 
-        List<Attachment> attachmentList = files.stream().map(s -> {
+        if(files == null || files.isEmpty()){
+            return List.of();
+        }
+
+        return files.stream().map(s -> {
             Attachment attachment = new Attachment();
             attachment.setFileData(getFileByte(s));
             attachment.setFileName(s.getOriginalFilename());
-            attachment.setFileType(attachment.getFileType());
+            attachment.setFileType(s.getContentType());
             return attachment;
         }).toList();
-        return attachmentList;
     }
 
     public static byte[] getFileByte(MultipartFile file){

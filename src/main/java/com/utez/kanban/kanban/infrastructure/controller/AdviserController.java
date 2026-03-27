@@ -9,6 +9,7 @@ import com.utez.kanban.kanban.domain.model.exeption.user.UserNotFoundException;
 import com.utez.kanban.kanban.infrastructure.controller.DTO.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
@@ -29,10 +30,10 @@ public class AdviserController {
     public AdviserController(AdviserService adviserService){
         this.adviserService = adviserService;
     }
-    // pendiente asignar el estudiante a tablero durante el registro
     @PostMapping("/registerStudent")
-    public ResponseEntity<?> registerStudent(@RequestBody @Valid StudentRegister studentRegister){
+    public ResponseEntity<?> registerStudent(@RequestBody @Valid StudentRegister studentRegister, Authentication authentication){
         adviserService.registerStudent(
+                authentication.getName(),
                 studentRegister.getEmail(),
                 studentRegister.getFirstName(),
                 studentRegister.getLastName());
@@ -121,13 +122,79 @@ public class AdviserController {
         return ResponseEntity.ok(AdviserInformation.toAdviserInformation(adviser));
     }
 
-    @PostMapping
-    public ResponseEntity<?> createTask(@RequestBody @Valid TaskDTO taskDTO, Authentication authentication){
-        adviserService.createTask(taskDTO.getStudentIDs(),TaskDTO.toTask(taskDTO),authentication.getName(),TaskDTO.toAttachment(taskDTO.getFiles()));
-        return ResponseEntity.ok(new SuccessResponse(201, "Added task successful"));
+    @PostMapping(value = "/createTask",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> createTask(
+            @ModelAttribute @Valid TaskDTO taskDTO,
+            Authentication authentication
+    ){
+        adviserService.createTask(
+                taskDTO.getStudentIDs(),
+                TaskDTO.toTask(taskDTO),
+                authentication.getName(),
+                TaskDTO.toAttachment(taskDTO.getFiles())
+        );
 
+        return ResponseEntity.ok(new SuccessResponse(201, "Added task successful"));
     }
 
 
+    @GetMapping("/getTasks")
+    public ResponseEntity<?> getAllTasks(Authentication authentication){
+
+        List<TaskSimpleDto> response = adviserService
+                .getAllTasks(authentication.getName())
+                .stream()
+                .map(TaskSimpleDto::fromDomain)
+                .toList();
+
+        return ResponseEntity.ok(response);
+    }
+
+
+    @DeleteMapping("/deleteTask/{id}")
+    public ResponseEntity<?> deleteTask(
+            @PathVariable Long id,
+            Authentication authentication
+    ){
+        adviserService.deleteTask(id, authentication.getName());
+        return ResponseEntity.ok(new SuccessResponse(200, "Task deleted"));
+    }
+
+    @PutMapping("/task/{id}")
+    public ResponseEntity<?> updateTask(
+            @PathVariable Long id,
+            @RequestBody UpdateTaskDto dto,
+            Authentication authentication
+    ){
+
+        Task task = new Task();
+        task.setName(dto.getName());
+        task.setDescription(dto.getDescription());
+        task.setStatusKanban(dto.getStatusKanban());
+        task.setColor(dto.getColor());
+        task.setPriority(dto.getPriority());
+        task.setLimitDate(dto.getLimitDate());
+
+        adviserService.updateTask(id, authentication.getName(), task);
+
+        return ResponseEntity.ok(new SuccessResponse(200, "Task updated"));
+    }
+
+
+    @PatchMapping("/task/{id}/status")
+    public ResponseEntity<?> updateTaskStatus(
+            @PathVariable Long id,
+            @RequestBody UpdateStatusDto dto,
+            Authentication authentication
+    ){
+
+        adviserService.updateTaskStatus(
+                id,
+                authentication.getName(),
+                dto.getStatus()
+        );
+
+        return ResponseEntity.ok(new SuccessResponse(200, "Status updated"));
+    }
 
 }
