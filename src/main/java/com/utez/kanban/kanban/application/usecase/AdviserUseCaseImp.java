@@ -236,7 +236,7 @@ public class AdviserUseCaseImp implements AdviserUseCase {
         Task existingTask = taskRepositoryPort.findById(taskID)
                 .orElseThrow(() -> new BusinessRuleViolationException("Task not found"));
 
-        // ✅ actualizar datos
+
         existingTask.setName(task.getName());
         existingTask.setDescription(task.getDescription());
         existingTask.setStatusKanban(task.getStatusKanban());
@@ -246,14 +246,11 @@ public class AdviserUseCaseImp implements AdviserUseCase {
 
         taskRepositoryPort.update(existingTask);
 
-        // =========================
-        // 📎 ARCHIVOS
-        // =========================
-        // =========================
+
 
         if(files != null){
 
-            // 🧨 borrar todos los anteriores
+
             attachmentRepositoryPort.deleteByTaskId(taskID);
 
             if(!files.isEmpty()){
@@ -262,9 +259,7 @@ public class AdviserUseCaseImp implements AdviserUseCase {
             }
         }
 
-        // =========================
-        // 👥 ESTUDIANTES
-        // =========================
+
         if(studentIDs != null){
 
             // eliminar relaciones actuales
