@@ -45,5 +45,11 @@ public class JpaTaskRepositoryAdapter implements TaskRepositoryPort {
         return Optional.of(TaskMapper.toTask(taskEntity));
     }
 
+    @Override
+    public void update(Task task) {
+        TaskEntity entity = TaskMapper.toTaskEntity(task);
+        jpaTaskRepository.save(entity);
+    }
+
 
 }

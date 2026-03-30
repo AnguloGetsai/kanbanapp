@@ -71,9 +71,11 @@ public class AdviserService implements AdviserUseCase {
     }
 
     @Override
-    public void updateTask(Long taskID, String email, Task updatedTask) {
-        adviserUseCase.updateTask(taskID, email, updatedTask);
+    public void updateTask(Long taskID, String email, Task task, List<Long> studentIDs, List<Attachment> files) {
+        adviserUseCase.updateTask(taskID, email, task, studentIDs, files);
     }
+
+
 
     @Override
     public void updateTaskStatus(Long taskID, String email, String status) {

@@ -2,8 +2,10 @@ package com.utez.kanban.kanban.infrastructure.controller;
 
 import com.utez.kanban.kanban.application.service.AdviserService;
 import com.utez.kanban.kanban.application.service.StudentService;
+import com.utez.kanban.kanban.application.service.StudentTaskService;
 import com.utez.kanban.kanban.domain.model.Adviser;
 import com.utez.kanban.kanban.domain.model.Student;
+import com.utez.kanban.kanban.domain.model.StudentTask;
 import com.utez.kanban.kanban.domain.model.Task;
 import com.utez.kanban.kanban.domain.model.exeption.user.UserNotFoundException;
 import com.utez.kanban.kanban.infrastructure.controller.DTO.*;
@@ -26,9 +28,11 @@ import java.util.List;
 @Validated
 public class AdviserController {
     private final AdviserService adviserService;
+    private final StudentTaskService studentTaskService;
 
-    public AdviserController(AdviserService adviserService){
+    public AdviserController(AdviserService adviserService, StudentTaskService studentTaskService){
         this.adviserService = adviserService;
+        this.studentTaskService = studentTaskService;
     }
     @PostMapping("/registerStudent")
     public ResponseEntity<?> registerStudent(@RequestBody @Valid StudentRegister studentRegister, Authentication authentication){
@@ -141,14 +145,24 @@ public class AdviserController {
     @GetMapping("/getTasks")
     public ResponseEntity<?> getAllTasks(Authentication authentication){
 
-        List<TaskSimpleDto> response = adviserService
-                .getAllTasks(authentication.getName())
-                .stream()
-                .map(TaskSimpleDto::fromDomain)
-                .toList();
+
+        String email = authentication.getName();
+
+        List<Task> tasks = adviserService.getAllTasks(email);
+
+        List<TaskSimpleDto> response = tasks.stream().map(task -> {
+
+            List<StudentTask> st = studentTaskService.findByTaskId(task.getTaskID());
+
+            return TaskSimpleDto.fromDomain(task, st);
+
+        }).toList();
 
         return ResponseEntity.ok(response);
     }
+
+
+
 
 
     @DeleteMapping("/deleteTask/{id}")
@@ -160,22 +174,23 @@ public class AdviserController {
         return ResponseEntity.ok(new SuccessResponse(200, "Task deleted"));
     }
 
-    @PutMapping("/task/{id}")
+    @PutMapping(value = "/task/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> updateTask(
             @PathVariable Long id,
-            @RequestBody UpdateTaskDto dto,
+            @ModelAttribute UpdateTaskDto dto,
             Authentication authentication
     ){
 
-        Task task = new Task();
-        task.setName(dto.getName());
-        task.setDescription(dto.getDescription());
-        task.setStatusKanban(dto.getStatusKanban());
-        task.setColor(dto.getColor());
-        task.setPriority(dto.getPriority());
-        task.setLimitDate(dto.getLimitDate());
+        Task task = TaskSimpleDto.toTask(dto);
 
-        adviserService.updateTask(id, authentication.getName(), task);
+
+        adviserService.updateTask(
+                id,
+                authentication.getName(),
+                task,
+                dto.getStudentIDs(),
+                TaskDTO.toAttachment(dto.getFiles())
+        );
 
         return ResponseEntity.ok(new SuccessResponse(200, "Task updated"));
     }

@@ -21,6 +21,7 @@ public interface AdviserUseCase {
     void createTask(List<Long> studentIDs, Task task, String email, List<Attachment> files);
     List<Task> getAllTasks(String email);
     void deleteTask(Long taskID, String email);
-    void updateTask(Long taskID, String email, Task updatedTask);
+    void updateTask(Long taskID, String email, Task task,
+                    List<Long> studentIDs, List<Attachment> files);
     void updateTaskStatus(Long taskID, String email, String status);
 }

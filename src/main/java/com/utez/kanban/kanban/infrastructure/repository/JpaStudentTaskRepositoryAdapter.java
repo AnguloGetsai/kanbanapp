@@ -59,4 +59,17 @@ public class JpaStudentTaskRepositoryAdapter implements StudentTaskRepositoryPor
         return jpaStudentTaskRepository.findTaskDetailById(taskID, email)
                 .map(StudentTaskMapper::toStudentTask);
     }
+
+    @Override
+    public List<StudentTask> findByTaskId(Long taskID) {
+        return jpaStudentTaskRepository.findByTaskId(taskID)
+                .stream()
+                .map(StudentTaskMapper::toStudentTask)
+                .toList();
+    }
+
+    @Override
+    public void deleteByTaskId(Long taskID) {
+        jpaStudentTaskRepository.deleteByTaskId(taskID);
+    }
 }

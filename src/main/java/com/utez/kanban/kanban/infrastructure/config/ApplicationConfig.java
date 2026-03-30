@@ -1,13 +1,7 @@
 package com.utez.kanban.kanban.infrastructure.config;
 
-import com.utez.kanban.kanban.application.service.AdminService;
-import com.utez.kanban.kanban.application.service.AdviserService;
-import com.utez.kanban.kanban.application.service.StudentService;
-import com.utez.kanban.kanban.application.service.UserService;
-import com.utez.kanban.kanban.application.usecase.AdminUseCaseImp;
-import com.utez.kanban.kanban.application.usecase.AdviserUseCaseImp;
-import com.utez.kanban.kanban.application.usecase.StudentUseCaseImp;
-import com.utez.kanban.kanban.application.usecase.UserUseCaseImp;
+import com.utez.kanban.kanban.application.service.*;
+import com.utez.kanban.kanban.application.usecase.*;
 import com.utez.kanban.kanban.domain.port.in.AdviserUseCase;
 import com.utez.kanban.kanban.domain.port.out.*;
 import com.utez.kanban.kanban.infrastructure.repository.*;
@@ -101,6 +95,11 @@ public class ApplicationConfig {
     @Bean
     public AdviserStudentRepository adviserStudentRepository(JpaAdviserStudentRepositoryAdapter jpaAdviserStudentRepositoryAdapter){
         return jpaAdviserStudentRepositoryAdapter;
+    }
+
+    @Bean
+    public StudentTaskService studentTaskService(StudentTaskRepositoryPort studentTaskRepositoryPort){
+        return new StudentTaskService(new StudentTaskUseCaseImp(studentTaskRepositoryPort));
     }
 
 

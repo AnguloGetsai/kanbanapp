@@ -11,7 +11,6 @@ import java.util.List;
 public class TaskMapper {
     public static Task toTask(TaskEntity taskEntity){
 
-
         List<Attachment> attachments = new ArrayList<>();
 
         if(taskEntity.getAttachments() != null){
@@ -20,7 +19,7 @@ public class TaskMapper {
             }
         }
 
-        return new Task(
+        Task task = new Task(
                 taskEntity.getTaskID(),
                 taskEntity.getLimitDate(),
                 taskEntity.getCreationDate(),
@@ -31,6 +30,11 @@ public class TaskMapper {
                 taskEntity.getPriority(),
                 BoardMapper.toBoard(taskEntity.getBoardEntity())
         );
+
+
+        task.setAttachments(attachments);
+
+        return task;
     }
 
 

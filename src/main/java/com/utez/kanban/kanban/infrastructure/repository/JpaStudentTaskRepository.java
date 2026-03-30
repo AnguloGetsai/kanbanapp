@@ -3,8 +3,10 @@ package com.utez.kanban.kanban.infrastructure.repository;
 import com.utez.kanban.kanban.infrastructure.entity.StudentEntity;
 import com.utez.kanban.kanban.infrastructure.entity.StudentTaskEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.List;
@@ -42,4 +44,13 @@ AND ue.email = :email
             @Param("taskID") Long taskID,
             @Param("email") String email
     );
+
+
+    @Query("SELECT st FROM StudentTaskEntity st WHERE st.taskEntity.taskID = :taskID")
+    List<StudentTaskEntity> findByTaskId(Long taskID);
+
+    @Transactional
+    @Modifying
+    @Query("DELETE FROM StudentTaskEntity st WHERE st.taskEntity.taskID = :taskID")
+    void deleteByTaskId(Long taskID);
 }

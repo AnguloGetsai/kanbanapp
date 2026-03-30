@@ -1,6 +1,9 @@
 package com.utez.kanban.kanban.infrastructure.controller.DTO;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import java.time.LocalDate;
+import java.util.List;
 
 public class UpdateTaskDto {
     private String name;
@@ -10,15 +13,39 @@ public class UpdateTaskDto {
     private String priority;
     private LocalDate limitDate;
 
+    List<Long> studentIDs;
+
+    private List<MultipartFile> files;
+
     public UpdateTaskDto(){}
 
-    public UpdateTaskDto(String name, String description, String statusKanban, String color, String priority, LocalDate limitDate) {
+    public UpdateTaskDto(String name, String description, String statusKanban, String color,
+                         String priority, LocalDate limitDate, List<Long> studentIDs,
+                         List<MultipartFile> files) {
         this.name = name;
         this.description = description;
         this.statusKanban = statusKanban;
         this.color = color;
         this.priority = priority;
         this.limitDate = limitDate;
+        this.studentIDs = studentIDs;
+        this.files = files;
+    }
+
+    public List<Long> getStudentIDs() {
+        return studentIDs;
+    }
+
+    public void setStudentIDs(List<Long> studentIDs) {
+        this.studentIDs = studentIDs;
+    }
+
+    public List<MultipartFile> getFiles() {
+        return files;
+    }
+
+    public void setFiles(List<MultipartFile> files) {
+        this.files = files;
     }
 
     public String getName() {

@@ -8,6 +8,7 @@ import com.utez.kanban.kanban.domain.port.in.AdviserUseCase;
 import com.utez.kanban.kanban.domain.port.out.*;
 
 
+import java.time.LocalDate;
 import java.util.*;
 
 public class AdviserUseCaseImp implements AdviserUseCase {
@@ -228,29 +229,67 @@ public class AdviserUseCaseImp implements AdviserUseCase {
     }
 
     @Override
-    public void updateTask(Long taskID, String email, Task updatedTask) {
+    public void updateTask(Long taskID, String email, Task task, List<Long> studentIDs, List<Attachment> files) {
         Adviser adviser = adviserRepositoryPort.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("Adviser not found"));
 
         Task existingTask = taskRepositoryPort.findById(taskID)
                 .orElseThrow(() -> new BusinessRuleViolationException("Task not found"));
 
-        // validar que la tarea pertenece al asesor
-        if(!existingTask.getBoard().getAdviser().getAdviserID()
-                .equals(adviser.getAdviserID())){
-            throw new BusinessRuleViolationException("Unauthorized");
+        // ✅ actualizar datos
+        existingTask.setName(task.getName());
+        existingTask.setDescription(task.getDescription());
+        existingTask.setStatusKanban(task.getStatusKanban());
+        existingTask.setColor(task.getColor());
+        existingTask.setPriority(task.getPriority());
+        existingTask.setLimitDate(task.getLimitDate());
+
+        taskRepositoryPort.update(existingTask);
+
+        // =========================
+        // 📎 ARCHIVOS
+        // =========================
+        // =========================
+
+        if(files != null){
+
+            // 🧨 borrar todos los anteriores
+            attachmentRepositoryPort.deleteByTaskId(taskID);
+
+            if(!files.isEmpty()){
+                files.forEach(f -> f.setTask(existingTask));
+                attachmentRepositoryPort.saveAll(files);
+            }
         }
 
-        // actualizar campos
-        existingTask.setName(updatedTask.getName());
-        existingTask.setDescription(updatedTask.getDescription());
-        existingTask.setStatusKanban(updatedTask.getStatusKanban());
-        existingTask.setColor(updatedTask.getColor());
-        existingTask.setPriority(updatedTask.getPriority());
-        existingTask.setLimitDate(updatedTask.getLimitDate());
+        // =========================
+        // 👥 ESTUDIANTES
+        // =========================
+        if(studentIDs != null){
 
-        taskRepositoryPort.save(existingTask);
+            // eliminar relaciones actuales
+            studentTaskRepositoryPort.deleteByTaskId(taskID);
+
+            List<Student> students = studentRepositoryPort
+                    .getStudentByAdviserID(adviser.getAdviserID());
+
+            Set<Long> idsSet = new HashSet<>(studentIDs);
+
+            List<StudentTask> newRelations = students.stream()
+                    .filter(s -> idsSet.contains(s.getStudentID()))
+                    .map(s -> {
+                        StudentTask st = new StudentTask();
+                        st.setTask(existingTask);
+                        st.setStudent(s);
+                        st.setAssignedDate(LocalDate.now());
+                        st.setStatus(existingTask.getStatusKanban());
+                        return st;
+                    }).toList();
+
+            studentTaskRepositoryPort.saveAll(newRelations);
+        }
     }
+
 
     @Override
     public void updateTaskStatus(Long taskID, String email, String status) {

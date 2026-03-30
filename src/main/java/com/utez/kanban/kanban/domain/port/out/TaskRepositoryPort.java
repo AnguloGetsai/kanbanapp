@@ -10,4 +10,5 @@ public interface TaskRepositoryPort {
     List<Task> findTasksByAdviserID(Long adviserID);
     void deleteTask(Long taskID);
     Optional<Task> findById(Long id);
+    void update(Task task);
 }

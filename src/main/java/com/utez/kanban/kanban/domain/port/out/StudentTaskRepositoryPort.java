@@ -11,4 +11,6 @@ public interface StudentTaskRepositoryPort {
     void saveAll(List<StudentTask> studentTaskList);
     List<StudentTask> getTasksByStudentAndAdviser(String email, Long adviserID);
     Optional<StudentTask> getTaskDetail(String email, Long taskID);
+    List<StudentTask> findByTaskId(Long taskID);
+    void deleteByTaskId(Long taskID);
 }

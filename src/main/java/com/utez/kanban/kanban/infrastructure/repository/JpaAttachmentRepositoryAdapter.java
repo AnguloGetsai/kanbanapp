@@ -29,5 +29,10 @@ public class JpaAttachmentRepositoryAdapter implements AttachmentRepositoryPort 
         jpaAttachmentRepository.saveAll(attachmentEntityList);
     }
 
+    @Override
+    public void deleteByTaskId(Long taskID) {
+        jpaAttachmentRepository.deleteByTaskId(taskID);
+    }
+
 
 }

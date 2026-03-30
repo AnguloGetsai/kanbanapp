@@ -13,7 +13,6 @@ public class Task {
 
     private String color;
     private String priority;
-
     private List<Attachment> attachments;
 
     private Board board;

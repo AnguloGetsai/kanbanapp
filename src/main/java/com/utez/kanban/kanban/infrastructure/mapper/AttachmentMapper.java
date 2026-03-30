@@ -2,8 +2,7 @@ package com.utez.kanban.kanban.infrastructure.mapper;
 
 import com.utez.kanban.kanban.domain.model.Attachment;
 import com.utez.kanban.kanban.infrastructure.entity.AttachmentEntity;
-import org.hibernate.query.NativeQuery;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+
 
 
 public class AttachmentMapper {
@@ -13,17 +12,27 @@ public class AttachmentMapper {
                 attachmentEntity.getFileName(),
                 attachmentEntity.getFileType(),
                 attachmentEntity.getFileData(),
-                TaskMapper.toTask(attachmentEntity.getTaskEntity())
+                null
         );
     }
 
     public static AttachmentEntity toAttachmentEntity(Attachment attachment){
-        return new AttachmentEntity(
+
+        AttachmentEntity entity = new AttachmentEntity(
                 attachment.getAttachmentID(),
                 attachment.getFileName(),
                 attachment.getFileType(),
                 attachment.getFileData(),
-                TaskMapper.toTaskEntity(attachment.getTask())
+                null
         );
+
+
+        if(attachment.getTask() != null){
+            entity.setTaskEntity(
+                    TaskMapper.toTaskEntity(attachment.getTask())
+            );
+        }
+
+        return entity;
     }
 }
