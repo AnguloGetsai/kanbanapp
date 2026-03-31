@@ -20,6 +20,7 @@ public class AdviserUseCaseImp implements AdviserUseCase {
     private final BoardRepositoryPort boardRepositoryPort;
     private final AttachmentRepositoryPort attachmentRepositoryPort;
     private final StudentTaskRepositoryPort studentTaskRepositoryPort;
+    private final NotificationRepositoryPort notificationRepositoryPort;
 
     public AdviserUseCaseImp(AdviserRepositoryPort adviserRepositoryPort,
                              UserRepositoryPort userRepositoryPort,
@@ -28,7 +29,8 @@ public class AdviserUseCaseImp implements AdviserUseCase {
                              TaskRepositoryPort taskRepositoryPort,
                              BoardRepositoryPort boardRepositoryPort,
                              AttachmentRepositoryPort attachmentRepositoryPort,
-                             StudentTaskRepositoryPort studentTaskRepositoryPort){
+                             StudentTaskRepositoryPort studentTaskRepositoryPort,
+                             NotificationRepositoryPort notificationRepositoryPort){
         this.adviserRepositoryPort = adviserRepositoryPort;
         this.userRepositoryPort = userRepositoryPort;
         this.studentRepositoryPort = studentRepositoryPort;
@@ -37,6 +39,7 @@ public class AdviserUseCaseImp implements AdviserUseCase {
         this.boardRepositoryPort = boardRepositoryPort;
         this.attachmentRepositoryPort = attachmentRepositoryPort;
         this.studentTaskRepositoryPort = studentTaskRepositoryPort;
+        this.notificationRepositoryPort = notificationRepositoryPort;
     }
 
 
@@ -198,6 +201,16 @@ public class AdviserUseCaseImp implements AdviserUseCase {
                 .toList();
 
         studentTaskRepositoryPort.saveAll(st);
+
+
+        st.forEach(studentTask -> {
+            Notification notification = new Notification();
+            notification.setMessage("You have a new task: " + createdTask.getName());
+            notification.setRead(false);
+            notification.setStudentID(studentTask.getStudent().getStudentID());
+
+            notificationRepositoryPort.save(notification);
+        });
 
 
 

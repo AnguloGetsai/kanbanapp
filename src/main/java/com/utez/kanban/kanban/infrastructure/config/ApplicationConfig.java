@@ -66,7 +66,8 @@ public class ApplicationConfig {
                                          TaskRepositoryPort taskRepositoryPort,
                                          BoardRepositoryPort boardRepositoryPort,
                                          AttachmentRepositoryPort attachmentRepositoryPort,
-                                         StudentTaskRepositoryPort studentTaskRepositoryPort
+                                         StudentTaskRepositoryPort studentTaskRepositoryPort,
+                                         NotificationRepositoryPort notificationRepositoryPort
 
     ){
         return new AdviserService(
@@ -77,7 +78,8 @@ public class ApplicationConfig {
                         taskRepositoryPort,
                         boardRepositoryPort,
                         attachmentRepositoryPort,
-                        studentTaskRepositoryPort)
+                        studentTaskRepositoryPort,
+                        notificationRepositoryPort)
         );
     }
 
@@ -101,7 +103,10 @@ public class ApplicationConfig {
     public StudentTaskService studentTaskService(StudentTaskRepositoryPort studentTaskRepositoryPort){
         return new StudentTaskService(new StudentTaskUseCaseImp(studentTaskRepositoryPort));
     }
-
+@Bean
+    public NotificationRepositoryPort notificationRepositoryPort(JpaNotificationRepositoryAdapter jpaNotificationRepositoryAdapter){
+        return jpaNotificationRepositoryAdapter;
+}
 
 
 }

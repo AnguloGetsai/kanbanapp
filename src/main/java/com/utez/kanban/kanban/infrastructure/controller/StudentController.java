@@ -1,8 +1,11 @@
 package com.utez.kanban.kanban.infrastructure.controller;
 
 import com.utez.kanban.kanban.application.service.StudentService;
+import com.utez.kanban.kanban.domain.model.Notification;
 import com.utez.kanban.kanban.domain.model.Student;
 import com.utez.kanban.kanban.domain.model.StudentTask;
+import com.utez.kanban.kanban.domain.port.out.NotificationRepositoryPort;
+import com.utez.kanban.kanban.domain.port.out.StudentRepositoryPort;
 import com.utez.kanban.kanban.infrastructure.controller.DTO.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -11,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -18,9 +22,18 @@ import java.util.stream.Collectors;
 public class StudentController {
 
     private final StudentService studentService;
+    private final StudentRepositoryPort studentRepositoryPort;
+    private final NotificationRepositoryPort notificationRepositoryPort;
 
-    public StudentController(StudentService studentService){
+    public StudentController(
+            StudentService studentService,
+            StudentRepositoryPort studentRepositoryPort,
+            NotificationRepositoryPort notificationRepositoryPort
+
+    ){
         this.studentService = studentService;
+        this.notificationRepositoryPort = notificationRepositoryPort;
+        this.studentRepositoryPort = studentRepositoryPort;
     }
 
 
@@ -115,6 +128,48 @@ public class StudentController {
                 .orElseThrow(() -> new RuntimeException("TASK NOT FOUND"));
 
         return ResponseEntity.ok(TaskDetailDto.fromDomain(task));
+    }
+
+
+    @GetMapping("/notifications")
+    public ResponseEntity<?> getNotifications(Authentication authentication){
+
+        Student student = studentRepositoryPort.findByEmail(authentication.getName())
+                .orElseThrow(() -> new RuntimeException("Student not found"));
+
+        List<Notification> notifications =
+                notificationRepositoryPort.findByStudentID(student.getStudentID());
+
+        return ResponseEntity.ok(Map.of(
+                "status",200,
+                "data",notifications
+        ));
+    }
+
+
+    @PutMapping("/notifications/{id}/read")
+    public ResponseEntity<?> markAsRead(
+            @PathVariable Long id,
+            Authentication authentication
+    ){
+
+        Student student = studentRepositoryPort.findByEmail(authentication.getName())
+                .orElseThrow(() -> new RuntimeException("Student not found"));
+
+        Notification notification = notificationRepositoryPort.findById(id)
+                .orElseThrow(() -> new RuntimeException("Notification not found"));
+
+
+        if(!notification.getStudentID().equals(student.getStudentID())){
+            throw new RuntimeException("Unauthorized");
+        }
+
+        notificationRepositoryPort.markAsRead(id);
+
+        return ResponseEntity.ok(Map.of(
+                "status",200,
+                "message","Notification marked as read"
+        ));
     }
 
 }

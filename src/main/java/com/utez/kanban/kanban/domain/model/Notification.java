@@ -5,16 +5,15 @@ public class Notification {
     private boolean isRead;
     private String message;
 
-    private Student student;
+    private Long studentID;
 
-
-    public Notification(Long notificationID, boolean isRead,
-                        String message, Student student) {
+    public Notification(Long notificationID, boolean isRead, String message, Long studentID) {
         this.notificationID = notificationID;
         this.isRead = isRead;
         this.message = message;
-        this.student = student;
+        this.studentID = studentID;
     }
+
     public Notification(){
 
     }
@@ -47,11 +46,11 @@ public class Notification {
         this.message = message;
     }
 
-    public Student getStudent() {
-        return student;
+    public Long getStudentID() {
+        return studentID;
     }
 
-    public void setStudent(Student student) {
-        this.student = student;
+    public void setStudentID(Long studentID) {
+        this.studentID = studentID;
     }
 }
