@@ -1,10 +1,8 @@
 package com.utez.kanban.kanban.infrastructure.controller;
 
 import com.utez.kanban.kanban.application.service.AdminService;
-import com.utez.kanban.kanban.domain.model.Admin;
-import com.utez.kanban.kanban.domain.model.Adviser;
-import com.utez.kanban.kanban.domain.model.Board;
-import com.utez.kanban.kanban.domain.model.User;
+import com.utez.kanban.kanban.application.service.StudentTaskService;
+import com.utez.kanban.kanban.domain.model.*;
 import com.utez.kanban.kanban.domain.model.exeption.user.UserNotFoundException;
 import com.utez.kanban.kanban.infrastructure.controller.DTO.*;
 import jakarta.validation.Valid;
@@ -25,9 +23,11 @@ import java.util.List;
 @RequestMapping("/api/admin")
 public class AdminController {
     private final AdminService adminService;
+    private final StudentTaskService studentTaskService;
 
-    public AdminController(AdminService adminService){
+    public AdminController(AdminService adminService, StudentTaskService studentTaskService){
         this.adminService = adminService;
+        this.studentTaskService = studentTaskService;
     }
 
     // *|* *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*
@@ -124,6 +124,23 @@ public class AdminController {
                 "Updated admin"
         ));
 
+    }
+
+    @GetMapping("/adviser/{adviserId}/tasks")
+    public ResponseEntity<?> getTasksByAdviser(
+            @PathVariable Long adviserId,
+            Authentication authentication
+    ) {
+
+        List<Task> tasks = adminService.getTasksByAdviser(adviserId, authentication.getName());
+
+
+        List<TaskSimpleDto> response = tasks.stream().map(task -> {
+            List<StudentTask> st = studentTaskService.findByTaskId(task.getTaskID());
+            return TaskSimpleDto.fromDomain(task, st);
+        }).toList();
+
+        return ResponseEntity.ok(response);
     }
 
 

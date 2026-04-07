@@ -1,7 +1,6 @@
 package com.utez.kanban.kanban.infrastructure.controller;
 
 import com.utez.kanban.kanban.application.service.AdviserService;
-import com.utez.kanban.kanban.application.service.StudentService;
 import com.utez.kanban.kanban.application.service.StudentTaskService;
 import com.utez.kanban.kanban.domain.model.Adviser;
 import com.utez.kanban.kanban.domain.model.Student;
@@ -20,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.security.PublicKey;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
 
@@ -131,8 +131,10 @@ public class AdviserController {
             @ModelAttribute @Valid TaskDTO taskDTO,
             Authentication authentication
     ){
+
+
         adviserService.createTask(
-                taskDTO.getStudentIDs(),
+                taskDTO.getStudentIDsParsed(),
                 TaskDTO.toTask(taskDTO),
                 authentication.getName(),
                 TaskDTO.toAttachment(taskDTO.getFiles())
@@ -188,7 +190,7 @@ public class AdviserController {
                 id,
                 authentication.getName(),
                 task,
-                dto.getStudentIDs(),
+                dto.getStudentIDsParsed(),
                 TaskDTO.toAttachment(dto.getFiles())
         );
 

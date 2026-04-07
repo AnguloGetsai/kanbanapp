@@ -1,7 +1,8 @@
 package com.utez.kanban.kanban.infrastructure.controller.DTO;
 
 import org.springframework.web.multipart.MultipartFile;
-
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -13,14 +14,14 @@ public class UpdateTaskDto {
     private String priority;
     private LocalDate limitDate;
 
-    List<Long> studentIDs;
+    private String studentIDs;
 
     private List<MultipartFile> files;
 
     public UpdateTaskDto(){}
 
     public UpdateTaskDto(String name, String description, String statusKanban, String color,
-                         String priority, LocalDate limitDate, List<Long> studentIDs,
+                         String priority, LocalDate limitDate, String studentIDs,
                          List<MultipartFile> files) {
         this.name = name;
         this.description = description;
@@ -32,12 +33,22 @@ public class UpdateTaskDto {
         this.files = files;
     }
 
-    public List<Long> getStudentIDs() {
+    public String getStudentIDs() {
         return studentIDs;
     }
 
-    public void setStudentIDs(List<Long> studentIDs) {
+    public void setStudentIDs(String studentIDs) {
         this.studentIDs = studentIDs;
+    }
+
+    public List<Long> getStudentIDsParsed() {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(studentIDs, new TypeReference<List<Long>>() {});
+        } catch (Exception e) {
+            e.printStackTrace();
+            return List.of();
+        }
     }
 
     public List<MultipartFile> getFiles() {

@@ -1,11 +1,13 @@
 package com.utez.kanban.kanban.infrastructure.controller.DTO;
 
 import com.utez.kanban.kanban.domain.model.Attachment;
-import com.utez.kanban.kanban.domain.model.Board;
-import com.utez.kanban.kanban.domain.model.StatusKanban;
+
 import com.utez.kanban.kanban.domain.model.Task;
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -23,13 +25,13 @@ public class TaskDTO {
     private String color;
     private String priority;
 
-    List<Long> studentIDs;
+    private String studentIDs;
 
     private List<MultipartFile> files;
 
     public TaskDTO(LocalDate limitDate, LocalDate startDate,
                    String name, String description, String statusKanban,
-                   String color, String priority, List<Long> studentIDs,
+                   String color, String priority, String studentIDs,
                    List<MultipartFile> files) {
         this.limitDate = limitDate;
         this.startDate = startDate;
@@ -137,11 +139,21 @@ public class TaskDTO {
         this.priority = priority;
     }
 
-    public List<Long> getStudentIDs() {
+    public List<Long> getStudentIDsParsed() {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(studentIDs, new TypeReference<List<Long>>() {});
+        } catch (Exception e) {
+            e.printStackTrace();
+            return List.of();
+        }
+    }
+
+    public String getStudentIDs() {
         return studentIDs;
     }
 
-    public void setStudentIDs(List<Long> studentIDs) {
+    public void setStudentIDs(String studentIDs) {
         this.studentIDs = studentIDs;
     }
 
@@ -153,3 +165,6 @@ public class TaskDTO {
         this.files = files;
     }
 }
+
+
+

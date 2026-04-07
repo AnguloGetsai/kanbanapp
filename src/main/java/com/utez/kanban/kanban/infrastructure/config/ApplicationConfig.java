@@ -46,9 +46,9 @@ public class ApplicationConfig {
     }
 
     @Bean
-    public AdminService adminService(AdviserRepositoryPort adviserRepositoryPort, UserRepositoryPort userRepositoryPort, AdminRepositoryPort adminRepositoryPort, BoardRepositoryPort boardRepositoryPort){
+    public AdminService adminService(AdviserRepositoryPort adviserRepositoryPort, UserRepositoryPort userRepositoryPort, AdminRepositoryPort adminRepositoryPort, BoardRepositoryPort boardRepositoryPort, TaskRepositoryPort taskRepositoryPort){
         return new AdminService(
-                new AdminUseCaseImp(adviserRepositoryPort, userRepositoryPort, adminRepositoryPort, boardRepositoryPort)
+                new AdminUseCaseImp(adviserRepositoryPort, userRepositoryPort, adminRepositoryPort, boardRepositoryPort, taskRepositoryPort)
         );
     }
 
@@ -107,6 +107,9 @@ public class ApplicationConfig {
     public NotificationRepositoryPort notificationRepositoryPort(JpaNotificationRepositoryAdapter jpaNotificationRepositoryAdapter){
         return jpaNotificationRepositoryAdapter;
 }
-
+@Bean
+public  TaskRepositoryPort taskRepositoryPort(JpaTaskRepositoryAdapter jpaTaskRepositoryAdapter){
+        return jpaTaskRepositoryAdapter;
+}
 
 }

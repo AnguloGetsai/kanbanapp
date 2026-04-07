@@ -6,6 +6,7 @@ import com.utez.kanban.kanban.domain.model.Admin;
 import com.utez.kanban.kanban.domain.model.Adviser;
 
 import com.utez.kanban.kanban.domain.model.Board;
+import com.utez.kanban.kanban.domain.model.Task;
 import com.utez.kanban.kanban.domain.port.in.AdminUseCase;
 
 import java.util.List;
@@ -54,6 +55,11 @@ public class AdminService implements AdminUseCase {
     @Override
     public void updateAdminInformation(String email, Admin admin) {
         adminUseCase.updateAdminInformation(email, admin);
+    }
+
+    @Override
+    public List<Task> getTasksByAdviser(Long adviserId, String adminEmail) {
+        return adminUseCase.getTasksByAdviser(adviserId, adminEmail);
     }
 
 

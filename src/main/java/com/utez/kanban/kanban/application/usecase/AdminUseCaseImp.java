@@ -5,10 +5,7 @@ import com.utez.kanban.kanban.domain.model.exeption.user.BusinessRuleViolationEx
 import com.utez.kanban.kanban.domain.model.exeption.user.EmailAlreadyExistsException;
 import com.utez.kanban.kanban.domain.model.exeption.user.UserNotFoundException;
 import com.utez.kanban.kanban.domain.port.in.AdminUseCase;
-import com.utez.kanban.kanban.domain.port.out.AdminRepositoryPort;
-import com.utez.kanban.kanban.domain.port.out.AdviserRepositoryPort;
-import com.utez.kanban.kanban.domain.port.out.BoardRepositoryPort;
-import com.utez.kanban.kanban.domain.port.out.UserRepositoryPort;
+import com.utez.kanban.kanban.domain.port.out.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,14 +16,17 @@ public class AdminUseCaseImp implements AdminUseCase {
     private final AdviserRepositoryPort adviserRepositoryPort;
     private final UserRepositoryPort userRepositoryPort;
     private final AdminRepositoryPort adminRepositoryPort;
+    private final TaskRepositoryPort taskRepositoryPort;
     public AdminUseCaseImp(AdviserRepositoryPort adviserRepositoryPort,
                            UserRepositoryPort userRepositoryPort,
                             AdminRepositoryPort   adminRepositoryPort,
-                           BoardRepositoryPort boardRepositoryPort){
+                           BoardRepositoryPort boardRepositoryPort,
+                           TaskRepositoryPort taskRepositoryPort){
         this.adviserRepositoryPort = adviserRepositoryPort;
         this.userRepositoryPort = userRepositoryPort;
         this.adminRepositoryPort = adminRepositoryPort;
         this.boardRepositoryPort = boardRepositoryPort;
+        this.taskRepositoryPort = taskRepositoryPort;
     }
 
 
@@ -123,6 +123,25 @@ public class AdminUseCaseImp implements AdminUseCase {
 //        if(!userRepositoryPort.changeEmail(email, admin.getUser().getEmail())){
 //            throw new BusinessRuleViolationException("Error changing email");
 //        }
+    }
+
+    @Override
+    public List<Task> getTasksByAdviser(Long adviserId, String adminEmail) {
+
+        Admin admin = adminRepositoryPort.findByEmail(adminEmail)
+                .orElseThrow(() -> new UserNotFoundException("Admin not found"));
+
+
+        Adviser adviser = adviserRepositoryPort.findById(adviserId)
+                .orElseThrow(() -> new UserNotFoundException("Adviser not found"));
+
+
+        if(!adviser.getAdmin().getAdminID().equals(admin.getAdminID())){
+            throw new BusinessRuleViolationException("Unauthorized");
+        }
+
+
+        return taskRepositoryPort.findTasksByAdviserID(adviserId);
     }
 
 
