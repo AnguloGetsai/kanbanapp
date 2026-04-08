@@ -32,6 +32,7 @@ public class AdviserInformation {
             logoB6 = Base64.getEncoder().encodeToString(adviser.getImage());
         }
         AdviserInformation adviserInformation = new AdviserInformation(
+                adviser.getAdviserID(),
                 adviser.getFirstName(),
                 adviser.getLastName(),
                 adviser.getUser().getEmail()
@@ -53,7 +54,8 @@ public class AdviserInformation {
         this.status = status;
     }
 
-    public AdviserInformation(String firstName, String lastName, String email) {
+    public AdviserInformation(Long id,String firstName, String lastName, String email) {
+        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
