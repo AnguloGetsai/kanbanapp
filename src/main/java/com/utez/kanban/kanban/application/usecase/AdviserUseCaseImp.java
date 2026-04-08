@@ -9,6 +9,7 @@ import com.utez.kanban.kanban.domain.port.out.*;
 
 import com.utez.kanban.kanban.domain.model.Evidence;
 import com.utez.kanban.kanban.infrastructure.controller.DTO.AdviserReportDto;
+import com.utez.kanban.kanban.infrastructure.controller.DTO.StudentExpedienteDto;
 import com.utez.kanban.kanban.infrastructure.controller.DTO.TaskDetailReportDto;
 
 import java.time.LocalDate;
@@ -442,6 +443,98 @@ public class AdviserUseCaseImp implements AdviserUseCase {
         avg = Math.round(avg * 100.0) / 100.0;
 
         return new AdviserReportDto(totalStudents, totalFilteredTasks, todo, doing, done, avg, detailReportDtoList);
+    }
+
+    @Override
+    public StudentExpedienteDto getStudentExpediente(String email, Long studentID, LocalDate startDate, LocalDate endDate) {
+        // 1. Validar Asesor y Alumno
+        Adviser adviser = adviserRepositoryPort.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("Adviser not found"));
+
+        Student student = studentRepositoryPort.findById(studentID)
+                .orElseThrow(() -> new UserNotFoundException("Student not found"));
+
+        // 2. Obtener todas las tareas asignadas a ESTE estudiante
+        List<Task> adviserTasks = taskRepositoryPort.findTasksByAdviserID(adviser.getAdviserID());
+
+        int todo = 0, doing = 0, done = 0;
+        double totalGrades = 0.0;
+        int gradedCount = 0;
+        int onTimeCount = 0;
+        int finishedTasksCount = 0;
+
+        List<TaskDetailReportDto> taskHistory = new ArrayList<>();
+
+        for (Task task : adviserTasks) {
+            // Buscamos si el alumno está en esta tarea
+            Optional<StudentTask> stOptional = studentTaskRepositoryPort.findByStudentAndTask(studentID, task.getTaskID());
+
+            if (stOptional.isPresent()) {
+                StudentTask st = stOptional.get();
+                LocalDate taskDate = st.getAssignedDate();
+
+                // Filtro de fechas
+                if ((taskDate.isAfter(startDate) || taskDate.isEqual(startDate)) &&
+                        (taskDate.isBefore(endDate) || taskDate.isEqual(endDate))) {
+
+                    // Conteo de Estatus
+                    if (st.getStatus() != null) {
+                        switch (st.getStatus().toUpperCase()) {
+                            case "TODO": todo++; break;
+                            case "DOING": doing++; break;
+                            case "DONE": done++; break;
+                        }
+                    }
+
+                    // Cálculo de Promedio
+                    if (st.getGrade() != null) {
+                        totalGrades += st.getGrade();
+                        gradedCount++;
+                    }
+
+                    // Cálculo de Puntualidad (Solo evaluamos las que ya culminó)
+                    if (st.getCulminationDate() != null) {
+                        finishedTasksCount++;
+                        // Si la culminó antes o el mismo día del límite
+                        if (!st.getCulminationDate().isAfter(task.getLimitDate())) {
+                            onTimeCount++;
+                        }
+                    }
+
+                    // Agregar a su historial
+                    taskHistory.add(new TaskDetailReportDto(
+                            task.getName(),
+                            student.getFirstName() + " " + student.getLastName(),
+                            st.getAssignedDate(),
+                            st.getStatus(),
+                            st.getGrade()
+                    ));
+                }
+            }
+        }
+
+        // Matemáticas finales
+        Double avgGrade = (gradedCount > 0) ? (totalGrades / gradedCount) : 0.0;
+        avgGrade = Math.round(avgGrade * 100.0) / 100.0;
+
+        Double onTimePct = (finishedTasksCount > 0) ? ((double) onTimeCount / finishedTasksCount) * 100 : 0.0;
+        onTimePct = Math.round(onTimePct * 100.0) / 100.0;
+
+
+        Integer age = 0;
+
+
+
+        String fullName = student.getFirstName() + " " + student.getLastName();
+        int totalTasks = todo + doing + done;
+
+        return new StudentExpedienteDto(
+                fullName,
+                student.getUser().getEmail(),
+                age,
+                true,
+                totalTasks, todo, doing, done, avgGrade, onTimePct, taskHistory
+        );
     }
 
 

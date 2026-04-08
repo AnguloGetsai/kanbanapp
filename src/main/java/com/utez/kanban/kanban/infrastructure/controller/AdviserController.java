@@ -259,4 +259,15 @@ public class AdviserController {
         AdviserReportDto report = adviserService.getAdviserReport(authentication.getName(), startDate, endDate);
         return ResponseEntity.ok(report);
     }
+
+    @GetMapping("/student/{studentID}/expediente")
+    public ResponseEntity<?> getStudentExpediente(
+            @PathVariable Long studentID,
+            @RequestParam("startDate") @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam("endDate") @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE) LocalDate endDate,
+            Authentication authentication) {
+
+        StudentExpedienteDto expediente = adviserService.getStudentExpediente(authentication.getName(), studentID, startDate, endDate);
+        return ResponseEntity.ok(expediente);
+    }
 }
