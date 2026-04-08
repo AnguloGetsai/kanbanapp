@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.security.PublicKey;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
@@ -249,5 +250,13 @@ public class AdviserController {
 
         return ResponseEntity.ok(new SuccessResponse(200, "Task graded successfully"));
     }
+    @GetMapping("/report")
+    public ResponseEntity<?> getAdviserReport(
+            @RequestParam("startDate") @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam("endDate") @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE) LocalDate endDate,
+            Authentication authentication) {
 
+        AdviserReportDto report = adviserService.getAdviserReport(authentication.getName(), startDate, endDate);
+        return ResponseEntity.ok(report);
+    }
 }

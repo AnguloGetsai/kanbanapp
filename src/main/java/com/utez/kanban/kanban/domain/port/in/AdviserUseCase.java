@@ -2,7 +2,9 @@ package com.utez.kanban.kanban.domain.port.in;
 
 
 import com.utez.kanban.kanban.domain.model.*;
+import com.utez.kanban.kanban.infrastructure.controller.DTO.AdviserReportDto;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,4 +25,5 @@ public interface AdviserUseCase {
     void updateTaskStatus(Long taskID, String email, String status);
     List<Evidence> getStudentEvidences(String email, Long taskID, Long studentID);
     void gradeStudentTask(String email, Long taskID, Long studentID, Double grade, String feedback);
+    AdviserReportDto getAdviserReport(String email, LocalDate startDate, LocalDate endDate);
 }

@@ -2,7 +2,9 @@ package com.utez.kanban.kanban.application.service;
 
 import com.utez.kanban.kanban.domain.model.*;
 import com.utez.kanban.kanban.domain.port.in.AdviserUseCase;
+import com.utez.kanban.kanban.infrastructure.controller.DTO.AdviserReportDto;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -87,6 +89,11 @@ public class AdviserService implements AdviserUseCase {
     @Override
     public void gradeStudentTask(String email, Long taskID, Long studentID, Double grade, String feedback) {
         adviserUseCase.gradeStudentTask(email, taskID, studentID, grade, feedback);
+    }
+
+    @Override
+    public AdviserReportDto getAdviserReport(String email, LocalDate startDate, LocalDate endDate) {
+        return adviserUseCase.getAdviserReport(email, startDate, endDate);
     }
 
 
