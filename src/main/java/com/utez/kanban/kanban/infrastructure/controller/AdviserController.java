@@ -214,4 +214,21 @@ public class AdviserController {
         return ResponseEntity.ok(new SuccessResponse(200, "Status updated"));
     }
 
+
+    @GetMapping("/task/{taskID}/student/{studentID}/evidences")
+    public ResponseEntity<?> getStudentEvidences(
+            @PathVariable Long taskID,
+            @PathVariable Long studentID,
+            Authentication authentication
+    ){
+
+        List<EvidenceResponseDto> response = adviserService
+                .getStudentEvidences(authentication.getName(), taskID, studentID)
+                .stream()
+                .map(EvidenceResponseDto::fromDomain)
+                .toList();
+
+        return ResponseEntity.ok(response);
+    }
+
 }

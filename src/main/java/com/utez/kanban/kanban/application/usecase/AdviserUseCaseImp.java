@@ -7,6 +7,7 @@ import com.utez.kanban.kanban.domain.model.exeption.user.UserNotFoundException;
 import com.utez.kanban.kanban.domain.port.in.AdviserUseCase;
 import com.utez.kanban.kanban.domain.port.out.*;
 
+import com.utez.kanban.kanban.domain.model.Evidence;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -21,6 +22,7 @@ public class AdviserUseCaseImp implements AdviserUseCase {
     private final AttachmentRepositoryPort attachmentRepositoryPort;
     private final StudentTaskRepositoryPort studentTaskRepositoryPort;
     private final NotificationRepositoryPort notificationRepositoryPort;
+    private final EvidenceRepositoryPort evidenceRepositoryPort;
 
     public AdviserUseCaseImp(AdviserRepositoryPort adviserRepositoryPort,
                              UserRepositoryPort userRepositoryPort,
@@ -30,7 +32,8 @@ public class AdviserUseCaseImp implements AdviserUseCase {
                              BoardRepositoryPort boardRepositoryPort,
                              AttachmentRepositoryPort attachmentRepositoryPort,
                              StudentTaskRepositoryPort studentTaskRepositoryPort,
-                             NotificationRepositoryPort notificationRepositoryPort){
+                             NotificationRepositoryPort notificationRepositoryPort,
+                             EvidenceRepositoryPort evidenceRepositoryPort){
         this.adviserRepositoryPort = adviserRepositoryPort;
         this.userRepositoryPort = userRepositoryPort;
         this.studentRepositoryPort = studentRepositoryPort;
@@ -40,6 +43,7 @@ public class AdviserUseCaseImp implements AdviserUseCase {
         this.attachmentRepositoryPort = attachmentRepositoryPort;
         this.studentTaskRepositoryPort = studentTaskRepositoryPort;
         this.notificationRepositoryPort = notificationRepositoryPort;
+        this.evidenceRepositoryPort = evidenceRepositoryPort;
     }
 
 
@@ -323,6 +327,29 @@ public class AdviserUseCaseImp implements AdviserUseCase {
         task.setStatusKanban(status);
 
         taskRepositoryPort.save(task);
+    }
+
+    @Override
+    public List<Evidence> getStudentEvidences(String email, Long taskID, Long studentID) {
+        Adviser adviser = adviserRepositoryPort.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("Adviser not found"));
+
+        Task task = taskRepositoryPort.findById(taskID)
+                .orElseThrow(() -> new BusinessRuleViolationException("Task not found"));
+
+
+        if(!task.getBoard().getAdviser().getAdviserID()
+                .equals(adviser.getAdviserID())){
+            throw new BusinessRuleViolationException("Unauthorized");
+        }
+
+
+        StudentTask st = studentTaskRepositoryPort
+                .findByStudentAndTask(studentID, taskID)
+                .orElseThrow(() -> new BusinessRuleViolationException("Student not assigned to this task"));
+
+
+        return evidenceRepositoryPort.findByStudentTask(st);
     }
 
 

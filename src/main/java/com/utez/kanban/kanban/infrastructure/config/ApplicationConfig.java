@@ -69,7 +69,8 @@ public class ApplicationConfig {
                                          BoardRepositoryPort boardRepositoryPort,
                                          AttachmentRepositoryPort attachmentRepositoryPort,
                                          StudentTaskRepositoryPort studentTaskRepositoryPort,
-                                         NotificationRepositoryPort notificationRepositoryPort
+                                         NotificationRepositoryPort notificationRepositoryPort,
+                                         EvidenceRepositoryPort evidenceRepositoryPort
 
     ){
         return new AdviserService(
@@ -81,7 +82,8 @@ public class ApplicationConfig {
                         boardRepositoryPort,
                         attachmentRepositoryPort,
                         studentTaskRepositoryPort,
-                        notificationRepositoryPort)
+                        notificationRepositoryPort,
+                        evidenceRepositoryPort)
         );
     }
 

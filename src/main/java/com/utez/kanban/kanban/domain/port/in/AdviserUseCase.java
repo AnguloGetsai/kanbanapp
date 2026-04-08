@@ -1,10 +1,7 @@
 package com.utez.kanban.kanban.domain.port.in;
 
 
-import com.utez.kanban.kanban.domain.model.Adviser;
-import com.utez.kanban.kanban.domain.model.Attachment;
-import com.utez.kanban.kanban.domain.model.Student;
-import com.utez.kanban.kanban.domain.model.Task;
+import com.utez.kanban.kanban.domain.model.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,4 +21,5 @@ public interface AdviserUseCase {
     void updateTask(Long taskID, String email, Task task,
                     List<Long> studentIDs, List<Attachment> files);
     void updateTaskStatus(Long taskID, String email, String status);
+    List<Evidence> getStudentEvidences(String email, Long taskID, Long studentID);
 }
