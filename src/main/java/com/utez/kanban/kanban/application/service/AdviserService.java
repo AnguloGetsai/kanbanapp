@@ -84,5 +84,10 @@ public class AdviserService implements AdviserUseCase {
         return adviserUseCase.getStudentEvidences(email, taskID, studentID);
     }
 
+    @Override
+    public void gradeStudentTask(String email, Long taskID, Long studentID, Double grade, String feedback) {
+        adviserUseCase.gradeStudentTask(email, taskID, studentID, grade, feedback);
+    }
+
 
 }

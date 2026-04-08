@@ -22,4 +22,5 @@ public interface AdviserUseCase {
                     List<Long> studentIDs, List<Attachment> files);
     void updateTaskStatus(Long taskID, String email, String status);
     List<Evidence> getStudentEvidences(String email, Long taskID, Long studentID);
+    void gradeStudentTask(String email, Long taskID, Long studentID, Double grade, String feedback);
 }

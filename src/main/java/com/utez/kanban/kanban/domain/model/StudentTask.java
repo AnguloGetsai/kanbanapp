@@ -10,14 +10,19 @@ public class StudentTask {
     private LocalDate assignedDate;
     private LocalDate culminationDate;
 
+    private Double grade;
+    private String feedback;
+
     public StudentTask(Student student, Task task,
                        String status, LocalDate assignedDate,
-                       LocalDate culminationDate) {
+                       LocalDate culminationDate, Double grade, String feedback) {
         this.student = student;
         this.task = task;
         this.status = status;
         this.assignedDate = assignedDate;
         this.culminationDate = culminationDate;
+        this.grade =grade;
+        this.feedback = feedback;
     }
 
     public StudentTask(){}
@@ -60,5 +65,21 @@ public class StudentTask {
 
     public void setCulminationDate(LocalDate culminationDate) {
         this.culminationDate = culminationDate;
+    }
+
+    public Double getGrade() {
+        return grade;
+    }
+
+    public void setGrade(Double grade) {
+        this.grade = grade;
+    }
+
+    public String getFeedback() {
+        return feedback;
+    }
+
+    public void setFeedback(String feedback) {
+        this.feedback = feedback;
     }
 }

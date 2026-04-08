@@ -231,4 +231,23 @@ public class AdviserController {
         return ResponseEntity.ok(response);
     }
 
+    @PatchMapping("/task/{taskID}/student/{studentID}/grade")
+    public ResponseEntity<?> gradeStudentTask(
+            @PathVariable Long taskID,
+            @PathVariable Long studentID,
+            @RequestBody @Valid GradeTaskDto dto,
+            Authentication authentication
+    ){
+
+        adviserService.gradeStudentTask(
+                authentication.getName(),
+                taskID,
+                studentID,
+                dto.getGrade(),
+                dto.getFeedback()
+        );
+
+        return ResponseEntity.ok(new SuccessResponse(200, "Task graded successfully"));
+    }
+
 }

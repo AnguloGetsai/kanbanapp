@@ -13,7 +13,9 @@ public class StudentTaskMapper {
                 TaskMapper.toTaskEntity(studentTask.getTask()),
                 studentTask.getStatus(),
                 studentTask.getAssignedDate(),
-                studentTask.getCulminationDate()
+                studentTask.getCulminationDate(),
+                studentTask.getGrade(),
+                studentTask.getFeedback()
 
         );
     }
@@ -24,7 +26,9 @@ public class StudentTaskMapper {
                 TaskMapper.toTask(studentTaskEntity.getTaskEntity()),
                 studentTaskEntity.getStatus(),
                 studentTaskEntity.getAssignedDate(),
-                studentTaskEntity.getCulminationDate()
+                studentTaskEntity.getCulminationDate(),
+                studentTaskEntity.getGrade(),
+                studentTaskEntity.getFeedback()
         );
     }
 }

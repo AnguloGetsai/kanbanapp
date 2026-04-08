@@ -26,16 +26,21 @@ public class StudentTaskEntity {
     private LocalDate assignedDate;
     private LocalDate culminationDate;
 
+    private Double grade;
+    private String feedback;
+
 
     public StudentTaskEntity(StudentTaskID id, StudentEntity studentEntity,
                              TaskEntity taskEntity, String status, LocalDate assignedDate,
-                             LocalDate culminationDate) {
+                             LocalDate culminationDate, Double grade, String feedback) {
         this.id = id;
         this.studentEntity = studentEntity;
         this.taskEntity = taskEntity;
         this.status = status;
         this.assignedDate = assignedDate;
         this.culminationDate = culminationDate;
+        this.grade = grade;
+        this.feedback = feedback;
     }
 
     public StudentTaskEntity(){}
@@ -85,5 +90,21 @@ public class StudentTaskEntity {
 
     public void setCulminationDate(LocalDate culminationDate) {
         this.culminationDate = culminationDate;
+    }
+
+    public Double getGrade() {
+        return grade;
+    }
+
+    public void setGrade(Double grade) {
+        this.grade = grade;
+    }
+
+    public String getFeedback() {
+        return feedback;
+    }
+
+    public void setFeedback(String feedback) {
+        this.feedback = feedback;
     }
 }

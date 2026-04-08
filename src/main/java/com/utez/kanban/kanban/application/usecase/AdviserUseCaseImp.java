@@ -352,5 +352,32 @@ public class AdviserUseCaseImp implements AdviserUseCase {
         return evidenceRepositoryPort.findByStudentTask(st);
     }
 
+    @Override
+    public void gradeStudentTask(String email, Long taskID, Long studentID, Double grade, String feedback) {
+        // 1. Validar que el asesor exista
+        Adviser adviser = adviserRepositoryPort.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("Adviser not found"));
+
+        // 2. Validar que la tarea exista
+        Task task = taskRepositoryPort.findById(taskID)
+                .orElseThrow(() -> new BusinessRuleViolationException("Task not found"));
+
+        // 3. Validar que la tarea pertenezca al tablero de ESTE asesor
+        if(!task.getBoard().getAdviser().getAdviserID().equals(adviser.getAdviserID())){
+            throw new BusinessRuleViolationException("Unauthorized to grade this task");
+        }
+
+        // 4. Buscar la relación específica entre el estudiante y esta tarea
+        StudentTask studentTask = studentTaskRepositoryPort.findByStudentAndTask(studentID, taskID)
+                .orElseThrow(() -> new BusinessRuleViolationException("Student is not assigned to this task"));
+
+        // 5. Asignar la calificación y la retroalimentación
+        studentTask.setGrade(grade);
+        studentTask.setFeedback(feedback);
+
+        // 6. Guardar los cambios v
+        studentTaskRepositoryPort.save(studentTask);
+    }
+
 
 }
