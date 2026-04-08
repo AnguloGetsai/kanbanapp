@@ -7,6 +7,8 @@ import com.utez.kanban.kanban.domain.model.StudentTask;
 import com.utez.kanban.kanban.domain.port.out.NotificationRepositoryPort;
 import com.utez.kanban.kanban.domain.port.out.StudentRepositoryPort;
 import com.utez.kanban.kanban.infrastructure.controller.DTO.*;
+import jakarta.validation.Valid;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -170,6 +172,51 @@ public class StudentController {
                 "status",200,
                 "message","Notification marked as read"
         ));
+    }
+
+    @PostMapping(value = "/submitEvidence", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> submitEvidence(
+            @ModelAttribute SubmitEvidenceDTO dto,
+            Authentication authentication
+    ){
+        try{
+            studentService.submitEvidence(
+                    authentication.getName(),
+                    dto.getTaskID(),
+                    dto.getComment(),
+                    dto.getFiles()
+            );
+
+            return ResponseEntity.ok(new SuccessResponse(200, "Evidence submitted"));
+
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.status(500).body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/task/{taskID}/status")
+    public ResponseEntity<?> changeTaskStatus(
+            @PathVariable Long taskID,
+           @Valid @RequestBody ChangeStatusDTO dto,
+            Authentication authentication
+    ){
+        try {
+
+            studentService.changeTaskStatus(
+                    authentication.getName(),
+                    taskID,
+                    dto.getStatus()
+            );
+
+            return ResponseEntity.ok(
+                    new SuccessResponse(200, "Task status updated")
+            );
+
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.status(500).body(e.getMessage());
+        }
     }
 
 }

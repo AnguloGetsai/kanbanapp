@@ -13,4 +13,6 @@ public interface StudentTaskRepositoryPort {
     Optional<StudentTask> getTaskDetail(String email, Long taskID);
     List<StudentTask> findByTaskId(Long taskID);
     void deleteByTaskId(Long taskID);
+    Optional<StudentTask> findByStudentAndTask(Long studentID, Long taskID);
+
 }

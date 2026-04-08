@@ -4,6 +4,7 @@ import com.utez.kanban.kanban.domain.model.Adviser;
 import com.utez.kanban.kanban.domain.model.Student;
 import com.utez.kanban.kanban.domain.model.StudentTask;
 import com.utez.kanban.kanban.domain.port.in.StudentUseCase;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -45,5 +46,16 @@ public class StudentService implements StudentUseCase {
     @Override
     public Optional<StudentTask> getTaskDetail(String email, Long taskID) {
         return studentUseCase.getTaskDetail(email, taskID);
+    }
+
+    @Override
+    public void submitEvidence(String email, Long taskID, String comment, List<MultipartFile> files) {
+        studentUseCase.submitEvidence(email, taskID, comment, files);
+
+    }
+
+    @Override
+    public void changeTaskStatus(String email, Long taskID, String status) {
+        studentUseCase.changeTaskStatus(email, taskID, status);
     }
 }

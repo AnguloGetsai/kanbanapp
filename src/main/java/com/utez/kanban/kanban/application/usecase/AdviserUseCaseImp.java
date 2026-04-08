@@ -188,14 +188,14 @@ public class AdviserUseCaseImp implements AdviserUseCase {
         List<Student> filtrados = studentList.stream()
                 .filter(s -> idsSet.contains(s.getStudentID()))
                 .toList();
-
+//modificacion temporal
         List<StudentTask> st = filtrados.stream()
                 .map(s -> {
                      StudentTask studentTask = new StudentTask();
                      studentTask.setTask(createdTask);
                      studentTask.setStudent(s);
                      studentTask.setAssignedDate(createdTask.getCreationDate());
-                     studentTask.setStatus(createdTask.getStatusKanban());
+                     studentTask.setStatus(StatusKanban.ToDo.name());
                      return studentTask;
                 })
                 .toList();

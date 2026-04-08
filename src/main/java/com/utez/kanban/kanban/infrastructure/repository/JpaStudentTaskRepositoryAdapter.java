@@ -72,4 +72,11 @@ public class JpaStudentTaskRepositoryAdapter implements StudentTaskRepositoryPor
     public void deleteByTaskId(Long taskID) {
         jpaStudentTaskRepository.deleteByTaskId(taskID);
     }
+
+    @Override
+    public Optional<StudentTask> findByStudentAndTask(Long studentID, Long taskID) {
+        return jpaStudentTaskRepository
+        .findByStudentIDAndTaskID(studentID, taskID)
+                .map(StudentTaskMapper::toStudentTask);
+    }
 }

@@ -19,10 +19,12 @@ public class ApplicationConfig {
     public StudentService studentService(
             StudentRepositoryPort studentRepositoryPort,
             AdviserRepositoryPort adviserRepositoryPort,
-            StudentTaskRepositoryPort studentTaskRepositoryPort
+            StudentTaskRepositoryPort studentTaskRepositoryPort,
+            EvidenceRepositoryPort evidenceRepositoryPort,
+            EvidenceFileRepositoryPort evidenceFileRepositoryPort
             ){
         return new StudentService(
-                new StudentUseCaseImp(studentRepositoryPort, adviserRepositoryPort,studentTaskRepositoryPort)
+                new StudentUseCaseImp(studentRepositoryPort, adviserRepositoryPort,studentTaskRepositoryPort, evidenceRepositoryPort, evidenceFileRepositoryPort)
         );
     }
 
@@ -111,5 +113,16 @@ public class ApplicationConfig {
 public  TaskRepositoryPort taskRepositoryPort(JpaTaskRepositoryAdapter jpaTaskRepositoryAdapter){
         return jpaTaskRepositoryAdapter;
 }
+
+
+    @Bean
+    public EvidenceRepositoryPort evidenceRepositoryPort(JpaEvidenceRepositoryAdapter jpaEvidenceRepositoryAdapter){
+        return jpaEvidenceRepositoryAdapter;
+    }
+
+    @Bean
+    public EvidenceFileRepositoryPort evidenceFileRepositoryPort(JpaEvidenceFileRepositoryAdapter jpaEvidenceFileRepositoryAdapter){
+        return  jpaEvidenceFileRepositoryAdapter;
+    }
 
 }
