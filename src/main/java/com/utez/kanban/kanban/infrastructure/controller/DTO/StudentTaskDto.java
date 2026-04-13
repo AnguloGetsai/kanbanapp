@@ -22,7 +22,7 @@ public class StudentTaskDto {
                 st.getTask().getTaskID(),
                 st.getTask().getName(),
                 st.getTask().getDescription(),
-                st.getTask().getStatusKanban(),
+                st.getStatus(),
                 st.getTask().getColor()
         );
     }

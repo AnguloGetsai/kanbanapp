@@ -1,6 +1,7 @@
 package com.utez.kanban.kanban.infrastructure.controller;
 
 import com.utez.kanban.kanban.application.service.AdminService;
+import com.utez.kanban.kanban.application.service.AdviserService;
 import com.utez.kanban.kanban.application.service.StudentTaskService;
 import com.utez.kanban.kanban.domain.model.*;
 import com.utez.kanban.kanban.domain.model.exeption.user.UserNotFoundException;
@@ -13,6 +14,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -24,18 +26,17 @@ import java.util.List;
 public class AdminController {
     private final AdminService adminService;
     private final StudentTaskService studentTaskService;
+    private final AdviserService adviserService;
 
-    public AdminController(AdminService adminService, StudentTaskService studentTaskService){
+    public AdminController(AdminService adminService,
+                           StudentTaskService studentTaskService,
+                           AdviserService adviserService
+    ){
         this.adminService = adminService;
         this.studentTaskService = studentTaskService;
+        this.adviserService = adviserService;
     }
 
-    // *|* *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*
-
-    //           TODOS LOS ENDPOINTS QUE TE PIDAN COMO PARAMETRO AUTHENTICATION NO LE PASES NADA       //
-    //                                          ESO LO INYECTA SPRING.
-
-    //  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*  *|*
 
 
     //solo manda firstName, lastName and email
@@ -141,6 +142,19 @@ public class AdminController {
         }).toList();
 
         return ResponseEntity.ok(response);
+    }
+
+    // Suponiendo que esto va en tu AdminController o donde manejes las rutas de /api/admin
+    @GetMapping("/adviser/{adviserID}/report")
+    public ResponseEntity<?> getReportForAdmin(
+            @PathVariable Long adviserID,
+            @RequestParam("startDate") @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam("endDate") @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE) LocalDate endDate) {
+
+        // Usamos el nuevo método que busca por ID
+        AdviserReportDto report = adviserService.getAdviserReportById(adviserID, startDate, endDate);
+
+        return ResponseEntity.ok(report);
     }
 
 

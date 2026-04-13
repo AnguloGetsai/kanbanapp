@@ -9,10 +9,12 @@ public class BoardCard {
     private String firstName;
     private String lastName;
     private String logo;
+    private Long adviserId;
 
 
 
     public static BoardCard toBoardCard(Board board){
+
         String logoBase64;
         if(board.getAdviser().getImage() == null){
              logoBase64 = "SIN LOGO";
@@ -23,15 +25,17 @@ public class BoardCard {
                 board.getBoardID(),
                 board.getAdviser().getFirstName(),
                 board.getAdviser().getLastName(),
-                logoBase64
+                logoBase64,
+                board.getAdviser().getAdviserID()
         );
     }
 
-    public BoardCard(Long boardId, String firstName, String lastName, String logo) {
+    public BoardCard(Long boardId, String firstName, String lastName, String logo, Long adviserId) {
         this.boardId = boardId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.logo = logo;
+        this.adviserId = adviserId;
 
     }
 
@@ -65,5 +69,13 @@ public class BoardCard {
 
     public void setLogo(String logo) {
         this.logo = logo;
+    }
+
+    public Long getAdviserId() {
+        return adviserId;
+    }
+
+    public void setAdviserId(Long adviserId) {
+        this.adviserId = adviserId;
     }
 }

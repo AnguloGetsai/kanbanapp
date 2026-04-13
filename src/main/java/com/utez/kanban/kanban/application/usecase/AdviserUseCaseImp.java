@@ -387,62 +387,8 @@ public class AdviserUseCaseImp implements AdviserUseCase {
         Adviser adviser = adviserRepositoryPort.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("Adviser not found"));
 
-        int totalStudents = adviserStudentRepository.getAllStudents(adviser.getAdviserID()).size();
-        List<Task> adviserTasks = taskRepositoryPort.findTasksByAdviserID(adviser.getAdviserID());
-
-        int todo = 0, doing = 0, done = 0, totalFilteredTasks = 0;
-        double totalGrades = 0.0;
-        int gradedCount = 0;
-
-        List<TaskDetailReportDto> detailReportDtoList = new ArrayList<>();
-
-        for (Task task : adviserTasks) {
-            List<StudentTask> studentTasks = studentTaskRepositoryPort.findByTaskId(task.getTaskID());
-
-            for (StudentTask st : studentTasks) {
-                LocalDate taskDate = st.getAssignedDate();
-
-                // FILTRO DE FECHAS: Verificar si la fecha está entre inicio y fin
-                if ((taskDate.isAfter(startDate) || taskDate.isEqual(startDate)) &&
-                        (taskDate.isBefore(endDate) || taskDate.isEqual(endDate))) {
-
-                    totalFilteredTasks++;
-
-                    // Conteo por estatus
-                    if (st.getStatus() != null) {
-                        switch (st.getStatus().toUpperCase()) {
-                            case "TODO": todo++; break;
-                            case "DOING": doing++; break;
-                            case "DONE": done++; break;
-                        }
-                    }
-
-                    // Promedio
-                    if (st.getGrade() != null) {
-                        totalGrades += st.getGrade();
-                        gradedCount++;
-                    }
-
-                    String fullName = st.getStudent().getFirstName() + " " + st.getStudent().getLastName();
-
-                    TaskDetailReportDto detail = new TaskDetailReportDto(
-                            task.getName(),
-                            fullName,
-                            st.getAssignedDate(),
-                            st.getStatus(),
-                            st.getGrade()
-                    );
-
-                    detailReportDtoList.add(detail);
-
-                }
-            }
-        }
-
-        Double avg = (gradedCount > 0) ? (totalGrades / gradedCount) : 0.0;
-        avg = Math.round(avg * 100.0) / 100.0;
-
-        return new AdviserReportDto(totalStudents, totalFilteredTasks, todo, doing, done, avg, detailReportDtoList);
+        // Llamamos a la función genérica
+        return calculateReportForAdviser(adviser, startDate, endDate);
     }
 
     @Override
@@ -535,6 +481,69 @@ public class AdviserUseCaseImp implements AdviserUseCase {
                 true,
                 totalTasks, todo, doing, done, avgGrade, onTimePct, taskHistory
         );
+    }
+
+    @Override
+    public AdviserReportDto getAdviserReportById(Long adviserID, LocalDate startDate, LocalDate endDate) {
+        Adviser adviser = adviserRepositoryPort.findById(adviserID) // Usamos el ID en lugar del email
+                .orElseThrow(() -> new UserNotFoundException("Adviser not found"));
+
+        // Llamamos a la MISMA función genérica
+        return calculateReportForAdviser(adviser, startDate, endDate);
+    }
+
+    private AdviserReportDto calculateReportForAdviser(Adviser adviser, LocalDate startDate, LocalDate endDate) {
+        int totalStudents = adviserStudentRepository.getAllStudents(adviser.getAdviserID()).size();
+        List<Task> adviserTasks = taskRepositoryPort.findTasksByAdviserID(adviser.getAdviserID());
+
+        int todo = 0, doing = 0, done = 0, totalFilteredTasks = 0;
+        double totalGrades = 0.0;
+        int gradedCount = 0;
+
+        List<TaskDetailReportDto> detailReportDtoList = new ArrayList<>();
+
+        for (Task task : adviserTasks) {
+            List<StudentTask> studentTasks = studentTaskRepositoryPort.findByTaskId(task.getTaskID());
+
+            for (StudentTask st : studentTasks) {
+                LocalDate taskDate = st.getAssignedDate();
+
+                if ((taskDate.isAfter(startDate) || taskDate.isEqual(startDate)) &&
+                        (taskDate.isBefore(endDate) || taskDate.isEqual(endDate))) {
+
+                    totalFilteredTasks++;
+
+                    if (st.getStatus() != null) {
+                        switch (st.getStatus().toUpperCase()) {
+                            case "TODO": todo++; break;
+                            case "DOING": doing++; break;
+                            case "DONE": done++; break;
+                        }
+                    }
+
+                    if (st.getGrade() != null) {
+                        totalGrades += st.getGrade();
+                        gradedCount++;
+                    }
+
+                    String fullName = st.getStudent().getFirstName() + " " + st.getStudent().getLastName();
+
+                    TaskDetailReportDto detail = new TaskDetailReportDto(
+                            task.getName(),
+                            fullName,
+                            st.getAssignedDate(),
+                            st.getStatus(),
+                            st.getGrade()
+                    );
+                    detailReportDtoList.add(detail);
+                }
+            }
+        }
+
+        Double avg = (gradedCount > 0) ? (totalGrades / gradedCount) : 0.0;
+        avg = Math.round(avg * 100.0) / 100.0;
+
+        return new AdviserReportDto(totalStudents, totalFilteredTasks, todo, doing, done, avg, detailReportDtoList);
     }
 
 

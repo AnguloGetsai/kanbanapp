@@ -102,5 +102,10 @@ public class AdviserService implements AdviserUseCase {
         return adviserUseCase.getStudentExpediente(email, studentID, startDate, endDate);
     }
 
+    @Override
+    public AdviserReportDto getAdviserReportById(Long adviserID, LocalDate startDate, LocalDate endDate) {
+        return adviserUseCase.getAdviserReportById(adviserID, startDate, endDate);
+    }
+
 
 }

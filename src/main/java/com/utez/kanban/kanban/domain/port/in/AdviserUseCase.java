@@ -28,5 +28,6 @@ public interface AdviserUseCase {
     void gradeStudentTask(String email, Long taskID, Long studentID, Double grade, String feedback);
     AdviserReportDto getAdviserReport(String email, LocalDate startDate, LocalDate endDate);
     StudentExpedienteDto getStudentExpediente(String email, Long studentID, LocalDate startDate, LocalDate endDate);
+    AdviserReportDto getAdviserReportById(Long adviserID, LocalDate startDate, LocalDate endDate);
 
 }
