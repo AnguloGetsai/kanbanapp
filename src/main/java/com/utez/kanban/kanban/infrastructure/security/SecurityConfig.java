@@ -52,6 +52,13 @@ public class SecurityConfig {
                                 "/api/user/changePassword"
                         ).permitAll()
 
+
+                        .requestMatchers("/api/admin/**").hasAuthority("ADMIN")
+                        .requestMatchers("/api/adviser/**").hasAuthority("ADVISER")
+                        .requestMatchers("/api/student/**").hasAuthority("STUDENT")
+
+
+
                         // todo lo demas requiere autenticaion
                         .anyRequest().authenticated()
                 )
