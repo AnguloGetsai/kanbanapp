@@ -5,11 +5,9 @@ import java.time.LocalDate;
 public class StudentTask {
     private Student student;
     private  Task task;
-
     private String status;
     private LocalDate assignedDate;
     private LocalDate culminationDate;
-
     private Double grade;
     private String feedback;
 

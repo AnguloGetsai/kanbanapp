@@ -11,18 +11,25 @@ public class TaskDetailDto {
     private String description;
     private String statusKanban;
     private String color;
+    private double grade;
+    private String feedback;
+
+
 
     private List<AttachmentDto> attachments;
 
     public TaskDetailDto(Long taskID, String name, String description,
                          String statusKanban, String color,
-                         List<AttachmentDto> attachments) {
+                         List<AttachmentDto> attachments,
+                        double grade,  String feedback) {
         this.taskID = taskID;
         this.name = name;
         this.description = description;
         this.statusKanban = statusKanban;
         this.color = color;
         this.attachments = attachments;
+        this.grade = grade;
+        this.feedback = feedback;
     }
 
     public static TaskDetailDto fromDomain(StudentTask st){
@@ -42,7 +49,9 @@ public class TaskDetailDto {
                 st.getTask().getDescription(),
                 st.getTask().getStatusKanban(),
                 st.getTask().getColor(),
-                files
+                files,
+                st.getGrade(),
+                st.getFeedback()
         );
     }
 
@@ -93,5 +102,21 @@ public class TaskDetailDto {
 
     public void setAttachments(List<AttachmentDto> attachments) {
         this.attachments = attachments;
+    }
+
+    public double getGrade() {
+        return grade;
+    }
+
+    public void setGrade(double grade) {
+        this.grade = grade;
+    }
+
+    public String getFeedback() {
+        return feedback;
+    }
+
+    public void setFeedback(String feedback) {
+        this.feedback = feedback;
     }
 }
