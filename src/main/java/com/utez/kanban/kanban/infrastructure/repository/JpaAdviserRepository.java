@@ -53,4 +53,7 @@ WHERE ue.email = :email AND ue.rol = 'ADVISER'
 
 
 
-}
+    @Query("SELECT ase.status FROM AdviserStudentEntity ase WHERE ase.studentEntity.studentID = :studentID AND ase.adviserEntity.adviserID = :adviserID")
+    Optional<Boolean> findStatusByStudentAndAdviser(@Param("studentID") Long studentID, @Param("adviserID") Long adviserID);
+
+    }

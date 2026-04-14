@@ -35,6 +35,10 @@ public class CustomUserDetailsService implements UserDetailsService {
         return new User(
                 user.getEmail(),
                 user.getPassword(),
+                user.isStatus(), // <-- status en bd
+                true,            // la cuenta no ha expirado
+                true,            // las credenciales no han expirado
+                true,            // la cuenta no está bloqueada
                 authorities
         );
     }

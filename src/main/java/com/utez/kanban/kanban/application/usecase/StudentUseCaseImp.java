@@ -70,7 +70,21 @@ public class StudentUseCaseImp implements StudentUseCase {
 
     @Override
     public List<StudentTask> getTasksByAdviser(String email, Long adviserID) {
+
+        Student student = studentRepositoryPort.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("Student not found"));
+
+
+        boolean isEnabled = adviserRepositoryPort.checkStudentAdviserStatus(student.getStudentID(), adviserID);
+
+        if (!isEnabled) {
+            throw new BusinessRuleViolationException("El asesor te ha bloqueado o deshabilitado de su tablero.");
+        }
+
         return studentTaskRepositoryPort.getTasksByStudentAndAdviser(email, adviserID);
+
+
+
     }
 
     @Override

@@ -101,20 +101,36 @@ public class StudentController {
 
 
 
+
+
+
+
     @GetMapping("/tasks/{adviserID}")
     public ResponseEntity<?> getTasksByAdviser(
             @PathVariable Long adviserID,
             Authentication authentication
     ){
+        try {
+            String email = authentication.getName();
 
-        String email = authentication.getName();
+            return ResponseEntity.ok(
+                    studentService.getTasksByAdviser(email, adviserID)
+                            .stream()
+                            .map(StudentTaskDto::fromDomain)
+                            .toList()
+            );
+        } catch (com.utez.kanban.kanban.domain.model.exeption.user.BusinessRuleViolationException e) {
 
-        return ResponseEntity.ok(
-                studentService.getTasksByAdviser(email, adviserID)
-                        .stream()
-                        .map(StudentTaskDto::fromDomain)
-                        .toList()
-        );
+            return ResponseEntity.status(403).body(Map.of(
+                    "status", 403,
+                    "message", e.getMessage()
+            ));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(Map.of(
+                    "status", 500,
+                    "message", "Ocurrió un error al obtener las tareas"
+            ));
+        }
     }
 
 

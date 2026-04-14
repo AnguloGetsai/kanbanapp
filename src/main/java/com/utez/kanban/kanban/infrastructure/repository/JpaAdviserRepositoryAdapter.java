@@ -68,5 +68,11 @@ public class JpaAdviserRepositoryAdapter implements AdviserRepositoryPort {
         return advisers;
     }
 
+    @Override
+    public boolean checkStudentAdviserStatus(Long studentID, Long adviserID) {
+        return jpaAdviserRepository.findStatusByStudentAndAdviser(studentID, adviserID)
+                .orElse(false);
+    }
+
 
 }

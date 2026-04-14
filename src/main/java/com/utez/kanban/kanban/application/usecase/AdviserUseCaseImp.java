@@ -60,6 +60,7 @@ public class AdviserUseCaseImp implements AdviserUseCase {
         // crear su usuario
         User user = new User();
         user.setEmail(email);
+        user.setStatus(true);
         user.setRol(Rol.STUDENT.name());
         User studentUser = userRepositoryPort.saveUser(user);
         if(studentUser == null) throw  new BusinessRuleViolationException("An error occurred while creating the user");
