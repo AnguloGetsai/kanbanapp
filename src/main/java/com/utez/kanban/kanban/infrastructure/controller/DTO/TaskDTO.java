@@ -2,6 +2,7 @@ package com.utez.kanban.kanban.infrastructure.controller.DTO;
 
 import com.utez.kanban.kanban.domain.model.Attachment;
 
+import com.utez.kanban.kanban.domain.model.StatusKanban;
 import com.utez.kanban.kanban.domain.model.Task;
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.web.multipart.MultipartFile;
@@ -45,12 +46,15 @@ public class TaskDTO {
     }
 
     public static Task toTask(TaskDTO taskDTO){
+        System.out.println("""
+                This is the status bro
+                """+taskDTO.getStatusKanban());
         return new Task(
                 taskDTO.getLimitDate(),
                 taskDTO.getStartDate(),
                 taskDTO.getName(),
                 taskDTO.getDescription(),
-                taskDTO.getStatusKanban(),
+                StatusKanban.normalize(taskDTO.getStatusKanban()),
                 taskDTO.getColor(),
                 taskDTO.getPriority()
         );
