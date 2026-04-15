@@ -282,17 +282,30 @@ public class AdviserUseCaseImp implements AdviserUseCase {
 
 
         if(studentIDs != null){
+            // 1. Obtener las asignaciones actuales de la base de datos
+            List<StudentTask> currentAssignments = studentTaskRepositoryPort.findByTaskId(taskID);
 
-            // eliminar relaciones actuales
-            studentTaskRepositoryPort.deleteByTaskId(taskID);
+            // Sacar solo los IDs de los alumnos que ya estaban asignados
+            Set<Long> currentStudentIDs = currentAssignments.stream()
+                    .map(st -> st.getStudent().getStudentID())
+                    .collect(java.util.stream.Collectors.toSet());
 
-            List<Student> students = studentRepositoryPort
-                    .getStudentByAdviserID(adviser.getAdviserID());
+            Set<Long> newStudentIDs = new HashSet<>(studentIDs);
 
-            Set<Long> idsSet = new HashSet<>(studentIDs);
+            // 2. Identificar a quiénes QUITAR (estaban antes, pero ya no vienen en la nueva lista)
+            for (StudentTask st : currentAssignments) {
+                if (!newStudentIDs.contains(st.getStudent().getStudentID())) {
+                    // Solo borramos la relación de este alumno en específico
+                    studentTaskRepositoryPort.deleteStudentTask(st);
+                }
+            }
+
+            // 3. Identificar a quiénes AGREGAR (vienen en la nueva lista, pero no estaban antes)
+            List<Student> students = studentRepositoryPort.getStudentByAdviserID(adviser.getAdviserID());
 
             List<StudentTask> newRelations = students.stream()
-                    .filter(s -> idsSet.contains(s.getStudentID()))
+                    // Filtramos: Que esté en la lista nueva Y QUE NO estuviera ya asignado antes
+                    .filter(s -> newStudentIDs.contains(s.getStudentID()) && !currentStudentIDs.contains(s.getStudentID()))
                     .map(s -> {
                         StudentTask st = new StudentTask();
                         st.setTask(existingTask);
@@ -302,7 +315,10 @@ public class AdviserUseCaseImp implements AdviserUseCase {
                         return st;
                     }).toList();
 
-            studentTaskRepositoryPort.saveAll(newRelations);
+            // 4. Guardar SOLO a los nuevos
+            if (!newRelations.isEmpty()) {
+                studentTaskRepositoryPort.saveAll(newRelations);
+            }
         }
     }
 

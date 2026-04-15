@@ -65,4 +65,10 @@ AND ue.email = :email
             @Param("studentID") Long studentID,
             @Param("taskID") Long taskID
     );
+
+
+    @Transactional
+    @Modifying
+    @Query("DELETE FROM StudentTaskEntity st WHERE st.studentEntity.studentID = :studentID AND st.taskEntity.taskID = :taskID")
+    void deleteByStudentAndTask(@Param("studentID") Long studentID, @Param("taskID") Long taskID);
 }

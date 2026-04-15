@@ -7,6 +7,7 @@ import java.util.List;
 
 public class EvidenceResponseDto {
     private Long evidenceID;
+    private String studentFullName;
     private LocalDate uploadDate;
     private String comment;
     private List<EvidenceFileDto> files;
@@ -20,6 +21,13 @@ public class EvidenceResponseDto {
 
         EvidenceResponseDto dto = new EvidenceResponseDto();
         dto.evidenceID = evidence.getEvidenceID();
+
+        if (evidence.getStudentTask() != null && evidence.getStudentTask().getStudent() != null) {
+            String firstName = evidence.getStudentTask().getStudent().getFirstName();
+            String lastName = evidence.getStudentTask().getStudent().getLastName();
+            dto.studentFullName = firstName + " " + lastName;
+        }
+
         dto.uploadDate = evidence.getUploadDate();
         dto.comment = evidence.getComment();
         dto.files = files;
@@ -57,5 +65,13 @@ public class EvidenceResponseDto {
 
     public void setFiles(List<EvidenceFileDto> files) {
         this.files = files;
+    }
+
+    public String getStudentFullName() {
+        return studentFullName;
+    }
+
+    public void setStudentFullName(String studentFullName) {
+        this.studentFullName = studentFullName;
     }
 }

@@ -11,7 +11,7 @@ public class TaskDetailDto {
     private String description;
     private String statusKanban;
     private String color;
-    private double grade;
+    private Double grade;
     private String feedback;
 
 
@@ -21,7 +21,7 @@ public class TaskDetailDto {
     public TaskDetailDto(Long taskID, String name, String description,
                          String statusKanban, String color,
                          List<AttachmentDto> attachments,
-                        double grade,  String feedback) {
+                        Double grade,  String feedback) {
         this.taskID = taskID;
         this.name = name;
         this.description = description;
@@ -104,11 +104,11 @@ public class TaskDetailDto {
         this.attachments = attachments;
     }
 
-    public double getGrade() {
+    public Double getGrade() {
         return grade;
     }
 
-    public void setGrade(double grade) {
+    public void setGrade(Double grade) {
         this.grade = grade;
     }
 

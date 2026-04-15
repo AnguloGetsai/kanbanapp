@@ -79,4 +79,14 @@ public class JpaStudentTaskRepositoryAdapter implements StudentTaskRepositoryPor
         .findByStudentIDAndTaskID(studentID, taskID)
                 .map(StudentTaskMapper::toStudentTask);
     }
+
+    @Override
+    public void deleteStudentTask(StudentTask studentTask) {
+        // Extraemos los IDs directamente de los objetos anidados en tu dominio
+        Long studentID = studentTask.getStudent().getStudentID();
+        Long taskID = studentTask.getTask().getTaskID();
+
+        // Llamamos a nuestro nuevo método del repositorio
+        jpaStudentTaskRepository.deleteByStudentAndTask(studentID, taskID);
+    }
 }

@@ -14,5 +14,5 @@ public interface StudentTaskRepositoryPort {
     List<StudentTask> findByTaskId(Long taskID);
     void deleteByTaskId(Long taskID);
     Optional<StudentTask> findByStudentAndTask(Long studentID, Long taskID);
-
+    void deleteStudentTask(StudentTask studentTask);
 }
