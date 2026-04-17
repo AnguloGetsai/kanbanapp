@@ -257,6 +257,13 @@ public class AdviserUseCaseImp implements AdviserUseCase {
         Task existingTask = taskRepositoryPort.findById(taskID)
                 .orElseThrow(() -> new BusinessRuleViolationException("Task not found"));
 
+        
+
+        if (task.getLimitDate() != null && existingTask.getCreationDate() != null) {
+            if (task.getLimitDate().isBefore(existingTask.getCreationDate())) {
+                throw new BusinessRuleViolationException("La fecha de culminación no puede ser antes de la fecha de inicio.");
+            }
+        }
 
         existingTask.setName(task.getName());
         existingTask.setDescription(task.getDescription());

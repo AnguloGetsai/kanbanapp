@@ -6,7 +6,7 @@ import com.utez.kanban.kanban.domain.model.StudentTask;
 import com.utez.kanban.kanban.domain.model.Task;
 
 
-
+import javax.xml.stream.events.StartDocument;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -22,6 +22,7 @@ public class TaskSimpleDto {
 
     private List<Long> students;
     private String priority;
+    private LocalDate startDate;
     private LocalDate dateOfEnd;
     private String notes;
     private List<AttachmentDto> files;
@@ -60,6 +61,7 @@ public class TaskSimpleDto {
                 task.getColor(),
                 students,
                 task.getPriority(),
+                task.getCreationDate(),
                 task.getLimitDate(),
                 task.getDescription(),
                 files
@@ -70,7 +72,7 @@ public class TaskSimpleDto {
 
     public TaskSimpleDto(Long id, String name, String statusKanban,
                          String color, List<Long> students,
-                         String priority,
+                         String priority,LocalDate startDate,
                          LocalDate dateOfEnd, String notes,
                          List<AttachmentDto> files) {
         this.id = id;
@@ -79,7 +81,7 @@ public class TaskSimpleDto {
         this.color = color;
         this.students = students;
         this.priority = priority;
-
+this.startDate = startDate;
         this.dateOfEnd = dateOfEnd;
         this.notes = notes;
         this.files = files;
@@ -157,18 +159,12 @@ public class TaskSimpleDto {
         this.files = files;
     }
 
-    @Override
-    public String toString() {
-        return "TaskSimpleDto{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", statusKanban='" + statusKanban + '\'' +
-                ", color='" + color + '\'' +
-                ", students=" + students +
-                ", priority='" + priority + '\'' +
-                ", dateOfEnd=" + dateOfEnd +
-                ", notes='" + notes + '\'' +
-                ", files=" + files +
-                '}';
+
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
     }
 }
