@@ -114,6 +114,12 @@ public class AdviserUseCaseImp implements AdviserUseCase {
         studentRepositoryPort.findById(studentID)
                 .orElseThrow(() -> new BusinessRuleViolationException("Student not found"));
         if(adviserStudentRepository.changeStatus(false, adviser.getAdviserID(), studentID)){
+
+            Notification notification = new Notification();
+            notification.setMessage("Tu asesor te ha deshabilitado de su tablero de Kanban.");
+            notification.setRead(false);
+            notification.setStudentID(studentID);
+            notificationRepositoryPort.save(notification);
             return;
         }
         throw new BusinessRuleViolationException("Changes not applied");
@@ -127,6 +133,11 @@ public class AdviserUseCaseImp implements AdviserUseCase {
         studentRepositoryPort.findById(studentID)
                 .orElseThrow(() -> new BusinessRuleViolationException("Student not found"));
         if(adviserStudentRepository.changeStatus(true, adviser.getAdviserID(), studentID)){
+            Notification notification = new Notification();
+            notification.setMessage("Tu asesor te ha habilitado nuevamente en su tablero de Kanban.");
+            notification.setRead(false);
+            notification.setStudentID(studentID);
+            notificationRepositoryPort.save(notification);
             return;
         }
         throw new BusinessRuleViolationException("Changes not applied");
@@ -166,6 +177,13 @@ public class AdviserUseCaseImp implements AdviserUseCase {
         // buscar el board del asesor
         Board board = boardRepositoryPort.findBoardByAdviserId(adviser.getAdviserID())
                 .orElseThrow(() -> new BusinessRuleViolationException("BOARD NOT FOUND"));
+
+
+        if (task.getLimitDate() != null && task.getCreationDate() != null) {
+            if (task.getLimitDate().isBefore(task.getCreationDate())) {
+                throw new BusinessRuleViolationException("La fecha límite no puede ser anterior a la fecha de creación.");
+            }
+        }
 
         // crear la tarea
         task.setBoard(board);
@@ -213,7 +231,7 @@ public class AdviserUseCaseImp implements AdviserUseCase {
 
         st.forEach(studentTask -> {
             Notification notification = new Notification();
-            notification.setMessage("You have a new task: " + createdTask.getName());
+            notification.setMessage("Tienes una nueva tarea: " + createdTask.getName());
             notification.setRead(false);
             notification.setStudentID(studentTask.getStudent().getStudentID());
 
